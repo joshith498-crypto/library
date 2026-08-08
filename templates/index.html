@@ -103,7 +103,7 @@
                     <div class="school-card p-6 rounded-3xl flex items-center justify-between">
                         <div>
                             <p class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Active Borrowings</p>
-                            <h3 id="statActiveLoans" class="text-4xl font-extrabold text-white mt-2">--</h3>
+                            <h3 id="statActiveLoans" class="text-4xl font-extrabold text-white mt-2">0</h3>
                             <p class="text-[11px] text-zinc-500 mt-1">Books currently checked out</p>
                         </div>
                         <div class="h-14 w-14 rounded-2xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-2xl shadow-inner">📖</div>
@@ -111,7 +111,7 @@
                     <div class="school-card p-6 rounded-3xl flex items-center justify-between">
                         <div>
                             <p class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Total Students</p>
-                            <h3 id="statTotalStudents" class="text-4xl font-extrabold text-white mt-2">--</h3>
+                            <h3 id="statTotalStudents" class="text-4xl font-extrabold text-white mt-2">0</h3>
                             <p class="text-[11px] text-zinc-500 mt-1">Registered library members</p>
                         </div>
                         <div class="h-14 w-14 rounded-2xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-2xl shadow-inner">🎓</div>
@@ -137,7 +137,7 @@
                             <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-3 py-1 rounded-full font-semibold">Lifetime Volume</span>
                         </div>
                         <div id="leaderboardList" class="space-y-3">
-                            <p class="text-zinc-500 text-center py-8 text-xs">Loading scoreboard...</p>
+                            <p class="text-zinc-500 text-center py-8 text-xs">No historical activity logged yet.</p>
                         </div>
                     </div>
 
@@ -278,9 +278,24 @@
     </div>
 
     <script>
-        let globalIssues = [];
-        let globalHistory = [];
-        let existingStudents = [];
+        // Initialize localStorage if empty
+        if (!localStorage.getItem('zhs_issues')) {
+            localStorage.setItem('zhs_issues', JSON.stringify([
+                {
+                    id: 1,
+                    admission_no: "544421",
+                    name: "Tester",
+                    class_section: "10-B",
+                    book_name: "Mathematics Vol. 1",
+                    issue_date: new Date().toISOString().split('T')[0],
+                    due_date: new Date(Date.now() + 14*24*60*60*1000).toISOString().split('T')[0]
+                }
+            ]));
+        }
+        if (!localStorage.getItem('zhs_history')) {
+            localStorage.setItem('zhs_history', JSON.stringify([]));
+        }
+
         let announcements = [
             { id: 1, date: '7/Aug/2026', type: 'Notice', title: 'Return Overdue Books', desc: 'All students must return checked-out publications before the weekend holiday.' },
             { id: 2, date: '23/Jul/2026', type: 'Update', title: 'New Arrivals Added', desc: 'Check out the new computer science and science fiction editions in the catalog.' }
@@ -295,18 +310,13 @@
             document.getElementById(`nav-${tabName}`).className = "px-4 py-2.5 rounded-xl bg-indigo-600 text-white transition flex items-center gap-2 shadow-sm";
         }
 
-        async function attemptLogin() {
+        function attemptLogin() {
             const password = document.getElementById('loginPass').value;
-            const res = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password })
-            });
-            if(res.ok) {
+            if(password === 'librarian123') {
                 document.getElementById('loginOverlay').classList.add('hidden');
                 document.getElementById('dashboardApp').classList.remove('hidden');
                 document.getElementById('dashboardApp').classList.add('flex');
-                fetchDashboardData();
+                refreshAppData();
                 renderAnnouncements();
             } else {
                 document.getElementById('loginError').classList.remove('hidden');
@@ -320,40 +330,46 @@
             document.getElementById('loginPass').value = '';
         }
 
-        async function fetchDashboardData() {
-            try {
-                const statsRes = await fetch('/api/stats');
-                const stats = await statsRes.json();
-                document.getElementById('statActiveLoans').innerText = stats.active_loans;
-                document.getElementById('statTotalStudents').innerText = stats.registered_students;
+        function getIssues() { return JSON.parse(localStorage.getItem('zhs_issues')) || []; }
+        function setIssues(data) { localStorage.setItem('zhs_issues', JSON.stringify(data)); }
+        function getHistory() { return JSON.parse(localStorage.getItem('zhs_history')) || []; }
+        function setHistory(data) { localStorage.setItem('zhs_history', JSON.stringify(data)); }
 
-                const leaderboardRes = await fetch('/api/leaderboard');
-                const leaderboard = await leaderboardRes.json();
-                renderLeaderboard(leaderboard);
+        function refreshAppData() {
+            const issues = getIssues();
+            const history = getHistory();
+            const allItems = [...issues, ...history];
 
-                const studentsRes = await fetch('/api/students');
-                existingStudents = await studentsRes.json();
+            // Stats
+            document.getElementById('statActiveLoans').innerText = issues.length;
+            const uniqueStudents = new Set(allItems.map(i => i.admission_no)).size;
+            document.getElementById('statTotalStudents').innerText = Math.max(uniqueStudents, issues.length);
 
-                const issuesRes = await fetch('/api/issues');
-                globalIssues = await issuesRes.json();
-                renderTable(globalIssues);
+            // Leaderboard
+            renderLeaderboard(allItems);
 
-                const historyRes = await fetch('/api/history');
-                globalHistory = await historyRes.json();
-                renderHistoryTable(globalHistory);
-            } catch (error) {
-                console.error(error);
-            }
+            // Tables
+            renderTable(issues);
+            renderHistoryTable(history);
         }
 
-        function renderLeaderboard(data) {
+        function renderLeaderboard(allItems) {
             const container = document.getElementById('leaderboardList');
-            if(!data || data.length === 0) {
+            const counts = {};
+            allItems.forEach(item => {
+                if(!counts[item.admission_no]) {
+                    counts[item.admission_no] = { admission_no: item.admission_no, name: item.name, class_section: item.class_section, total_borrowed: 0 };
+                }
+                counts[item.admission_no].total_borrowed++;
+            });
+
+            const sorted = Object.values(counts).sort((a,b) => b.total_borrowed - a.total_borrowed);
+            if(sorted.length === 0) {
                 container.innerHTML = `<p class="text-zinc-500 text-center py-6 text-xs">No historical activity logged yet.</p>`;
                 return;
             }
             container.innerHTML = '';
-            data.forEach((item, index) => {
+            sorted.forEach((item, index) => {
                 const medals = ['🥇', '🥈', '🥉'];
                 const rank = medals[index] || `#${index + 1}`;
                 container.innerHTML += `
@@ -407,7 +423,6 @@
             const title = document.getElementById('annTitle').value.trim();
             const desc = document.getElementById('annDesc').value.trim();
             if(!title || !desc) { alert("Please fill out both fields."); return; }
-            
             const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/ /g, '/');
             announcements.unshift({ id: Date.now(), date: today, type: 'Notice', title, desc });
             renderAnnouncements();
@@ -421,8 +436,10 @@
 
         function checkStudentExistence() {
             const adm = document.getElementById('admNo').value.trim();
+            const allItems = [...getIssues(), ...getHistory()];
+            const exists = allItems.some(i => i.admission_no === adm);
             const box = document.getElementById('newStudentBox');
-            if (adm.length > 0 && !existingStudents.includes(adm)) {
+            if (adm.length > 0 && !exists) {
                 box.classList.remove('hidden');
             } else {
                 box.classList.add('hidden');
@@ -458,7 +475,7 @@
         function renderHistoryTable(data) {
             const tbody = document.getElementById('historyTable');
             if(!data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-16 text-zinc-500">No history records logged yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-16 text-zinc-500">No history records logged yet. Return a book to see it here.</td></tr>`;
                 return;
             }
             tbody.innerHTML = '';
@@ -478,7 +495,7 @@
         }
 
         function openModal(id) {
-            const item = globalIssues.find(i => i.id === id);
+            const item = getIssues().find(i => i.id === id);
             if(!item) return;
             document.getElementById('modalContent').innerHTML = `
                 <div class="grid grid-cols-2 gap-3 bg-black/40 p-4 rounded-2xl border border-white/10">
@@ -504,59 +521,84 @@
 
         function filterTable() {
             const query = document.getElementById('searchFilter').value.toLowerCase();
-            const filtered = globalIssues.filter(i => i.name.toLowerCase().includes(query) || i.admission_no.toLowerCase().includes(query) || i.book_name.toLowerCase().includes(query));
+            const filtered = getIssues().filter(i => i.name.toLowerCase().includes(query) || i.admission_no.toLowerCase().includes(query) || i.book_name.toLowerCase().includes(query));
             renderTable(filtered);
         }
 
         function filterHistoryTable() {
             const query = document.getElementById('historyFilter').value.toLowerCase();
-            const filtered = globalHistory.filter(i => i.name.toLowerCase().includes(query) || i.admission_no.toLowerCase().includes(query) || i.book_name.toLowerCase().includes(query));
+            const filtered = getHistory().filter(i => i.name.toLowerCase().includes(query) || i.admission_no.toLowerCase().includes(query) || i.book_name.toLowerCase().includes(query));
             renderHistoryTable(filtered);
         }
 
-        async function submitIssue() {
+        function submitIssue() {
             const admission_no = document.getElementById('admNo').value.trim();
             const book_name = document.getElementById('bookName').value.trim();
             const studentNameElem = document.getElementById('studentName');
             const studentClassElem = document.getElementById('studentClass');
             
-            const student_name = studentNameElem ? studentNameElem.value.trim() : '';
-            const class_section = studentClassElem ? studentClassElem.value.trim() : '';
-
             if(!admission_no || !book_name) { alert("Please enter Admission Number and Book Name."); return; }
 
-            const res = await fetch('/api/issue', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ admission_no, student_name, class_section, book_name })
-            });
+            const allItems = [...getIssues(), ...getHistory()];
+            const existing = allItems.find(i => i.admission_no === admission_no);
 
-            if(res.ok) {
-                document.getElementById('admNo').value = '';
-                document.getElementById('bookName').value = '';
-                if(studentNameElem) studentNameElem.value = '';
-                if(studentClassElem) studentClassElem.value = '';
-                document.getElementById('newStudentBox').classList.add('hidden');
-                fetchDashboardData();
-                switchTab('ledger');
+            let name, class_section;
+            if(existing) {
+                name = existing.name;
+                class_section = existing.class_section;
             } else {
-                alert("Error committing transaction.");
+                name = studentNameElem ? studentNameElem.value.trim() : '';
+                class_section = studentClassElem ? studentClassElem.value.trim() : '';
+                if(!name || !class_section) { alert("Please fill out the new student's name and class."); return; }
+            }
+
+            const newEntry = {
+                id: Date.now(),
+                admission_no,
+                name,
+                class_section,
+                book_name,
+                issue_date: new Date().toISOString().split('T')[0],
+                due_date: new Date(Date.now() + 14*24*60*60*1000).toISOString().split('T')[0]
+            };
+
+            const issues = getIssues();
+            issues.push(newEntry);
+            setIssues(issues);
+
+            document.getElementById('admNo').value = '';
+            document.getElementById('bookName').value = '';
+            if(studentNameElem) studentNameElem.value = '';
+            if(studentClassElem) studentClassElem.value = '';
+            document.getElementById('newStudentBox').classList.add('hidden');
+
+            refreshAppData();
+            switchTab('ledger');
+        }
+
+        function returnBook(id) {
+            if(!confirm("Process return for this book? It will move to the History Log.")) return;
+            const issues = getIssues();
+            const history = getHistory();
+
+            const index = issues.findIndex(i => i.id === id);
+            if(index !== -1) {
+                const item = issues.splice(index, 1)[0];
+                item.return_date = new Date().toISOString().split('T')[0];
+                history.unshift(item);
+                setIssues(issues);
+                setHistory(history);
+                refreshAppData();
             }
         }
 
-        async function returnBook(id) {
-            if(!confirm("Process return for this book? It will move to the History Log.")) return;
-            await fetch(`/api/return/${id}`, { method: 'POST' });
-            fetchDashboardData();
-        }
-
-        async function updateDueDate(id, due_date) {
-            await fetch('/api/update-date', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id, due_date })
-            });
-            fetchDashboardData();
+        function updateDueDate(id, due_date) {
+            const issues = getIssues();
+            const item = issues.find(i => i.id === id);
+            if(item) {
+                item.due_date = due_date;
+                setIssues(issues);
+            }
         }
     </script>
 </body>
