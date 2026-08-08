@@ -3,8 +3,7 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
-# Simple in-memory data store for demonstration
-# In production, connect this to a database (e.g., PostgreSQL, SQLite)
+# Active borrowings store
 issues_db = [
     {
         "id": 1,
@@ -17,6 +16,9 @@ issues_db = [
     }
 ]
 
+# Permanent historical archive for returned/all-time transactions
+history_db = []
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -24,7 +26,6 @@ def index():
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.json
-    # Default simple password check
     if data.get('password') == 'librarian123':
         return jsonify({"success": True}), 200
     return jsonify({"success": False}), 401
@@ -32,23 +33,21 @@ def login():
 @app.route('/api/stats', methods=['GET'])
 def get_stats():
     active_loans = len(issues_db)
-    # Unique students count based on admission number
-    unique_students = len(set(item['admission_no'] for item in issues_db))
+    unique_students = len(set(item['admission_no'] for item in issues_db + history_db))
     return jsonify({
         "active_loans": active_loans,
-        "registered_students": max(unique_students, 2)
+        "registered_students": max(unique_students, len(set(i['admission_no'] for i in issues_db)))
     })
 
 @app.route('/api/students', methods=['GET'])
 def get_students():
-    students = list(set(item['admission_no'] for item in issues_db))
+    students = list(set(item['admission_no'] for item in issues_db + history_db))
     return jsonify(students)
 
 @app.route('/api/leaderboard', methods=['GET'])
 def get_leaderboard():
-    # Aggregate borrowing counts per student
     counts = {}
-    for item in issues_db:
+    for item in issues_db + history_db:
         adm = item['admission_no']
         if adm not in counts:
             counts[adm] = {
@@ -66,14 +65,17 @@ def get_leaderboard():
 def get_issues():
     return jsonify(issues_db)
 
+@app.route('/api/history', methods=['GET'])
+def get_history():
+    return jsonify(history_db)
+
 @app.route('/api/issue', methods=['POST'])
 def issue_book():
     data = request.json
     admission_no = data.get('admission_no')
     book_name = data.get('book_name')
     
-    # Check if student already exists in our records to fetch their name/class
-    existing = next((i for i in issues_db if i['admission_no'] == admission_no), None)
+    existing = next((i for i in issues_db + history_db if i['admission_no'] == admission_no), None)
     
     if existing:
         name = existing['name']
@@ -98,8 +100,13 @@ def issue_book():
 @app.route('/api/return/<int:item_id>', methods=['POST'])
 def return_book(item_id):
     global issues_db
-    issues_db = [i for i in issues_db if i['id'] != item_id]
-    return jsonify({"success": True}), 200
+    matched = next((i for i in issues_db if i['id'] == item_id), None)
+    if matched:
+        matched['return_date'] = datetime.now().strftime("%Y-%m-%d")
+        history_db.insert(0, matched)
+        issues_db = [i for i in issues_db if i['id'] != item_id]
+        return jsonify({"success": True}), 200
+    return jsonify({"success": False}), 404
 
 @app.route('/api/update-date', methods=['POST'])
 def update_date():
