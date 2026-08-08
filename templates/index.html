@@ -68,6 +68,7 @@
                     <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-4 py-2.5 rounded-xl bg-indigo-600 text-white transition flex items-center gap-2 shadow-sm">📊 Dashboard</button>
                     <button onclick="switchTab('issue')" id="nav-issue" class="px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-2">📚 Issue Book</button>
                     <button onclick="switchTab('ledger')" id="nav-ledger" class="px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-2">📋 Active Ledger</button>
+                    <button onclick="switchTab('history')" id="nav-history" class="px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-2">📜 History Log</button>
                 </nav>
             </div>
 
@@ -146,9 +147,7 @@
                                 <h3 class="text-base font-bold text-white">📢 Notice Board</h3>
                                 <button onclick="openAnnouncementModal()" class="text-xs bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-400 border border-indigo-500/30 px-2.5 py-1 rounded-lg transition font-semibold">+ Add Notice</button>
                             </div>
-                            <div id="announcementsList" class="space-y-3 text-xs text-zinc-300 max-h-[340px] overflow-y-auto pr-1">
-                                <!-- Dynamic notices injected here -->
-                            </div>
+                            <div id="announcementsList" class="space-y-3 text-xs text-zinc-300 max-h-[340px] overflow-y-auto pr-1"></div>
                         </div>
                         <p class="text-[11px] text-zinc-500 text-center pt-4 border-t border-white/5">Visible to all students & staff portal views.</p>
                     </div>
@@ -210,6 +209,35 @@
                 </div>
             </div>
 
+            <!-- TAB 4: PERMANENT HISTORY LOG -->
+            <div id="tab-history" class="hidden space-y-6 pb-12">
+                <div class="school-card p-8 rounded-3xl space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-5">
+                        <div>
+                            <h2 class="text-lg font-bold text-white">Circulation History Log</h2>
+                            <p class="text-xs text-zinc-400 mt-1">Permanent archive of all returned book transactions and student borrow logs.</p>
+                        </div>
+                        <input type="text" id="historyFilter" onkeyup="filterHistoryTable()" placeholder="Search history records..." class="w-full sm:w-72 bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500">
+                    </div>
+
+                    <div class="overflow-x-auto border border-white/10 rounded-2xl bg-black/30 shadow-inner">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-white/[0.03] border-b border-white/10 text-zinc-400 font-bold uppercase tracking-wider text-[10px]">
+                                    <th class="p-4">Student Information</th>
+                                    <th class="p-4">Publication</th>
+                                    <th class="p-4">Issue Date</th>
+                                    <th class="p-4">Return Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTable" class="divide-y divide-white/5">
+                                <tr><td colspan="4" class="text-center py-16 text-zinc-500">No history records found.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
@@ -251,6 +279,7 @@
 
     <script>
         let globalIssues = [];
+        let globalHistory = [];
         let existingStudents = [];
         let announcements = [
             { id: 1, date: '7/Aug/2026', type: 'Notice', title: 'Return Overdue Books', desc: 'All students must return checked-out publications before the weekend holiday.' },
@@ -258,7 +287,7 @@
         ];
 
         function switchTab(tabName) {
-            ['dashboard', 'issue', 'ledger'].forEach(t => {
+            ['dashboard', 'issue', 'ledger', 'history'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
                 document.getElementById(`nav-${t}`).className = "px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-2";
             });
@@ -308,6 +337,10 @@
                 const issuesRes = await fetch('/api/issues');
                 globalIssues = await issuesRes.json();
                 renderTable(globalIssues);
+
+                const historyRes = await fetch('/api/history');
+                globalHistory = await historyRes.json();
+                renderHistoryTable(globalHistory);
             } catch (error) {
                 console.error(error);
             }
@@ -349,7 +382,7 @@
                     <div class="bg-black/40 p-4 rounded-2xl border border-white/5 space-y-1.5 relative group">
                         <div class="flex justify-between items-center">
                             <span class="text-[10px] text-indigo-400 font-bold">${item.date} - ${item.type}</span>
-                            <button onclick="deleteAnnouncement(${item.id})" class="text-zinc-600 hover:text-rose-400 text-[10px] opacity-0 group-hover:opacity-150 transition">Delete</button>
+                            <button onclick="deleteAnnouncement(${item.id})" class="text-zinc-600 hover:text-rose-400 text-[10px] opacity-0 group-hover:opacity-100 transition">Delete</button>
                         </div>
                         <p class="font-bold text-white text-xs">${item.title}</p>
                         <p class="text-zinc-400 text-[11px] leading-relaxed">${item.desc}</p>
@@ -422,6 +455,28 @@
             });
         }
 
+        function renderHistoryTable(data) {
+            const tbody = document.getElementById('historyTable');
+            if(!data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-16 text-zinc-500">No history records logged yet.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-white/[0.03] transition">
+                        <td class="p-4">
+                            <p class="font-bold text-zinc-100">${item.name} <span class="text-zinc-500 font-normal text-xs">(${item.class_section})</span></p>
+                            <p class="text-xs text-indigo-400 font-mono mt-0.5">ADM: ${item.admission_no}</p>
+                        </td>
+                        <td class="p-4 font-semibold text-zinc-300">${item.book_name}</td>
+                        <td class="p-4 text-zinc-400 text-xs">${item.issue_date}</td>
+                        <td class="p-4 text-emerald-400 font-semibold text-xs">${item.return_date}</td>
+                    </tr>
+                `;
+            });
+        }
+
         function openModal(id) {
             const item = globalIssues.find(i => i.id === id);
             if(!item) return;
@@ -453,25 +508,34 @@
             renderTable(filtered);
         }
 
+        function filterHistoryTable() {
+            const query = document.getElementById('historyFilter').value.toLowerCase();
+            const filtered = globalHistory.filter(i => i.name.toLowerCase().includes(query) || i.admission_no.toLowerCase().includes(query) || i.book_name.toLowerCase().includes(query));
+            renderHistoryTable(filtered);
+        }
+
         async function submitIssue() {
             const admission_no = document.getElementById('admNo').value.trim();
             const book_name = document.getElementById('bookName').value.trim();
-            const name = document.getElementById('studentName').value.trim();
-            const class_section = document.getElementById('studentClass').value.trim();
+            const studentNameElem = document.getElementById('studentName');
+            const studentClassElem = document.getElementById('studentClass');
+            
+            const student_name = studentNameElem ? studentNameElem.value.trim() : '';
+            const class_section = studentClassElem ? studentClassElem.value.trim() : '';
 
             if(!admission_no || !book_name) { alert("Please enter Admission Number and Book Name."); return; }
 
             const res = await fetch('/api/issue', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ admission_no, name, class_section, book_name })
+                body: JSON.stringify({ admission_no, student_name, class_section, book_name })
             });
 
             if(res.ok) {
                 document.getElementById('admNo').value = '';
                 document.getElementById('bookName').value = '';
-                document.getElementById('studentName').value = '';
-                document.getElementById('studentClass').value = '';
+                if(studentNameElem) studentNameElem.value = '';
+                if(studentClassElem) studentClassElem.value = '';
                 document.getElementById('newStudentBox').classList.add('hidden');
                 fetchDashboardData();
                 switchTab('ledger');
@@ -481,7 +545,7 @@
         }
 
         async function returnBook(id) {
-            if(!confirm("Process return for this book?")) return;
+            if(!confirm("Process return for this book? It will move to the History Log.")) return;
             await fetch(`/api/return/${id}`, { method: 'POST' });
             fetchDashboardData();
         }
