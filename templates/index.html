@@ -137,7 +137,7 @@
                             <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-3 py-1 rounded-full font-semibold">Lifetime Volume</span>
                         </div>
                         <div id="leaderboardList" class="space-y-3">
-                            <p class="text-zinc-500 text-center py-8 text-xs">No historical activity logged yet.</p>
+                            <p class="text-zinc-500 text-center py-8 text-xs">Loading leaderboard...</p>
                         </div>
                     </div>
 
@@ -278,23 +278,9 @@
     </div>
 
     <script>
-        // Initialize localStorage if empty
-        if (!localStorage.getItem('zhs_issues')) {
-            localStorage.setItem('zhs_issues', JSON.stringify([
-                {
-                    id: 1,
-                    admission_no: "544421",
-                    name: "Tester",
-                    class_section: "10-B",
-                    book_name: "Mathematics Vol. 1",
-                    issue_date: new Date().toISOString().split('T')[0],
-                    due_date: new Date(Date.now() + 14*24*60*60*1000).toISOString().split('T')[0]
-                }
-            ]));
-        }
-        if (!localStorage.getItem('zhs_history')) {
-            localStorage.setItem('zhs_history', JSON.stringify([]));
-        }
+        let cachedIssues = [];
+        let cachedHistory = [];
+        let existingStudents = [];
 
         let announcements = [
             { id: 1, date: '7/Aug/2026', type: 'Notice', title: 'Return Overdue Books', desc: 'All students must return checked-out publications before the weekend holiday.' },
@@ -310,16 +296,26 @@
             document.getElementById(`nav-${tabName}`).className = "px-4 py-2.5 rounded-xl bg-indigo-600 text-white transition flex items-center gap-2 shadow-sm";
         }
 
-        function attemptLogin() {
+        async function attemptLogin() {
             const password = document.getElementById('loginPass').value;
-            if(password === 'librarian123') {
-                document.getElementById('loginOverlay').classList.add('hidden');
-                document.getElementById('dashboardApp').classList.remove('hidden');
-                document.getElementById('dashboardApp').classList.add('flex');
-                refreshAppData();
-                renderAnnouncements();
-            } else {
-                document.getElementById('loginError').classList.remove('hidden');
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ password })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    document.getElementById('loginOverlay').classList.add('hidden');
+                    document.getElementById('dashboardApp').classList.remove('hidden');
+                    document.getElementById('dashboardApp').classList.add('flex');
+                    refreshAppData();
+                    renderAnnouncements();
+                } else {
+                    document.getElementById('loginError').classList.remove('hidden');
+                }
+            } catch(e) {
+                alert("Login request failed.");
             }
         }
 
@@ -330,42 +326,36 @@
             document.getElementById('loginPass').value = '';
         }
 
-        function getIssues() { return JSON.parse(localStorage.getItem('zhs_issues')) || []; }
-        function setIssues(data) { localStorage.setItem('zhs_issues', JSON.stringify(data)); }
-        function getHistory() { return JSON.parse(localStorage.getItem('zhs_history')) || []; }
-        function setHistory(data) { localStorage.setItem('zhs_history', JSON.stringify(data)); }
+        async function refreshAppData() {
+            try {
+                // Fetch stats, issues, history, students, and leaderboard in parallel
+                const [statsRes, issuesRes, historyRes, studentsRes, leaderboardRes] = await Promise.all([
+                    fetch('/api/stats').then(r => r.json()),
+                    fetch('/api/issues').then(r => r.json()),
+                    fetch('/api/history').then(r => r.json()),
+                    fetch('/api/students').then(r => r.json()),
+                    fetch('/api/leaderboard').then(r => r.json())
+                ]);
 
-        function refreshAppData() {
-            const issues = getIssues();
-            const history = getHistory();
-            const allItems = [...issues, ...history];
+                document.getElementById('statActiveLoans').innerText = statsRes.active_loans;
+                document.getElementById('statTotalStudents').innerText = statsRes.registered_students;
 
-            // Stats
-            document.getElementById('statActiveLoans').innerText = issues.length;
-            const uniqueStudents = new Set(allItems.map(i => i.admission_no)).size;
-            document.getElementById('statTotalStudents').innerText = Math.max(uniqueStudents, issues.length);
+                cachedIssues = issuesRes;
+                cachedHistory = historyRes;
+                existingStudents = studentsRes;
 
-            // Leaderboard
-            renderLeaderboard(allItems);
-
-            // Tables
-            renderTable(issues);
-            renderHistoryTable(history);
+                renderLeaderboard(leaderboardRes);
+                renderTable(cachedIssues);
+                renderHistoryTable(cachedHistory);
+            } catch (e) {
+                console.error("Failed to refresh application data", e);
+            }
         }
 
-        function renderLeaderboard(allItems) {
+        function renderLeaderboard(sorted) {
             const container = document.getElementById('leaderboardList');
-            const counts = {};
-            allItems.forEach(item => {
-                if(!counts[item.admission_no]) {
-                    counts[item.admission_no] = { admission_no: item.admission_no, name: item.name, class_section: item.class_section, total_borrowed: 0 };
-                }
-                counts[item.admission_no].total_borrowed++;
-            });
-
-            const sorted = Object.values(counts).sort((a,b) => b.total_borrowed - a.total_borrowed);
-            if(sorted.length === 0) {
-                container.innerHTML = `<p class="text-zinc-500 text-center py-6 text-xs">No historical activity logged yet.</p>`;
+            if(!sorted || sorted.length === 0) {
+                container.innerHTML = `<p class="text-zinc-500 text-center py-8 text-xs">No historical activity logged yet.</p>`;
                 return;
             }
             container.innerHTML = '';
@@ -436,8 +426,7 @@
 
         function checkStudentExistence() {
             const adm = document.getElementById('admNo').value.trim();
-            const allItems = [...getIssues(), ...getHistory()];
-            const exists = allItems.some(i => i.admission_no === adm);
+            const exists = existingStudents.includes(adm);
             const box = document.getElementById('newStudentBox');
             if (adm.length > 0 && !exists) {
                 box.classList.remove('hidden');
@@ -495,7 +484,7 @@
         }
 
         function openModal(id) {
-            const item = getIssues().find(i => i.id === id);
+            const item = cachedIssues.find(i => i.id === id);
             if(!item) return;
             document.getElementById('modalContent').innerHTML = `
                 <div class="grid grid-cols-2 gap-3 bg-black/40 p-4 rounded-2xl border border-white/10">
@@ -521,17 +510,17 @@
 
         function filterTable() {
             const query = document.getElementById('searchFilter').value.toLowerCase();
-            const filtered = getIssues().filter(i => i.name.toLowerCase().includes(query) || i.admission_no.toLowerCase().includes(query) || i.book_name.toLowerCase().includes(query));
+            const filtered = cachedIssues.filter(i => i.name.toLowerCase().includes(query) || i.admission_no.toLowerCase().includes(query) || i.book_name.toLowerCase().includes(query));
             renderTable(filtered);
         }
 
         function filterHistoryTable() {
             const query = document.getElementById('historyFilter').value.toLowerCase();
-            const filtered = getHistory().filter(i => i.name.toLowerCase().includes(query) || i.admission_no.toLowerCase().includes(query) || i.book_name.toLowerCase().includes(query));
+            const filtered = cachedHistory.filter(i => i.name.toLowerCase().includes(query) || i.admission_no.toLowerCase().includes(query) || i.book_name.toLowerCase().includes(query));
             renderHistoryTable(filtered);
         }
 
-        function submitIssue() {
+        async function submitIssue() {
             const admission_no = document.getElementById('admNo').value.trim();
             const book_name = document.getElementById('bookName').value.trim();
             const studentNameElem = document.getElementById('studentName');
@@ -539,65 +528,62 @@
             
             if(!admission_no || !book_name) { alert("Please enter Admission Number and Book Name."); return; }
 
-            const allItems = [...getIssues(), ...getHistory()];
-            const existing = allItems.find(i => i.admission_no === admission_no);
-
-            let name, class_section;
-            if(existing) {
-                name = existing.name;
-                class_section = existing.class_section;
-            } else {
-                name = studentNameElem ? studentNameElem.value.trim() : '';
-                class_section = studentClassElem ? studentClassElem.value.trim() : '';
-                if(!name || !class_section) { alert("Please fill out the new student's name and class."); return; }
+            const payload = { admission_no, book_name };
+            const exists = existingStudents.includes(admission_no);
+            if (!exists) {
+                payload.student_name = studentNameElem ? studentNameElem.value.trim() : '';
+                payload.class_section = studentClassElem ? studentClassElem.value.trim() : '';
+                if(!payload.student_name || !payload.class_section) { alert("Please fill out the new student's name and class."); return; }
             }
 
-            const newEntry = {
-                id: Date.now(),
-                admission_no,
-                name,
-                class_section,
-                book_name,
-                issue_date: new Date().toISOString().split('T')[0],
-                due_date: new Date(Date.now() + 14*24*60*60*1000).toISOString().split('T')[0]
-            };
+            try {
+                const res = await fetch('/api/issue', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if(data.success) {
+                    document.getElementById('admNo').value = '';
+                    document.getElementById('bookName').value = '';
+                    if(studentNameElem) studentNameElem.value = '';
+                    if(studentClassElem) studentClassElem.value = '';
+                    document.getElementById('newStudentBox').classList.add('hidden');
 
-            const issues = getIssues();
-            issues.push(newEntry);
-            setIssues(issues);
-
-            document.getElementById('admNo').value = '';
-            document.getElementById('bookName').value = '';
-            if(studentNameElem) studentNameElem.value = '';
-            if(studentClassElem) studentClassElem.value = '';
-            document.getElementById('newStudentBox').classList.add('hidden');
-
-            refreshAppData();
-            switchTab('ledger');
+                    await refreshAppData();
+                    switchTab('ledger');
+                } else {
+                    alert("Failed to commit transaction.");
+                }
+            } catch(e) {
+                alert("Network error processing issue.");
+            }
         }
 
-        function returnBook(id) {
+        async function returnBook(id) {
             if(!confirm("Process return for this book? It will move to the History Log.")) return;
-            const issues = getIssues();
-            const history = getHistory();
-
-            const index = issues.findIndex(i => i.id === id);
-            if(index !== -1) {
-                const item = issues.splice(index, 1)[0];
-                item.return_date = new Date().toISOString().split('T')[0];
-                history.unshift(item);
-                setIssues(issues);
-                setHistory(history);
-                refreshAppData();
+            try {
+                const res = await fetch(`/api/return/${id}`, { method: 'POST' });
+                const data = await res.json();
+                if(data.success) {
+                    await refreshAppData();
+                } else {
+                    alert("Failed to process return.");
+                }
+            } catch(e) {
+                alert("Network error processing return.");
             }
         }
 
-        function updateDueDate(id, due_date) {
-            const issues = getIssues();
-            const item = issues.find(i => i.id === id);
-            if(item) {
-                item.due_date = due_date;
-                setIssues(issues);
+        async function updateDueDate(id, due_date) {
+            try {
+                await fetch('/api/update-date', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ id, due_date })
+                });
+            } catch(e) {
+                console.error("Failed to update due date", e);
             }
         }
     </script>
