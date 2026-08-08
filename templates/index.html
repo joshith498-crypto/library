@@ -63,10 +63,8 @@
                 <!-- Clickable Navigation Menu Tabs -->
                 <nav class="hidden md:flex items-center gap-1 text-xs font-medium">
                     <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-3 py-2 rounded-lg bg-indigo-600 text-white transition flex items-center gap-1.5">📊 Dashboard</button>
-                    <button onclick="switchTab('profile')" id="nav-profile" class="px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5">👤 Profile</button>
-                    <button onclick="switchTab('homework')" id="nav-homework" class="px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5">📚 Issue Book</button>
+                    <button onclick="switchTab('issue')" id="nav-issue" class="px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5">📚 Issue Book</button>
                     <button onclick="switchTab('ledger')" id="nav-ledger" class="px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5">📋 Active Ledger</button>
-                    <button onclick="switchTab('fees')" id="nav-fees" class="px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5">💳 Fines & Fee</button>
                 </nav>
             </div>
 
@@ -108,10 +106,8 @@
                     </div>
                 </div>
 
-                <!-- Middle Split: Course/Leaderboard & Announcements -->
+                <!-- Middle Split: Leaderboard & Announcements -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    
-                    <!-- Circulation Leaderboard Card (Clickable) -->
                     <div class="school-card p-6 rounded-2xl lg:col-span-8 space-y-4">
                         <div class="flex justify-between items-center border-b border-white/10 pb-3">
                             <h3 class="text-sm font-bold text-white flex items-center gap-2">🏆 Circulation Leaderboard <span class="text-xs font-normal text-zinc-500">(Click entry to inspect)</span></h3>
@@ -122,7 +118,6 @@
                         </div>
                     </div>
 
-                    <!-- Announcements Card -->
                     <div class="school-card p-6 rounded-2xl lg:col-span-4 space-y-4">
                         <div class="border-b border-white/10 pb-3">
                             <h3 class="text-sm font-bold text-white">📢 Library Announcements</h3>
@@ -143,12 +138,12 @@
                 </div>
             </div>
 
-            <!-- TAB 2: PROFILE / ISSUE FORM -->
-            <div id="tab-profile" class="hidden space-y-6">
+            <!-- TAB 2: ISSUE BOOK FORM -->
+            <div id="tab-issue" class="hidden space-y-6">
                 <div class="school-card p-6 rounded-2xl max-w-2xl mx-auto space-y-5">
                     <div>
-                        <h2 class="text-sm font-bold text-white">Patron Account Profile & Quick Issue</h2>
-                        <p class="text-xs text-zinc-400 mt-0.5">Register new borrowing transaction or check account standing.</p>
+                        <h2 class="text-sm font-bold text-white">Issue New Publication</h2>
+                        <p class="text-xs text-zinc-400 mt-0.5">Register a new book borrowing transaction for any student.</p>
                     </div>
                     <div class="space-y-4 text-xs">
                         <div>
@@ -198,22 +193,6 @@
                 </div>
             </div>
 
-            <!-- TAB 4: FEES / FINES -->
-            <div id="tab-fees" class="hidden space-y-6">
-                <div class="school-card p-6 rounded-2xl max-w-md mx-auto text-center space-y-4">
-                    <div class="h-14 w-14 rounded-full bg-emerald-600/20 text-emerald-400 flex items-center justify-center mx-auto text-2xl font-bold">💳</div>
-                    <div>
-                        <h3 class="text-sm font-bold text-white">Library Fine & Due Balance</h3>
-                        <p class="text-xs text-zinc-400 mt-1">Current outstanding library penalties.</p>
-                    </div>
-                    <div class="bg-black/40 p-4 rounded-xl border border-white/10">
-                        <span class="text-zinc-500 text-[10px] block uppercase tracking-wider">Total Due Amount</span>
-                        <span class="text-3xl font-extrabold text-white">₹0.00/-</span>
-                    </div>
-                    <button onclick="alert('No pending fines due!')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 rounded-xl text-xs transition">Pay Dues</button>
-                </div>
-            </div>
-
         </main>
     </div>
 
@@ -237,7 +216,7 @@
         let existingStudents = [];
 
         function switchTab(tabName) {
-            ['dashboard', 'profile', 'ledger', 'fees'].forEach(t => {
+            ['dashboard', 'issue', 'ledger'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
                 document.getElementById(`nav-${t}`).className = "px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5";
             });
@@ -403,6 +382,8 @@
             if(res.ok) {
                 document.getElementById('admNo').value = '';
                 document.getElementById('bookName').value = '';
+                document.getElementById('studentName').value = '';
+                document.getElementById('studentClass').value = '';
                 document.getElementById('newStudentBox').classList.add('hidden');
                 fetchDashboardData();
                 switchTab('ledger');
