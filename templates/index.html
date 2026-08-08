@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library Command Console</title>
+    <title>Zee High School - Library Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script>
@@ -22,137 +22,165 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #09090b; }
-        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
-        .glass-card {
-            background: linear-gradient(135deg, rgba(24, 24, 27, 0.7) 0%, rgba(18, 18, 20, 0.8) 100%);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+        ::-webkit-scrollbar-track { background: #0f111a; }
+        ::-webkit-scrollbar-thumb { background: #2b2f40; border-radius: 4px; }
+        .school-card {
+            background: #171923;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
-<body class="bg-[#050507] text-zinc-100 min-h-screen flex flex-col selection:bg-violet-600 selection:text-white">
+<body class="bg-[#0f111a] text-zinc-100 min-h-screen flex flex-col selection:bg-indigo-600 selection:text-white">
 
     <!-- Auth Portal -->
-    <div id="loginOverlay" class="fixed inset-0 z-50 bg-[#050507]/90 backdrop-blur-2xl flex items-center justify-center p-4">
-        <div class="glass-card p-8 rounded-3xl w-full max-w-sm space-y-6 shadow-2xl relative border border-white/10">
-            <div class="absolute -top-px left-10 right-10 h-px bg-gradient-to-r from-transparent via-violet-500 to-transparent"></div>
+    <div id="loginOverlay" class="fixed inset-0 z-50 bg-[#0f111a]/95 backdrop-blur-xl flex items-center justify-center p-4">
+        <div class="school-card p-8 rounded-2xl w-full max-w-sm space-y-6 shadow-2xl border border-white/10">
             <div class="text-center space-y-2">
-                <div class="h-12 w-12 rounded-2xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center text-violet-400 mx-auto text-xl shadow-inner">🔒</div>
-                <h2 class="text-base font-bold tracking-tight text-white">System Authentication</h2>
-                <p class="text-xs text-zinc-400">Enter secure operator credentials to initialize console.</p>
+                <div class="h-12 w-12 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center mx-auto text-xl font-bold">🏫</div>
+                <h2 class="text-base font-bold text-white tracking-tight">Zee High School Portal</h2>
+                <p class="text-xs text-zinc-400">Sign in with your library credentials.</p>
             </div>
             <div class="space-y-4">
-                <input type="password" id="loginPass" placeholder="Passcode (librarian123)" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 transition shadow-inner">
-                <button onclick="attemptLogin()" class="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold py-3 rounded-xl text-xs transition shadow-lg shadow-violet-600/20">Authorize Access</button>
+                <input type="password" id="loginPass" placeholder="Passcode (librarian123)" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500 transition">
+                <button onclick="attemptLogin()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl text-xs transition shadow-lg shadow-indigo-600/20">Login to Dashboard</button>
                 <p id="loginError" class="text-xs text-rose-400 text-center hidden font-medium">Invalid security passcode.</p>
             </div>
         </div>
     </div>
 
-    <!-- Main Dashboard -->
+    <!-- Main Dashboard Application -->
     <div id="dashboardApp" class="hidden flex-col flex-grow min-h-screen">
         
-        <!-- Header -->
-        <header class="border-b border-white/[0.06] bg-black/40 backdrop-blur-xl sticky top-0 z-40 px-8 py-4">
-            <div class="max-w-[1600px] mx-auto flex justify-between items-center">
-                <div class="flex items-center gap-3.5">
-                    <div class="h-9 w-9 rounded-xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center text-violet-400 font-bold shadow-inner">⚡</div>
-                    <div>
-                        <h1 class="text-xs font-bold tracking-wider uppercase text-zinc-200">Library Command Console</h1>
-                        <p class="text-[10px] text-zinc-500 font-mono">SECURE NODE // 127.0.0.1:5000</p>
-                    </div>
+        <!-- School Top Header Bar -->
+        <header class="bg-[#1a1d2d] border-b border-white/10 sticky top-0 z-40 px-6 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-6 overflow-x-auto">
+                <div class="flex items-center gap-2.5 min-w-max">
+                    <div class="h-8 w-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm">ZHS</div>
+                    <span class="text-xs font-bold tracking-wide text-zinc-200">Zee High School - 2026 - 2027</span>
                 </div>
-                <div class="flex items-center gap-4">
-                    <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
-                        <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        Secure Link Live
-                    </div>
-                    <button onclick="logout()" class="bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-400 hover:text-white px-3.5 py-1.5 rounded-xl text-xs font-medium transition">Lock Session</button>
+                
+                <!-- Clickable Navigation Menu Tabs -->
+                <nav class="hidden md:flex items-center gap-1 text-xs font-medium">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-3 py-2 rounded-lg bg-indigo-600 text-white transition flex items-center gap-1.5">📊 Dashboard</button>
+                    <button onclick="switchTab('profile')" id="nav-profile" class="px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5">👤 Profile</button>
+                    <button onclick="switchTab('homework')" id="nav-homework" class="px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5">📚 Issue Book</button>
+                    <button onclick="switchTab('ledger')" id="nav-ledger" class="px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5">📋 Active Ledger</button>
+                    <button onclick="switchTab('fees')" id="nav-fees" class="px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5">💳 Fines & Fee</button>
+                </nav>
+            </div>
+
+            <div class="flex items-center gap-3 min-w-max">
+                <div class="hidden sm:flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full text-emerald-400 text-xs">
+                    <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span> Online
                 </div>
+                <button onclick="logout()" class="text-xs bg-white/5 hover:bg-white/10 text-zinc-300 px-3.5 py-1.5 rounded-lg border border-white/10 transition">Logout</button>
             </div>
         </header>
 
-        <!-- Body Container -->
-        <main class="max-w-[1600px] w-full mx-auto flex-grow p-8 space-y-6 flex flex-col">
-            
-            <!-- Metrics & Scoreboard Bar -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Metrics -->
-                <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="glass-card p-6 rounded-3xl flex items-center justify-between relative overflow-hidden">
+        <!-- Main Content View Area -->
+        <main class="max-w-[1600px] w-full mx-auto flex-grow p-6 space-y-6">
+
+            <!-- TAB 1: DASHBOARD -->
+            <div id="tab-dashboard" class="space-y-6">
+                <!-- Top Row Metric Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="school-card p-6 rounded-2xl flex items-center justify-between">
                         <div>
-                            <p class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Active Borrowings</p>
-                            <h3 id="statActiveLoans" class="text-4xl font-extrabold text-white mt-1 tabular-nums">--</h3>
+                            <p class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Active Borrowings</p>
+                            <h3 id="statActiveLoans" class="text-3xl font-extrabold text-white mt-1">--</h3>
                         </div>
-                        <div class="h-14 w-14 rounded-2xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center text-violet-400 text-xl shadow-inner">📖</div>
+                        <div class="h-12 w-12 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xl">📖</div>
                     </div>
-                    <div class="glass-card p-6 rounded-3xl flex items-center justify-between relative overflow-hidden">
+                    <div class="school-card p-6 rounded-2xl flex items-center justify-between">
                         <div>
-                            <p class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Registered Patrons</p>
-                            <h3 id="statTotalStudents" class="text-4xl font-extrabold text-white mt-1 tabular-nums">--</h3>
+                            <p class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Registered Patrons</p>
+                            <h3 id="statTotalStudents" class="text-3xl font-extrabold text-white mt-1">--</h3>
                         </div>
-                        <div class="h-14 w-14 rounded-2xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400 text-xl shadow-inner">🎓</div>
+                        <div class="h-12 w-12 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-xl">🎓</div>
+                    </div>
+                    <div class="school-card p-6 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Library Status</p>
+                            <h3 class="text-lg font-bold text-emerald-400 mt-2">Fully Operational</h3>
+                        </div>
+                        <div class="h-12 w-12 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-xl">🟢</div>
                     </div>
                 </div>
 
-                <!-- Leaderboard Scoreboard -->
-                <div class="glass-card p-6 rounded-3xl flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">🏆 Top Readers Scoreboard</h3>
-                        <span class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-0.5 rounded-full font-semibold">Lifetime</span>
+                <!-- Middle Split: Course/Leaderboard & Announcements -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <!-- Circulation Leaderboard Card (Clickable) -->
+                    <div class="school-card p-6 rounded-2xl lg:col-span-8 space-y-4">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                            <h3 class="text-sm font-bold text-white flex items-center gap-2">🏆 Circulation Leaderboard <span class="text-xs font-normal text-zinc-500">(Click entry to inspect)</span></h3>
+                            <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-0.5 rounded-full font-semibold">Lifetime Volume</span>
+                        </div>
+                        <div id="leaderboardList" class="space-y-2">
+                            <p class="text-zinc-500 text-center py-6 text-xs">Loading scoreboard...</p>
+                        </div>
                     </div>
-                    <div id="leaderboardList" class="space-y-2.5 text-xs">
-                        <p class="text-zinc-500 text-center py-4">Syncing leaderboard...</p>
+
+                    <!-- Announcements Card -->
+                    <div class="school-card p-6 rounded-2xl lg:col-span-4 space-y-4">
+                        <div class="border-b border-white/10 pb-3">
+                            <h3 class="text-sm font-bold text-white">📢 Library Announcements</h3>
+                        </div>
+                        <div class="space-y-3 text-xs text-zinc-300">
+                            <div class="bg-black/30 p-3.5 rounded-xl border border-white/5 space-y-1">
+                                <span class="text-[10px] text-indigo-400 font-bold">7/Aug/2026 - Notice</span>
+                                <p class="font-semibold text-white">Return Overdue Books</p>
+                                <p class="text-zinc-400 text-[11px]">All patrons must return checked-out publications before the weekend holiday.</p>
+                            </div>
+                            <div class="bg-black/30 p-3.5 rounded-xl border border-white/5 space-y-1">
+                                <span class="text-[10px] text-indigo-400 font-bold">23/Jul/2026 - Update</span>
+                                <p class="font-semibold text-white">New Arrivals Added</p>
+                                <p class="text-zinc-400 text-[11px]">Check out the new computer science and algorithm editions in the catalog.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Workspace Columns -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
-                
-                <!-- Issue Form -->
-                <section class="glass-card p-6 rounded-3xl lg:col-span-4 space-y-5 h-fit">
+            <!-- TAB 2: PROFILE / ISSUE FORM -->
+            <div id="tab-profile" class="hidden space-y-6">
+                <div class="school-card p-6 rounded-2xl max-w-2xl mx-auto space-y-5">
                     <div>
-                        <h2 class="text-sm font-bold tracking-tight text-white">Issue Publication</h2>
-                        <p class="text-xs text-zinc-400 mt-0.5">Register new borrowing transaction to database.</p>
+                        <h2 class="text-sm font-bold text-white">Patron Account Profile & Quick Issue</h2>
+                        <p class="text-xs text-zinc-400 mt-0.5">Register new borrowing transaction or check account standing.</p>
                     </div>
-                    
-                    <div class="space-y-4">
+                    <div class="space-y-4 text-xs">
                         <div>
-                            <label class="block text-xs font-semibold text-zinc-400 mb-1.5">Admission Number</label>
-                            <input type="text" id="admNo" oninput="checkStudentExistence()" placeholder="e.g. 544421" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 transition font-mono shadow-inner">
+                            <label class="block font-semibold text-zinc-400 mb-1.5">Admission Number</label>
+                            <input type="text" id="admNo" oninput="checkStudentExistence()" placeholder="e.g. 544421" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500 font-mono">
                         </div>
-
-                        <div id="newStudentBox" class="hidden p-4 bg-violet-950/20 border border-violet-500/30 rounded-2xl space-y-3">
-                            <p class="text-xs font-semibold text-violet-400">New patron signature detected. Input details:</p>
-                            <input type="text" id="studentName" placeholder="Full Legal Name" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 transition">
-                            <input type="text" id="studentClass" placeholder="Class & Section (e.g. 10-A)" class="w-full bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 transition">
+                        <div id="newStudentBox" class="hidden p-4 bg-indigo-950/20 border border-indigo-500/30 rounded-xl space-y-3">
+                            <p class="text-indigo-400 font-semibold">New patron registered. Enter profile names:</p>
+                            <input type="text" id="studentName" placeholder="Full Legal Name" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white">
+                            <input type="text" id="studentClass" placeholder="Class & Section (e.g. 9-C)" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-white">
                         </div>
-
                         <div>
-                            <label class="block text-xs font-semibold text-zinc-400 mb-1.5">Publication Title / Barcode ID</label>
-                            <input type="text" id="bookName" placeholder="e.g. Introduction to Algorithms" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 transition shadow-inner">
+                            <label class="block font-semibold text-zinc-400 mb-1.5">Publication Title / Barcode</label>
+                            <input type="text" id="bookName" placeholder="e.g. Introduction to Algorithms" class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500">
                         </div>
-
-                        <button onclick="submitIssue()" class="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold py-3 px-4 rounded-xl text-xs transition shadow-lg shadow-violet-600/20">Confirm Issue Transaction</button>
+                        <button onclick="submitIssue()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl transition shadow-lg shadow-indigo-600/20">Commit Transaction</button>
                     </div>
-                </section>
+                </div>
+            </div>
 
-                <!-- Active Ledger Table -->
-                <section class="glass-card p-6 rounded-3xl lg:col-span-8 space-y-5 flex flex-col">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <!-- TAB 3: ACTIVE LEDGER TABLE -->
+            <div id="tab-ledger" class="hidden space-y-6">
+                <div class="school-card p-6 rounded-2xl space-y-5">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-4">
                         <div>
-                            <h2 class="text-sm font-bold tracking-tight text-white">Active Borrowing Ledger</h2>
-                            <p class="text-xs text-zinc-400 mt-0.5">Click any row to inspect records or modify loan dates.</p>
+                            <h2 class="text-sm font-bold text-white">Active Borrowing Ledger</h2>
+                            <p class="text-xs text-zinc-400 mt-0.5">Click any row to inspect metadata or modify terms.</p>
                         </div>
-                        <div class="w-full sm:w-auto">
-                            <input type="text" id="searchFilter" onkeyup="filterTable()" placeholder="Filter live records..." class="w-full sm:w-64 bg-black/40 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 shadow-inner">
-                        </div>
+                        <input type="text" id="searchFilter" onkeyup="filterTable()" placeholder="Search active records..." class="w-full sm:w-64 bg-black/40 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500">
                     </div>
 
-                    <div class="overflow-x-auto border border-white/10 rounded-2xl flex-grow bg-black/20">
+                    <div class="overflow-x-auto border border-white/10 rounded-xl bg-black/20">
                         <table class="w-full text-left text-xs border-collapse">
                             <thead>
                                 <tr class="bg-white/[0.02] border-b border-white/10 text-zinc-400 font-bold uppercase tracking-wider text-[10px]">
@@ -163,29 +191,43 @@
                                 </tr>
                             </thead>
                             <tbody id="issuesTable" class="divide-y divide-white/5">
-                                <tr><td colspan="4" class="text-center py-16 text-zinc-500">Synchronizing database...</td></tr>
+                                <tr><td colspan="4" class="text-center py-12 text-zinc-500">Loading ledger...</td></tr>
                             </tbody>
                         </table>
                     </div>
-                </section>
-
+                </div>
             </div>
+
+            <!-- TAB 4: FEES / FINES -->
+            <div id="tab-fees" class="hidden space-y-6">
+                <div class="school-card p-6 rounded-2xl max-w-md mx-auto text-center space-y-4">
+                    <div class="h-14 w-14 rounded-full bg-emerald-600/20 text-emerald-400 flex items-center justify-center mx-auto text-2xl font-bold">💳</div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Library Fine & Due Balance</h3>
+                        <p class="text-xs text-zinc-400 mt-1">Current outstanding library penalties.</p>
+                    </div>
+                    <div class="bg-black/40 p-4 rounded-xl border border-white/10">
+                        <span class="text-zinc-500 text-[10px] block uppercase tracking-wider">Total Due Amount</span>
+                        <span class="text-3xl font-extrabold text-white">₹0.00/-</span>
+                    </div>
+                    <button onclick="alert('No pending fines due!')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 rounded-xl text-xs transition">Pay Dues</button>
+                </div>
+            </div>
+
         </main>
     </div>
 
     <!-- Inspector Modal -->
     <div id="detailModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="glass-card p-6 rounded-3xl w-full max-w-lg space-y-5 shadow-2xl relative border border-white/10">
-            <div class="flex justify-between items-center border-b border-white/10 pb-4">
-                <h3 class="text-sm font-bold tracking-tight text-white">Transaction Metadata Inspector</h3>
-                <button onclick="closeModal()" class="text-zinc-400 hover:text-white text-xs font-bold transition">✕</button>
+        <div class="school-card p-6 rounded-2xl w-full max-w-lg space-y-5 border border-white/10 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                <h3 class="text-sm font-bold text-white">Transaction Metadata Inspector</h3>
+                <button onclick="closeModal()" class="text-zinc-400 hover:text-white text-xs font-bold">✕</button>
             </div>
-            <div id="modalContent" class="space-y-4 text-xs">
-                <!-- Dynamically populated -->
-            </div>
+            <div id="modalContent" class="space-y-4 text-xs"></div>
             <div class="flex justify-end gap-3 pt-3 border-t border-white/10">
-                <button onclick="closeModal()" class="bg-white/5 border border-white/10 text-zinc-300 px-4 py-2.5 rounded-xl font-medium transition text-xs hover:bg-white/10">Dismiss</button>
-                <button id="modalReturnBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl font-medium transition text-xs shadow-lg shadow-emerald-600/20">Process Return</button>
+                <button onclick="closeModal()" class="bg-white/5 border border-white/10 text-zinc-300 px-4 py-2 rounded-xl text-xs">Dismiss</button>
+                <button id="modalReturnBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-medium">Process Return</button>
             </div>
         </div>
     </div>
@@ -193,6 +235,15 @@
     <script>
         let globalIssues = [];
         let existingStudents = [];
+
+        function switchTab(tabName) {
+            ['dashboard', 'profile', 'ledger', 'fees'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`nav-${t}`).className = "px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5";
+            });
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`nav-${tabName}`).className = "px-3 py-2 rounded-lg bg-indigo-600 text-white transition flex items-center gap-1.5";
+        }
 
         async function attemptLogin() {
             const password = document.getElementById('loginPass').value;
@@ -236,33 +287,31 @@
                 globalIssues = await issuesRes.json();
                 renderTable(globalIssues);
             } catch (error) {
-                console.error("Sync error:", error);
-                document.getElementById('issuesTable').innerHTML = `<tr><td colspan="4" class="text-center py-16 text-rose-400">Failed to load ledger records. Check server terminal.</td></tr>`;
+                console.error(error);
             }
         }
 
         function renderLeaderboard(data) {
             const container = document.getElementById('leaderboardList');
             if(!data || data.length === 0) {
-                container.innerHTML = `<p class="text-zinc-500 text-center py-4">No historical activity logged yet.</p>`;
+                container.innerHTML = `<p class="text-zinc-500 text-center py-4 text-xs">No historical activity logged yet.</p>`;
                 return;
             }
-
             container.innerHTML = '';
             data.forEach((item, index) => {
                 const medals = ['🥇', '🥈', '🥉'];
-                const rankBadge = medals[index] || `#${index + 1}`;
+                const rank = medals[index] || `#${index + 1}`;
                 container.innerHTML += `
-                    <div class="flex items-center justify-between bg-black/30 border border-white/5 p-3 rounded-2xl">
+                    <div class="flex items-center justify-between bg-black/30 border border-white/5 p-3 rounded-xl hover:bg-white/[0.04] transition cursor-pointer" onclick="switchTab('ledger')">
                         <div class="flex items-center gap-3">
-                            <span class="font-bold text-sm w-6 text-center">${rankBadge}</span>
+                            <span class="font-bold text-sm w-6 text-center">${rank}</span>
                             <div>
-                                <p class="font-semibold text-zinc-200">${item.name} <span class="text-zinc-500 font-normal text-[11px]">(${item.class_section})</span></p>
-                                <p class="text-[10px] text-violet-400 font-mono">ADM: ${item.admission_no}</p>
+                                <p class="font-semibold text-zinc-200 text-xs">${item.name} <span class="text-zinc-500 font-normal">(${item.class_section})</span></p>
+                                <p class="text-[10px] text-indigo-400 font-mono">ADM: ${item.admission_no}</p>
                             </div>
                         </div>
                         <div class="text-right">
-                            <span class="text-white font-extrabold tabular-nums">${item.total_borrowed}</span>
+                            <span class="text-white font-extrabold text-xs">${item.total_borrowed}</span>
                             <span class="text-zinc-500 text-[10px] block">books</span>
                         </div>
                     </div>
@@ -282,26 +331,24 @@
 
         function renderTable(data) {
             const tbody = document.getElementById('issuesTable');
-            
             if(!data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-16 text-zinc-500">No active borrowing entries present.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-12 text-zinc-500">No active borrowing entries present.</td></tr>`;
                 return;
             }
-
             tbody.innerHTML = '';
             data.forEach(item => {
                 tbody.innerHTML += `
                     <tr onclick="openModal(${item.id})" class="hover:bg-white/[0.03] transition cursor-pointer">
                         <td class="p-4">
                             <p class="font-semibold text-zinc-200">${item.name} <span class="text-zinc-500 font-normal text-xs">(${item.class_section})</span></p>
-                            <p class="text-xs text-violet-400 font-mono mt-0.5">ADM: ${item.admission_no}</p>
+                            <p class="text-xs text-indigo-400 font-mono mt-0.5">ADM: ${item.admission_no}</p>
                         </td>
                         <td class="p-4 font-semibold text-zinc-300">${item.book_name}</td>
                         <td class="p-4" onclick="event.stopPropagation()">
-                            <input type="date" value="${item.due_date}" onchange="updateDueDate(${item.id}, this.value)" class="bg-black/40 border border-white/10 text-zinc-300 rounded-xl px-3 py-2 text-xs outline-none focus:border-violet-500 tabular-nums cursor-pointer">
+                            <input type="date" value="${item.due_date}" onchange="updateDueDate(${item.id}, this.value)" class="bg-black/40 border border-white/10 text-zinc-300 rounded-lg px-2.5 py-1.5 text-xs outline-none focus:border-indigo-500 cursor-pointer">
                         </td>
                         <td class="p-4 text-right" onclick="event.stopPropagation()">
-                            <button onclick="returnBook(${item.id})" class="bg-white/5 hover:bg-emerald-500/10 text-zinc-400 hover:text-emerald-400 border border-white/10 hover:border-emerald-500/30 px-4 py-2 rounded-xl font-medium transition text-xs">Return</button>
+                            <button onclick="returnBook(${item.id})" class="bg-white/5 hover:bg-emerald-500/10 text-zinc-400 hover:text-emerald-400 border border-white/10 hover:border-emerald-500/30 px-3 py-1.5 rounded-lg text-xs transition">Return</button>
                         </td>
                     </tr>
                 `;
@@ -311,42 +358,19 @@
         function openModal(id) {
             const item = globalIssues.find(i => i.id === id);
             if(!item) return;
-
-            const content = document.getElementById('modalContent');
-            content.innerHTML = `
-                <div class="grid grid-cols-2 gap-3.5 bg-black/40 p-4 rounded-2xl border border-white/10">
-                    <div>
-                        <span class="text-zinc-500 block uppercase tracking-wider text-[10px]">Patron Name</span>
-                        <span class="text-zinc-200 font-bold">${item.name}</span>
-                    </div>
-                    <div>
-                        <span class="text-zinc-500 block uppercase tracking-wider text-[10px]">Admission Number</span>
-                        <span class="text-violet-400 font-mono font-bold">${item.admission_no}</span>
-                    </div>
-                    <div>
-                        <span class="text-zinc-500 block uppercase tracking-wider text-[10px]">Class & Section</span>
-                        <span class="text-zinc-300">${item.class_section}</span>
-                    </div>
-                    <div>
-                        <span class="text-zinc-500 block uppercase tracking-wider text-[10px]">Issue Date</span>
-                        <span class="text-zinc-300 tabular-nums">${item.issue_date}</span>
-                    </div>
+            document.getElementById('modalContent').innerHTML = `
+                <div class="grid grid-cols-2 gap-3 bg-black/40 p-3 rounded-xl border border-white/10">
+                    <div><span class="text-zinc-500 block text-[10px]">Patron Name</span><span class="font-bold text-white">${item.name}</span></div>
+                    <div><span class="text-zinc-500 block text-[10px]">Admission No</span><span class="text-indigo-400 font-mono font-bold">${item.admission_no}</span></div>
+                    <div><span class="text-zinc-500 block text-[10px]">Class & Section</span><span class="text-zinc-300">${item.class_section}</span></div>
+                    <div><span class="text-zinc-500 block text-[10px]">Issue Date</span><span class="text-zinc-300">${item.issue_date}</span></div>
                 </div>
-                <div class="bg-black/40 p-4 rounded-2xl border border-white/10 space-y-1.5">
-                    <span class="text-zinc-500 block uppercase tracking-wider text-[10px]">Publication Borrowed</span>
-                    <span class="text-white font-bold text-sm">${item.book_name}</span>
-                </div>
-                <div class="bg-black/40 p-4 rounded-2xl border border-white/10 flex justify-between items-center">
-                    <span class="text-zinc-400">Scheduled Due Date</span>
-                    <input type="date" value="${item.due_date}" onchange="updateDueDate(${item.id}, this.value)" class="bg-black border border-white/10 text-white rounded-xl px-3 py-2 text-xs outline-none focus:border-violet-500 tabular-nums">
+                <div class="bg-black/40 p-3 rounded-xl border border-white/10">
+                    <span class="text-zinc-500 block text-[10px]">Publication Borrowed</span>
+                    <span class="text-white font-bold">${item.book_name}</span>
                 </div>
             `;
-
-            document.getElementById('modalReturnBtn').onclick = () => {
-                closeModal();
-                returnBook(item.id);
-            };
-
+            document.getElementById('modalReturnBtn').onclick = () => { closeModal(); returnBook(item.id); };
             document.getElementById('detailModal').classList.remove('hidden');
             document.getElementById('detailModal').classList.add('flex');
         }
@@ -358,11 +382,7 @@
 
         function filterTable() {
             const query = document.getElementById('searchFilter').value.toLowerCase();
-            const filtered = globalIssues.filter(i => 
-                i.name.toLowerCase().includes(query) || 
-                i.admission_no.toLowerCase().includes(query) || 
-                i.book_name.toLowerCase().includes(query)
-            );
+            const filtered = globalIssues.filter(i => i.name.toLowerCase().includes(query) || i.admission_no.toLowerCase().includes(query) || i.book_name.toLowerCase().includes(query));
             renderTable(filtered);
         }
 
@@ -372,10 +392,7 @@
             const class_section = document.getElementById('studentClass').value.trim();
             const book_name = document.getElementById('bookName').value.trim();
 
-            if(!admission_no || !book_name) {
-                alert("Admission number and book title are required.");
-                return;
-            }
+            if(!admission_no || !book_name) { alert("Fill required fields."); return; }
 
             const res = await fetch('/api/issue', {
                 method: 'POST',
@@ -385,27 +402,26 @@
 
             if(res.ok) {
                 document.getElementById('admNo').value = '';
-                document.getElementById('studentName').value = '';
-                document.getElementById('studentClass').value = '';
                 document.getElementById('bookName').value = '';
                 document.getElementById('newStudentBox').classList.add('hidden');
                 fetchDashboardData();
+                switchTab('ledger');
             } else {
                 alert("Error committing transaction.");
             }
         }
 
         async function returnBook(id) {
-            if(!confirm("Authorize return sequence for this record?")) return;
+            if(!confirm("Process return for this book?")) return;
             await fetch(`/api/return/${id}`, { method: 'POST' });
             fetchDashboardData();
         }
 
-        async function updateDueDate(id, newDate) {
+        async function updateDueDate(id, due_date) {
             await fetch('/api/update-date', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id, due_date: newDate })
+                body: JSON.stringify({ id, due_date })
             });
             fetchDashboardData();
         }
