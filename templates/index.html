@@ -116,4 +116,484 @@
                 </nav>
             </div>
             <div class="flex items-center gap-4">
-                <button onclick=
+                <button onclick="exportDatabase()" class="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 uppercase tracking-widest transition">Backup</button>
+                <button onclick="logout()" class="text-[10px] font-mono text-rose-400 border border-rose-900/30 px-3 py-1 hover:bg-rose-900/10 transition uppercase">Logout</button>
+            </div>
+        </header>
+
+        <main class="max-w-7xl w-full mx-auto flex-grow p-8 space-y-12">
+            
+            <!-- TAB 1: DASHBOARD -->
+            <div id="tab-dashboard" class="space-y-12">
+                <div class="py-10 border-b border-zinc-800">
+                    <span class="text-[10px] font-mono text-zinc-600 uppercase tracking-[0.3em] mb-4 block">Archive Status / Terminal 01</span>
+                    <h1 class="text-5xl md:text-7xl font-bold text-white italic tracking-tighter">Welcome, Curator.</h1>
+                    <p class="text-zinc-500 mt-6 max-w-xl text-sm leading-relaxed">Centralized management system for the Zee High School literary repository. Real-time circulation tracking and student engagement monitoring active.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border border-zinc-800">
+                    <div class="p-8 border-r border-zinc-800 bg-zinc-900/20">
+                        <p class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-4">Active Circulation</p>
+                        <h3 id="statActiveLoans" class="text-6xl font-serif text-white">0</h3>
+                    </div>
+                    <div class="p-8 border-r border-zinc-800">
+                        <p class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-4">Registered Scholars</p>
+                        <h3 id="statTotalStudents" class="text-6xl font-serif text-white">0</h3>
+                    </div>
+                    <div class="p-8 bg-emerald-950/5">
+                        <p class="text-[10px] font-mono text-zinc-600 uppercase tracking-widest mb-4">System Link</p>
+                        <h3 class="text-xs font-mono text-emerald-500 uppercase tracking-widest mt-8 flex items-center gap-2">
+                            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            Synchronized
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    <div class="lg:col-span-8 space-y-6">
+                        <div class="flex justify-between items-end border-b border-zinc-800 pb-4">
+                            <h3 class="text-xl font-serif italic text-white font-bold">Top Readers</h3>
+                            <span class="text-[10px] font-mono text-zinc-500 uppercase">Lifetime Activity</span>
+                        </div>
+                        <div id="leaderboardList" class="divide-y divide-zinc-800/50">
+                            <!-- JS Renders Here -->
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-4 space-y-6">
+                        <div class="flex justify-between items-end border-b border-zinc-800 pb-4">
+                            <h3 class="text-xl font-serif italic text-white font-bold">Notices</h3>
+                            <button onclick="openAnnouncementModal()" class="text-[10px] font-mono text-zinc-400 hover:text-white uppercase">[ + ]</button>
+                        </div>
+                        <div id="announcementsList" class="space-y-6">
+                            <!-- JS Renders Here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: ISSUE BOOK -->
+            <div id="tab-issue" class="hidden max-w-xl mx-auto py-12">
+                <div class="school-card p-10 space-y-8">
+                    <h2 class="text-2xl font-serif italic text-white">Register Circulation</h2>
+                    <div class="space-y-6">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Presets</label>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="selectPresetBook('Advanced Mathematics Vol. 1')" class="px-3 py-1 border border-zinc-800 text-[10px] font-mono hover:border-zinc-500 transition">MATH_V1</button>
+                                <button onclick="selectPresetBook('Physics Grade 10 Lab Manual')" class="px-3 py-1 border border-zinc-800 text-[10px] font-mono hover:border-zinc-500 transition">PHYS_LAB</button>
+                                <button onclick="selectPresetBook('English Literature Anthology')" class="px-3 py-1 border border-zinc-800 text-[10px] font-mono hover:border-zinc-500 transition">ENG_LIT</button>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <input type="text" id="admNo" oninput="checkStudentExistence()" placeholder="Admission ID" class="w-full bg-transparent border-b border-zinc-800 py-3 text-sm focus:outline-none focus:border-white transition font-mono">
+                            
+                            <div id="newStudentBox" class="hidden p-6 bg-zinc-900 border border-zinc-800 space-y-4">
+                                <p class="text-[10px] font-mono text-emerald-500 uppercase tracking-widest">New Student Record</p>
+                                <input type="text" id="studentName" placeholder="Full Name" class="w-full bg-transparent border-b border-zinc-800 py-2 text-xs focus:outline-none">
+                                <input type="text" id="studentClass" placeholder="Class & Section" class="w-full bg-transparent border-b border-zinc-800 py-2 text-xs focus:outline-none">
+                            </div>
+
+                            <input type="text" id="bookName" placeholder="Publication Title" class="w-full bg-transparent border-b border-zinc-800 py-3 text-sm focus:outline-none focus:border-white transition">
+                        </div>
+                        <button onclick="submitIssue()" class="w-full glow-button py-4 text-[10px] uppercase tracking-widest">Commit Entry</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: ACTIVE LEDGER -->
+            <div id="tab-ledger" class="hidden space-y-8">
+                <div class="flex justify-between items-end border-b border-zinc-800 pb-6">
+                    <h2 class="text-3xl font-serif italic text-white font-bold">Active Ledger</h2>
+                    <div class="flex gap-4">
+                        <input type="text" id="searchFilter" onkeyup="filterTable()" placeholder="Filter entries..." class="bg-transparent border border-zinc-800 px-4 py-2 text-[10px] font-mono focus:border-zinc-500 outline-none w-64">
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="border-b border-zinc-800 text-zinc-600 font-mono uppercase tracking-widest">
+                                <th class="p-4">Student ID</th>
+                                <th class="p-4">Publication</th>
+                                <th class="p-4">Return Deadline</th>
+                                <th class="p-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="issuesTable" class="divide-y divide-zinc-900">
+                            <!-- JS Renders Here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 4: HISTORY LOG -->
+            <div id="tab-history" class="hidden space-y-8">
+                 <div class="flex justify-between items-end border-b border-zinc-800 pb-6">
+                    <h2 class="text-3xl font-serif italic text-white font-bold">Circulation History</h2>
+                    <input type="text" id="historyFilter" onkeyup="filterHistoryTable()" placeholder="Search archive..." class="bg-transparent border border-zinc-800 px-4 py-2 text-[10px] font-mono outline-none w-64">
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="border-b border-zinc-800 text-zinc-600 font-mono uppercase tracking-widest">
+                                <th class="p-4">Student</th>
+                                <th class="p-4">Publication</th>
+                                <th class="p-4">Issued</th>
+                                <th class="p-4">Returned</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTable" class="divide-y divide-zinc-900">
+                            <!-- JS Renders Here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals (Simplified Design) -->
+    <div id="detailModal" class="fixed inset-0 z-50 bg-[#0c0d0e]/95 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="school-card p-10 max-w-lg w-full space-y-8">
+            <h3 class="text-xl font-serif italic text-white">Metadata Inspector</h3>
+            <div id="modalContent" class="space-y-4 font-mono text-[11px] text-zinc-400"></div>
+            <div class="flex justify-end gap-4 pt-4">
+                <button onclick="closeModal()" class="text-[10px] font-mono uppercase text-zinc-600">Close</button>
+                <button id="modalReturnBtn" class="bg-white text-black px-6 py-2 text-[10px] font-mono uppercase font-bold hover:bg-zinc-200 transition">Process Return</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="announcementModal" class="fixed inset-0 z-50 bg-[#0c0d0e]/95 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="school-card p-10 max-w-md w-full space-y-6">
+            <h3 class="text-xl font-serif italic text-white">Publish Notice</h3>
+            <div class="space-y-4">
+                <input type="text" id="annTitle" placeholder="Headline" class="w-full bg-transparent border-b border-zinc-800 py-2 text-sm focus:outline-none text-white">
+                <textarea id="annDesc" rows="3" placeholder="Content..." class="w-full bg-transparent border border-zinc-800 p-4 text-sm focus:outline-none text-zinc-400"></textarea>
+                <button onclick="postAnnouncement()" class="w-full glow-button py-3 text-[10px] font-mono uppercase tracking-widest">Broadcast Notice</button>
+            </div>
+            <button onclick="closeAnnouncementModal()" class="w-full text-[10px] font-mono uppercase text-zinc-600">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        /* [EXACTLY YOUR JAVASCRIPT LOGIC - NO CHANGES] */
+        let cachedIssues = [];
+        let cachedHistory = [];
+        let existingStudents = [];
+        let announcements = [];
+
+        function switchTab(tabName) {
+            ['dashboard', 'issue', 'ledger', 'history'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                if(document.getElementById(`nav-${t}`)) {
+                    document.getElementById(`nav-${t}`).className = "text-zinc-500 hover:text-white transition";
+                }
+            });
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            if(document.getElementById(`nav-${tabName}`)) {
+                document.getElementById(`nav-${tabName}`).className = "text-white border-b border-white pb-1";
+            }
+        }
+
+        async function attemptLogin() {
+            const password = document.getElementById('loginPass').value;
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ password })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    document.getElementById('loginOverlay').classList.add('hidden');
+                    document.getElementById('dashboardApp').classList.remove('hidden');
+                    document.getElementById('dashboardApp').classList.add('flex');
+                    refreshAppData();
+                } else {
+                    document.getElementById('loginError').classList.remove('hidden');
+                }
+            } catch(e) {
+                alert("Login request failed.");
+            }
+        }
+
+        function logout() {
+            document.getElementById('dashboardApp').classList.add('hidden');
+            document.getElementById('dashboardApp').classList.remove('flex');
+            document.getElementById('loginOverlay').classList.remove('hidden');
+            document.getElementById('loginPass').value = '';
+        }
+
+        async function refreshAppData() {
+            try {
+                const [statsRes, issuesRes, historyRes, studentsRes, leaderboardRes, annRes] = await Promise.all([
+                    fetch('/api/stats').then(r => r.json()),
+                    fetch('/api/issues').then(r => r.json()),
+                    fetch('/api/history').then(r => r.json()),
+                    fetch('/api/students').then(r => r.json()),
+                    fetch('/api/leaderboard').then(r => r.json()),
+                    fetch('/api/announcements').then(r => r.json())
+                ]);
+
+                document.getElementById('statActiveLoans').innerText = statsRes.active_loans;
+                document.getElementById('statTotalStudents').innerText = statsRes.registered_students;
+
+                cachedIssues = issuesRes;
+                cachedHistory = historyRes;
+                existingStudents = studentsRes;
+                announcements = annRes;
+
+                renderLeaderboard(leaderboardRes);
+                renderTable(cachedIssues);
+                renderHistoryTable(cachedHistory);
+                renderAnnouncements();
+            } catch (e) {
+                console.error("Failed to refresh application data", e);
+            }
+        }
+
+        function selectPresetBook(title) {
+            document.getElementById('bookName').value = title;
+        }
+
+        function renderLeaderboard(sorted) {
+            const container = document.getElementById('leaderboardList');
+            if(!sorted || sorted.length === 0) {
+                container.innerHTML = `<p class="text-zinc-500 text-center py-8 text-xs font-mono">Archive Empty</p>`;
+                return;
+            }
+            container.innerHTML = '';
+            sorted.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="flex items-center justify-between py-6 group cursor-pointer" onclick="switchTab('ledger')">
+                        <div class="flex items-center gap-6">
+                            <span class="font-serif italic text-zinc-700 text-xl font-bold group-hover:text-white transition">0${index + 1}</span>
+                            <div>
+                                <p class="font-bold text-white text-sm">${item.name}</p>
+                                <p class="text-[10px] text-zinc-600 font-mono uppercase tracking-widest mt-1">${item.class_section} • ADM: ${item.admission_no}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-white font-serif italic font-bold text-lg">${item.total_borrowed}</span>
+                            <span class="text-zinc-600 font-mono text-[9px] block uppercase">Volumes</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderAnnouncements() {
+            const container = document.getElementById('announcementsList');
+            if(!announcements || announcements.length === 0) {
+                container.innerHTML = `<p class="text-zinc-700 text-xs font-mono">No active notices.</p>`;
+                return;
+            }
+            container.innerHTML = '';
+            announcements.forEach(item => {
+                container.innerHTML += `
+                    <div class="space-y-2 group relative">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[9px] text-zinc-600 font-mono uppercase tracking-widest">${item.date}</span>
+                            <button onclick="deleteAnnouncement(${item.id})" class="text-[9px] text-zinc-800 hover:text-rose-500 font-mono uppercase opacity-0 group-hover:opacity-100 transition">Remove</button>
+                        </div>
+                        <p class="font-bold text-zinc-200 text-sm italic font-serif">${item.title}</p>
+                        <p class="text-zinc-500 text-[11px] leading-relaxed">${item.desc}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function openAnnouncementModal() {
+            document.getElementById('announcementModal').classList.remove('hidden');
+            document.getElementById('announcementModal').classList.add('flex');
+        }
+
+        function closeAnnouncementModal() {
+            document.getElementById('announcementModal').classList.add('hidden');
+            document.getElementById('announcementModal').classList.remove('flex');
+            document.getElementById('annTitle').value = '';
+            document.getElementById('annDesc').value = '';
+        }
+
+        async function postAnnouncement() {
+            const title = document.getElementById('annTitle').value.trim();
+            const desc = document.getElementById('annDesc').value.trim();
+            if(!title || !desc) { alert("Fields required."); return; }
+            try {
+                const res = await fetch('/api/announcements/add', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ title, desc, type: 'Notice' })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    closeAnnouncementModal();
+                    await refreshAppData();
+                }
+            } catch(e) {
+                alert("Error.");
+            }
+        }
+
+        async function deleteAnnouncement(id) {
+            try {
+                await fetch(`/api/announcements/delete/${id}`, { method: 'POST' });
+                await refreshAppData();
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        function checkStudentExistence() {
+            const adm = document.getElementById('admNo').value.trim();
+            const exists = existingStudents.includes(adm);
+            const box = document.getElementById('newStudentBox');
+            if (adm.length > 0 && !exists) {
+                box.classList.remove('hidden');
+            } else {
+                box.classList.add('hidden');
+            }
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('issuesTable');
+            if(!data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-20 text-zinc-700 font-mono uppercase tracking-widest text-[10px]">Ledger Empty</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                tbody.innerHTML += `
+                    <tr onclick="openModal(${item.id})" class="hover:bg-zinc-900/50 transition cursor-pointer">
+                        <td class="p-4">
+                            <p class="font-bold text-zinc-100 text-sm">${item.name}</p>
+                            <p class="text-[9px] text-zinc-600 font-mono mt-1 uppercase">ID: ${item.admission_no}</p>
+                        </td>
+                        <td class="p-4 text-zinc-400 italic font-serif">${item.book_name}</td>
+                        <td class="p-4" onclick="event.stopPropagation()">
+                            <input type="date" value="${item.due_date}" onchange="updateDueDate(${item.id}, this.value)" class="bg-transparent border border-zinc-800 text-zinc-500 px-3 py-1 text-[10px] font-mono outline-none focus:border-zinc-500">
+                        </td>
+                        <td class="p-4 text-right" onclick="event.stopPropagation()">
+                            <button onclick="returnBook(${item.id})" class="text-[10px] font-mono text-emerald-600 border border-emerald-900/30 px-3 py-1 hover:bg-emerald-950/20 transition uppercase">Return</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderHistoryTable(data) {
+            const tbody = document.getElementById('historyTable');
+            if(!data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-20 text-zinc-700 font-mono text-[10px]">No History Recorded</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-zinc-900/30 transition">
+                        <td class="p-4">
+                            <p class="font-bold text-zinc-300 text-sm">${item.name}</p>
+                            <p class="text-[9px] text-zinc-600 font-mono mt-1 uppercase">ID: ${item.admission_no}</p>
+                        </td>
+                        <td class="p-4 text-zinc-500 italic font-serif">${item.book_name}</td>
+                        <td class="p-4 text-zinc-600 font-mono text-[10px]">${item.issue_date}</td>
+                        <td class="p-4 text-emerald-900 font-mono text-[10px] uppercase font-bold">${item.return_date}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        async function exportDatabase() {
+            window.location.href = '/api/backup/export';
+        }
+
+        function openModal(id) {
+            const item = cachedIssues.find(i => i.id === id);
+            if(!item) return;
+            document.getElementById('modalContent').innerHTML = `
+                <div class="grid grid-cols-2 gap-8 border border-zinc-800 p-6">
+                    <div><span class="text-zinc-700 block uppercase mb-1">Scholar</span><span class="text-zinc-100">${item.name}</span></div>
+                    <div><span class="text-zinc-700 block uppercase mb-1">Class</span><span class="text-zinc-100">${item.class_section}</span></div>
+                    <div><span class="text-zinc-700 block uppercase mb-1">Issue Date</span><span class="text-zinc-100">${item.issue_date}</span></div>
+                    <div><span class="text-zinc-700 block uppercase mb-1">Book ID</span><span class="text-zinc-100 font-mono">ARCH-${item.id}</span></div>
+                </div>
+                <div class="p-6 bg-zinc-900/50">
+                    <span class="text-zinc-700 block uppercase mb-1">Publication Borrowed</span>
+                    <span class="text-white font-serif italic text-lg">${item.book_name}</span>
+                </div>
+            `;
+            document.getElementById('modalReturnBtn').onclick = () => { closeModal(); returnBook(item.id); };
+            document.getElementById('detailModal').classList.remove('hidden');
+            document.getElementById('detailModal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+            document.getElementById('detailModal').classList.remove('flex');
+        }
+
+        function filterTable() {
+            const query = document.getElementById('searchFilter').value.toLowerCase();
+            const filtered = cachedIssues.filter(i => i.name.toLowerCase().includes(query) || i.admission_no.toLowerCase().includes(query) || i.book_name.toLowerCase().includes(query));
+            renderTable(filtered);
+        }
+
+        function filterHistoryTable() {
+            const query = document.getElementById('historyFilter').value.toLowerCase();
+            const filtered = cachedHistory.filter(i => i.name.toLowerCase().includes(query) || i.admission_no.toLowerCase().includes(query) || i.book_name.toLowerCase().includes(query));
+            renderHistoryTable(filtered);
+        }
+
+        async function submitIssue() {
+            const admission_no = document.getElementById('admNo').value.trim();
+            const book_name = document.getElementById('bookName').value.trim();
+            const studentNameElem = document.getElementById('studentName');
+            const studentClassElem = document.getElementById('studentClass');
+            
+            if(!admission_no || !book_name) { alert("Information Missing."); return; }
+
+            const payload = { admission_no, book_name };
+            const exists = existingStudents.includes(admission_no);
+            if (!exists) {
+                payload.student_name = studentNameElem ? studentNameElem.value.trim() : '';
+                payload.class_section = studentClassElem ? studentClassElem.value.trim() : '';
+                if(!payload.student_name || !payload.class_section) { alert("Details missing."); return; }
+            }
+
+            try {
+                const res = await fetch('/api/issue', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if(data.success) {
+                    document.getElementById('admNo').value = '';
+                    document.getElementById('bookName').value = '';
+                    document.getElementById('newStudentBox').classList.add('hidden');
+                    await refreshAppData();
+                    switchTab('ledger');
+                }
+            } catch(e) { alert("Error."); }
+        }
+
+        async function returnBook(id) {
+            if(!confirm("Process return?")) return;
+            try {
+                const res = await fetch(`/api/return/${id}`, { method: 'POST', headers: {'Content-Type': 'application/json'} });
+                if(res.ok) await refreshAppData();
+            } catch(e) { console.error(e); }
+        }
+
+        async function updateDueDate(id, due_date) {
+            try {
+                await fetch('/api/update-date', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ id, due_date })
+                });
+            } catch(e) { console.error(e); }
+        }
+    </script>
+</body>
+</html>
