@@ -198,4 +198,357 @@
                             <div id="newStudentBox" class="hidden p-10 bg-white/[0.03] border border-white/10 space-y-6">
                                 <p class="font-mono text-[10px] text-emerald-400 uppercase">New Scholar Record</p>
                                 <input type="text" id="studentName" placeholder="FULL NAME" class="w-full bg-transparent border-b border-zinc-800 py-2 text-sm text-white">
-                                <input type="text" id="studentClass" place
+                                <input type="text" id="studentClass" placeholder="CLASS & SECTION" class="w-full bg-transparent border-b border-zinc-800 py-2 text-sm text-white">
+                            </div>
+                            <input type="text" id="bookName" placeholder="PUBLICATION TITLE" class="w-full bg-transparent border-b border-zinc-800 py-4 text-sm text-white focus:outline-none focus:border-white transition">
+                        </div>
+                        <button onclick="submitIssue()" class="w-full btn-primary py-6 text-sm">Commit Transaction</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ledger Tab -->
+            <div id="tab-ledger" class="hidden space-y-10">
+                <div class="flex justify-between items-end border-b border-white/10 pb-8">
+                    <h2 class="text-5xl italic font-bold">Active Ledger</h2>
+                    <input type="text" id="searchFilter" onkeyup="filterTable()" placeholder="FILTER ARCHIVE..." class="bg-transparent border border-white/10 px-8 py-4 text-[11px] font-mono text-white focus:border-white outline-none w-96">
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-zinc-500 font-mono text-[10px] uppercase tracking-[0.2em]">
+                                <th class="py-8 px-6">Scholar</th>
+                                <th class="py-8 px-6">Publication</th>
+                                <th class="py-8 px-6">Due Date</th>
+                                <th class="py-8 px-6 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="issuesTable" class="text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div id="tab-history" class="hidden space-y-10">
+                <div class="flex justify-between items-end border-b border-white/10 pb-8">
+                    <h2 class="text-5xl italic font-bold">History Log</h2>
+                    <input type="text" id="historyFilter" onkeyup="filterHistoryTable()" placeholder="SEARCH LOGS..." class="bg-transparent border border-white/10 px-8 py-4 text-[11px] font-mono text-white focus:border-white outline-none w-96">
+                </div>
+                <div class="overflow-x-auto text-sm">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-zinc-500 font-mono text-[10px] uppercase tracking-[0.2em]">
+                                <th class="py-8 px-6">Scholar</th>
+                                <th class="py-8 px-6">Publication</th>
+                                <th class="py-8 px-6">Issued</th>
+                                <th class="py-8 px-6">Returned</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Inspector Modal -->
+    <div id="detailModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl hidden items-center justify-center p-6">
+        <div class="school-card p-12 max-w-xl w-full space-y-10">
+            <h3 class="text-4xl italic text-white">Metadata</h3>
+            <div id="modalContent" class="space-y-8"></div>
+            <div class="flex justify-end gap-8 pt-8 border-t border-white/10">
+                <button onclick="closeModal()" class="font-mono text-[10px] uppercase text-zinc-500">Dismiss</button>
+                <button id="modalReturnBtn" class="btn-primary px-10 py-4">Confirm Return</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Announcement Modal -->
+    <div id="announcementModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl hidden items-center justify-center p-6">
+        <div class="school-card p-16 max-w-md w-full space-y-10">
+            <h3 class="text-4xl italic text-white">Broadcast</h3>
+            <div class="space-y-8">
+                <input type="text" id="annTitle" placeholder="HEADLINE" class="w-full bg-transparent border-b border-zinc-800 py-3 text-sm text-white focus:border-white outline-none">
+                <textarea id="annDesc" rows="4" placeholder="MESSAGE..." class="w-full bg-zinc-900 border border-white/10 p-5 text-sm text-zinc-300 focus:border-white outline-none"></textarea>
+                <button onclick="postAnnouncement()" class="w-full btn-primary py-5">Publish Notice</button>
+                <button onclick="closeAnnouncementModal()" class="w-full font-mono text-[9px] uppercase text-zinc-500">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- PARTICLE ENGINE ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.3;
+                this.opacity = Math.random() * 0.5;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 100; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- APP LOGIC ---
+        let cachedIssues = [];
+        let cachedHistory = [];
+        let existingStudents = [];
+        let announcements = [];
+
+        function showToast(text) {
+            const toast = document.getElementById('notification');
+            document.getElementById('notifText').innerText = text;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function switchTab(tabName) {
+            ['dashboard', 'issue', 'ledger', 'history'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                const nav = document.getElementById(`nav-${t}`);
+                if(nav) nav.className = "text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500 hover:text-white transition";
+            });
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${tabName}`);
+            if(activeNav) activeNav.className = "text-[10px] font-mono uppercase tracking-[0.2em] text-white border-b border-white pb-1";
+        }
+
+        async function attemptLogin() {
+            const password = document.getElementById('loginPass').value;
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ password })
+            });
+            const data = await res.json();
+            if(data.success) {
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('dashboardApp').classList.remove('hidden');
+                document.getElementById('dashboardApp').classList.add('flex');
+                await refreshAppData();
+                showToast("System Online");
+            } else {
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        }
+
+        function logout() { location.reload(); }
+
+        async function refreshAppData() {
+            const [stats, issues, history, students, leaderboard, anns] = await Promise.all([
+                fetch('/api/stats').then(r => r.json()),
+                fetch('/api/issues').then(r => r.json()),
+                fetch('/api/history').then(r => r.json()),
+                fetch('/api/students').then(r => r.json()),
+                fetch('/api/leaderboard').then(r => r.json()),
+                fetch('/api/announcements').then(r => r.json())
+            ]);
+
+            document.getElementById('statActiveLoans').innerText = stats.active_loans;
+            document.getElementById('statTotalStudents').innerText = stats.registered_students;
+
+            cachedIssues = issues;
+            cachedHistory = history;
+            existingStudents = students;
+            announcements = anns;
+
+            renderLeaderboard(leaderboard);
+            renderTable(cachedIssues);
+            renderHistoryTable(cachedHistory);
+            renderAnnouncements();
+        }
+
+        function renderLeaderboard(data) {
+            const cont = document.getElementById('leaderboardList');
+            if(!data.length) { cont.innerHTML = `<p class="font-mono text-[10px] text-muted py-10 uppercase tracking-widest text-center">No Data</p>`; return; }
+            cont.innerHTML = data.map((item, idx) => `
+                <div class="flex justify-between items-center py-8 group cursor-pointer" onclick="switchTab('ledger')">
+                    <div class="flex items-center gap-10">
+                        <span class="font-serif italic text-zinc-800 text-5xl font-bold group-hover:text-white transition">0${idx+1}</span>
+                        <div>
+                            <p class="font-bold text-white text-lg">${item.name}</p>
+                            <p class="font-mono text-[10px] uppercase tracking-widest text-secondary mt-1">${item.class_section} • ADM: ${item.admission_no}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-serif italic font-bold text-3xl text-white">${item.total_borrowed}</span>
+                        <p class="font-mono text-[9px] text-muted uppercase">Logs</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('issuesTable');
+            if(!data.length) { tbody.innerHTML = `<tr><td colspan="4" class="py-20 text-center font-mono text-[11px] text-muted uppercase tracking-widest">Archive Empty</td></tr>`; return; }
+            tbody.innerHTML = data.map(item => `
+                <tr onclick="openModal(${item.id})" class="cursor-pointer">
+                    <td class="py-8 px-6">
+                        <p class="font-bold text-white text-base">${item.name}</p>
+                        <p class="font-mono text-[10px] text-secondary uppercase">ID: ${item.admission_no}</p>
+                    </td>
+                    <td class="py-8 px-6 italic font-serif text-secondary text-base">${item.book_name}</td>
+                    <td class="py-8 px-6" onclick="event.stopPropagation()">
+                        <input type="date" value="${item.due_date}" onchange="updateDueDate(${item.id}, this.value)" class="bg-black/50 border border-white/10 px-4 py-2 font-mono text-[10px] text-white focus:border-white transition outline-none">
+                    </td>
+                    <td class="py-8 px-6 text-right" onclick="event.stopPropagation()">
+                        <button onclick="returnBook(${item.id})" class="font-mono text-[10px] text-white border border-white/20 px-4 py-2 uppercase hover:bg-white hover:text-black transition">Process Return</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderHistoryTable(data) {
+            const tbody = document.getElementById('historyTable');
+            if(!data.length) { tbody.innerHTML = `<tr><td colspan="4" class="py-20 text-center font-mono text-[11px] text-muted uppercase tracking-widest">No Logs</td></tr>`; return; }
+            tbody.innerHTML = data.map(item => `
+                <tr>
+                    <td class="py-8 px-6">
+                        <p class="font-bold text-zinc-300 text-base">${item.name}</p>
+                        <p class="font-mono text-[10px] text-muted uppercase">ID: ${item.admission_no}</p>
+                    </td>
+                    <td class="py-8 px-6 italic font-serif text-muted text-base">${item.book_name}</td>
+                    <td class="py-8 px-6 font-mono text-[11px] text-muted">${item.issue_date}</td>
+                    <td class="py-8 px-6 font-mono text-[11px] text-emerald-400 uppercase font-bold">${item.return_date}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderAnnouncements() {
+            const cont = document.getElementById('announcementsList');
+            if(!announcements.length) { cont.innerHTML = `<p class="font-mono text-[10px] text-muted uppercase">No active notices.</p>`; return; }
+            cont.innerHTML = announcements.map(item => `
+                <div class="space-y-4 group relative">
+                    <div class="flex justify-between items-center">
+                        <span class="font-mono text-[9px] text-muted uppercase tracking-widest">${item.date}</span>
+                        <button onclick="deleteAnnouncement(${item.id})" class="font-mono text-[9px] text-rose-500 uppercase opacity-0 group-hover:opacity-100 transition">Delete</button>
+                    </div>
+                    <p class="font-serif italic font-bold text-white text-xl">${item.title}</p>
+                    <p class="text-secondary text-sm leading-relaxed font-light">${item.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        async function submitIssue() {
+            const admission_no = document.getElementById('admNo').value.trim();
+            const book_name = document.getElementById('bookName').value.trim();
+            if(!admission_no || !book_name) return;
+
+            const payload = { admission_no, book_name };
+            if (!existingStudents.includes(admission_no)) {
+                payload.student_name = document.getElementById('studentName').value.trim();
+                payload.class_section = document.getElementById('studentClass').value.trim();
+                if(!payload.student_name) return;
+            }
+
+            const res = await fetch('/api/issue', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            if(res.ok) {
+                document.getElementById('admNo').value = '';
+                document.getElementById('bookName').value = '';
+                document.getElementById('newStudentBox').classList.add('hidden');
+                await refreshAppData();
+                showToast("Transaction Recorded");
+                switchTab('ledger');
+            }
+        }
+
+        async function returnBook(id) {
+            const res = await fetch(`/api/return/${id}`, { method: 'POST' });
+            if(res.ok) {
+                await refreshAppData();
+                closeModal();
+                showToast("Publication Returned");
+            }
+        }
+
+        function openModal(id) {
+            const item = cachedIssues.find(i => i.id == id);
+            if(!item) return;
+            document.getElementById('modalContent').innerHTML = `
+                <div class="grid grid-cols-2 gap-10 border border-white/10 p-10 font-mono text-[11px] uppercase tracking-widest">
+                    <div><span class="text-muted block mb-2">Scholar</span><span class="text-white text-sm">${item.name}</span></div>
+                    <div><span class="text-muted block mb-2">Terminal</span><span class="text-white text-sm">${item.class_section}</span></div>
+                    <div><span class="text-muted block mb-2">Issued</span><span class="text-zinc-400 text-sm">${item.issue_date}</span></div>
+                    <div><span class="text-muted block mb-2">Deadline</span><span class="text-white text-sm">${item.due_date}</span></div>
+                </div>
+                <div class="p-10 bg-white/[0.02]">
+                    <span class="font-mono text-[10px] text-muted uppercase block mb-4 tracking-[0.2em]">Publication Item</span>
+                    <h4 class="text-3xl italic font-serif text-white font-bold">${item.book_name}</h4>
+                </div>
+            `;
+            document.getElementById('modalReturnBtn').onclick = () => returnBook(id);
+            document.getElementById('detailModal').classList.remove('hidden');
+            document.getElementById('detailModal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+            document.getElementById('detailModal').classList.remove('flex');
+        }
+
+        function selectPresetBook(t) { document.getElementById('bookName').value = t; }
+        function checkStudentExistence() {
+            const box = document.getElementById('newStudentBox');
+            existingStudents.includes(document.getElementById('admNo').value.trim()) ? box.classList.add('hidden') : box.classList.remove('hidden');
+        }
+        function openAnnouncementModal() { document.getElementById('announcementModal').classList.remove('hidden'); document.getElementById('announcementModal').classList.add('flex'); }
+        function closeAnnouncementModal() { document.getElementById('announcementModal').classList.add('hidden'); }
+        async function postAnnouncement() {
+            const title = document.getElementById('annTitle').value;
+            const desc = document.getElementById('annDesc').value;
+            await fetch('/api/announcements/add', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({title, desc}) });
+            closeAnnouncementModal(); await refreshAppData(); showToast("Broadcasted");
+        }
+        async function deleteAnnouncement(id) { await fetch(`/api/announcements/delete/${id}`, { method: 'POST' }); await refreshAppData(); }
+        async function exportDatabase() { window.location.href = '/api/backup/export'; }
+        async function updateDueDate(id, due_date) { await fetch('/api/update-date', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id, due_date}) }); showToast("Deadline Extended"); }
+
+        function filterTable() {
+            const q = document.getElementById('searchFilter').value.toLowerCase();
+            renderTable(cachedIssues.filter(i => i.name.toLowerCase().includes(q) || i.admission_no.includes(q) || i.book_name.toLowerCase().includes(q)));
+        }
+        function filterHistoryTable() {
+            const q = document.getElementById('historyFilter').value.toLowerCase();
+            renderHistoryTable(cachedHistory.filter(i => i.name.toLowerCase().includes(q) || i.admission_no.includes(q) || i.book_name.toLowerCase().includes(q)));
+        }
+    </script>
+</body>
+</html>
