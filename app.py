@@ -161,19 +161,19 @@ def issue_book():
     save_data(issues_db, history_db, db.get("announcements", []))
     return jsonify({"success": True, "entry": new_entry}), 200
 
-@app.route('/api/return/<int:item_id>', methods=['POST'])
+@app.route('/api/return/<item_id>', methods=['POST'])
 def return_book(item_id):
     db = load_data()
     issues_db = db.get("issues", [])
     history_db = db.get("history", [])
 
-    matched = next((i for i in issues_db if int(i.get('id', 0)) == int(item_id)), None)
+    matched = next((i for i in issues_db if str(i.get('id')) == str(item_id)), None)
     
     if matched:
         matched['return_date'] = datetime.now().strftime("%Y-%m-%d")
         history_db.insert(0, matched)
         
-        db["issues"] = [i for i in issues_db if int(i.get('id', 0)) != int(item_id)]
+        db["issues"] = [i for i in issues_db if str(i.get('id')) != str(item_id)]
         db["history"] = history_db
 
         save_data(db["issues"], db["history"], db.get("announcements", []))
@@ -192,7 +192,7 @@ def update_date():
     new_due_date = data.get('due_date')
     
     for item in issues_db:
-        if item['id'] == item_id:
+        if str(item['id']) == str(item_id):
             item['due_date'] = new_due_date
             save_data(issues_db, history_db, db.get("announcements", []))
             return jsonify({"success": True}), 200
