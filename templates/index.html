@@ -67,14 +67,19 @@
                 <nav class="hidden md:flex items-center gap-1.5 text-xs font-semibold">
                     <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-4 py-2.5 rounded-xl bg-indigo-600 text-white transition flex items-center gap-2 shadow-sm">📊 Dashboard</button>
                     <button onclick="switchTab('issue')" id="nav-issue" class="px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-2">📚 Issue Book</button>
+                    <button onclick="switchTab('catalog')" id="nav-catalog" class="px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-2">📖 Book Catalog</button>
                     <button onclick="switchTab('ledger')" id="nav-ledger" class="px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-2">📋 Active Ledger</button>
                     <button onclick="switchTab('history')" id="nav-history" class="px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-2">📜 History Log</button>
                 </nav>
             </div>
 
             <div class="flex items-center gap-4 min-w-max">
-                <div class="hidden sm:flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full text-emerald-400 text-xs font-medium">
-                    <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span> System Online
+                <!-- Backup Tools -->
+                <div class="flex items-center gap-2">
+                    <button onclick="exportDatabase()" title="Export JSON Backup" class="text-xs bg-white/5 hover:bg-white/10 text-indigo-400 px-3 py-2 rounded-xl border border-white/10 transition font-medium flex items-center gap-1.5">💾 Backup</button>
+                    <label title="Restore JSON Backup" class="text-xs bg-white/5 hover:bg-white/10 text-emerald-400 px-3 py-2 rounded-xl border border-white/10 transition font-medium cursor-pointer flex items-center gap-1.5">
+                        📥 Restore <input type="file" id="importFile" accept=".json" onchange="importDatabase(event)" class="hidden">
+                    </label>
                 </div>
                 <button onclick="logout()" class="text-xs bg-white/5 hover:bg-white/10 text-zinc-300 px-4 py-2 rounded-xl border border-white/10 transition font-medium">Logout</button>
             </div>
@@ -172,7 +177,10 @@
                             <input type="text" id="studentClass" placeholder="Class & Section (e.g. 10-B)" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-xs">
                         </div>
                         <div>
-                            <label class="block font-semibold text-zinc-300 mb-2">Publication Title or Barcode</label>
+                            <label class="block font-semibold text-zinc-300 mb-2">Select Book from Catalog or Type Custom</label>
+                            <select id="bookSelect" onchange="document.getElementById('bookName').value = this.value" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-xs text-white mb-2 focus:outline-none focus:border-indigo-500">
+                                <option value="">-- Choose from Inventory Catalog --</option>
+                            </select>
                             <input type="text" id="bookName" placeholder="e.g. Physics Grade 10 Laboratory Manual" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500">
                         </div>
                         <button onclick="submitIssue()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3.5 rounded-xl text-sm transition shadow-lg shadow-indigo-600/30">Commit Transaction</button>
@@ -180,7 +188,36 @@
                 </div>
             </div>
 
-            <!-- TAB 3: ACTIVE LEDGER TABLE -->
+            <!-- TAB 3: BOOK CATALOG INVENTORY -->
+            <div id="tab-catalog" class="hidden space-y-6 pb-12">
+                <div class="school-card p-8 rounded-3xl space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-5">
+                        <div>
+                            <h2 class="text-lg font-bold text-white">Library Book Catalog & Inventory</h2>
+                            <p class="text-xs text-zinc-400 mt-1">Manage physical book stock, total copies, and real-time availability.</p>
+                        </div>
+                        <button onclick="openCatalogModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition shadow-lg shadow-indigo-600/30">+ Add New Title</button>
+                    </div>
+
+                    <div class="overflow-x-auto border border-white/10 rounded-2xl bg-black/30 shadow-inner">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-white/[0.03] border-b border-white/10 text-zinc-400 font-bold uppercase tracking-wider text-[10px]">
+                                    <th class="p-4">Publication Title</th>
+                                    <th class="p-4">Total Copies</th>
+                                    <th class="p-4">Available Copies</th>
+                                    <th class="p-4 text-right">Stock Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="catalogTable" class="divide-y divide-white/5">
+                                <tr><td colspan="4" class="text-center py-16 text-zinc-500">Loading catalog...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: ACTIVE LEDGER TABLE -->
             <div id="tab-ledger" class="hidden space-y-6 pb-12">
                 <div class="school-card p-8 rounded-3xl space-y-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-5">
@@ -188,7 +225,10 @@
                             <h2 class="text-lg font-bold text-white">Active Borrowing Ledger</h2>
                             <p class="text-xs text-zinc-400 mt-1">Inspect active book loans, modify return deadlines, or process returns.</p>
                         </div>
-                        <input type="text" id="searchFilter" onkeyup="filterTable()" placeholder="Search active records..." class="w-full sm:w-72 bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500">
+                        <div class="flex items-center gap-3 w-full sm:w-auto">
+                            <input type="text" id="searchFilter" onkeyup="filterTable()" placeholder="Search active records..." class="w-full sm:w-60 bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500">
+                            <button onclick="exportCSV('ledger')" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition whitespace-nowrap">Export CSV</button>
+                        </div>
                     </div>
 
                     <div class="overflow-x-auto border border-white/10 rounded-2xl bg-black/30 shadow-inner">
@@ -209,7 +249,7 @@
                 </div>
             </div>
 
-            <!-- TAB 4: PERMANENT HISTORY LOG -->
+            <!-- TAB 5: PERMANENT HISTORY LOG -->
             <div id="tab-history" class="hidden space-y-6 pb-12">
                 <div class="school-card p-8 rounded-3xl space-y-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-5">
@@ -217,7 +257,10 @@
                             <h2 class="text-lg font-bold text-white">Circulation History Log</h2>
                             <p class="text-xs text-zinc-400 mt-1">Permanent archive of all returned book transactions and student borrow logs.</p>
                         </div>
-                        <input type="text" id="historyFilter" onkeyup="filterHistoryTable()" placeholder="Search history records..." class="w-full sm:w-72 bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500">
+                        <div class="flex items-center gap-3 w-full sm:w-auto">
+                            <input type="text" id="historyFilter" onkeyup="filterHistoryTable()" placeholder="Search history records..." class="w-full sm:w-60 bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500">
+                            <button onclick="exportCSV('history')" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition whitespace-nowrap">Export CSV</button>
+                        </div>
                     </div>
 
                     <div class="overflow-x-auto border border-white/10 rounded-2xl bg-black/30 shadow-inner">
@@ -256,6 +299,27 @@
         </div>
     </div>
 
+    <!-- Add Catalog Item Modal -->
+    <div id="catalogModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="school-card p-6 md:p-8 rounded-3xl w-full max-w-md space-y-6 border border-white/10 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-white/10 pb-4">
+                <h3 class="text-base font-bold text-white">Add New Book to Inventory</h3>
+                <button onclick="closeCatalogModal()" class="text-zinc-400 hover:text-white text-sm font-bold">✕</button>
+            </div>
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-zinc-300 mb-1.5">Book Title & Edition</label>
+                    <input type="text" id="catTitle" placeholder="e.g. Advanced Biology Grade 12" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white">
+                </div>
+                <div>
+                    <label class="block font-semibold text-zinc-300 mb-1.5">Total Physical Copies</label>
+                    <input type="number" id="catCopies" value="5" min="1" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white">
+                </div>
+                <button onclick="submitCatalogItem()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl text-xs transition shadow-lg shadow-indigo-600/30">Save to Catalog</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Add Announcement Modal -->
     <div id="announcementModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
         <div class="school-card p-6 md:p-8 rounded-3xl w-full max-w-md space-y-6 border border-white/10 shadow-2xl">
@@ -280,6 +344,7 @@
     <script>
         let cachedIssues = [];
         let cachedHistory = [];
+        let cachedInventory = [];
         let existingStudents = [];
 
         let announcements = [
@@ -288,12 +353,16 @@
         ];
 
         function switchTab(tabName) {
-            ['dashboard', 'issue', 'ledger', 'history'].forEach(t => {
+            ['dashboard', 'issue', 'catalog', 'ledger', 'history'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
-                document.getElementById(`nav-${t}`).className = "px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-2";
+                if(document.getElementById(`nav-${t}`)) {
+                    document.getElementById(`nav-${t}`).className = "px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-2";
+                }
             });
             document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-            document.getElementById(`nav-${tabName}`).className = "px-4 py-2.5 rounded-xl bg-indigo-600 text-white transition flex items-center gap-2 shadow-sm";
+            if(document.getElementById(`nav-${tabName}`)) {
+                document.getElementById(`nav-${tabName}`).className = "px-4 py-2.5 rounded-xl bg-indigo-600 text-white transition flex items-center gap-2 shadow-sm";
+            }
         }
 
         async function attemptLogin() {
@@ -328,13 +397,13 @@
 
         async function refreshAppData() {
             try {
-                // Fetch stats, issues, history, students, and leaderboard in parallel
-                const [statsRes, issuesRes, historyRes, studentsRes, leaderboardRes] = await Promise.all([
+                const [statsRes, issuesRes, historyRes, studentsRes, leaderboardRes, inventoryRes] = await Promise.all([
                     fetch('/api/stats').then(r => r.json()),
                     fetch('/api/issues').then(r => r.json()),
                     fetch('/api/history').then(r => r.json()),
                     fetch('/api/students').then(r => r.json()),
-                    fetch('/api/leaderboard').then(r => r.json())
+                    fetch('/api/leaderboard').then(r => r.json()),
+                    fetch('/api/inventory').then(r => r.json())
                 ]);
 
                 document.getElementById('statActiveLoans').innerText = statsRes.active_loans;
@@ -343,12 +412,81 @@
                 cachedIssues = issuesRes;
                 cachedHistory = historyRes;
                 existingStudents = studentsRes;
+                cachedInventory = inventoryRes;
 
                 renderLeaderboard(leaderboardRes);
                 renderTable(cachedIssues);
                 renderHistoryTable(cachedHistory);
+                renderCatalogTable(cachedInventory);
+                populateBookSelect(cachedInventory);
             } catch (e) {
                 console.error("Failed to refresh application data", e);
+            }
+        }
+
+        function populateBookSelect(inventory) {
+            const select = document.getElementById('bookSelect');
+            select.innerHTML = '<option value="">-- Choose from Inventory Catalog --</option>';
+            inventory.forEach(item => {
+                select.innerHTML += `<option value="${item.title}">${item.title} (${item.available} available)</option>`;
+            });
+        }
+
+        function renderCatalogTable(inventory) {
+            const tbody = document.getElementById('catalogTable');
+            if(!inventory || inventory.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-16 text-zinc-500">No books found in catalog.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = '';
+            inventory.forEach(item => {
+                const badgeColor = item.available > 0 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+                const statusText = item.available > 0 ? `${item.available} Available` : 'Out of Stock';
+                tbody.innerHTML += `
+                    <tr class="hover:bg-white/[0.03] transition">
+                        <td class="p-4 font-bold text-white">${item.title}</td>
+                        <td class="p-4 text-zinc-300">${item.total_copies}</td>
+                        <td class="p-4 text-indigo-400 font-semibold">${item.available}</td>
+                        <td class="p-4 text-right">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-bold border ${badgeColor}">${statusText}</span>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openCatalogModal() {
+            document.getElementById('catalogModal').classList.remove('hidden');
+            document.getElementById('catalogModal').classList.add('flex');
+        }
+
+        function closeCatalogModal() {
+            document.getElementById('catalogModal').classList.add('hidden');
+            document.getElementById('catalogModal').classList.remove('flex');
+            document.getElementById('catTitle').value = '';
+            document.getElementById('catCopies').value = '5';
+        }
+
+        async function submitCatalogItem() {
+            const title = document.getElementById('catTitle').value.trim();
+            const copies = parseInt(document.getElementById('catCopies').value) || 1;
+            if(!title) { alert("Please enter a book title."); return; }
+
+            try {
+                const res = await fetch('/api/inventory/add', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ title, copies })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    closeCatalogModal();
+                    await refreshAppData();
+                } else {
+                    alert("Failed to add book to catalog.");
+                }
+            } catch(e) {
+                alert("Network error.");
             }
         }
 
@@ -481,6 +619,56 @@
                     </tr>
                 `;
             });
+        }
+
+        function exportCSV(type) {
+            let csv = [];
+            if(type === 'ledger') {
+                csv.push(["Admission No", "Student Name", "Class/Section", "Book Name", "Issue Date", "Due Date"]);
+                cachedIssues.forEach(i => csv.push([i.admission_no, `"${i.name}"`, i.class_section, `"${i.book_name}"`, i.issue_date, i.due_date]));
+            } else {
+                csv.push(["Admission No", "Student Name", "Class/Section", "Book Name", "Issue Date", "Return Date"]);
+                cachedHistory.forEach(i => csv.push([i.admission_no, `"${i.name}"`, i.class_section, `"${i.book_name}"`, i.issue_date, i.return_date]));
+            }
+            
+            const csvContent = "data:text/csv;charset=utf-8," + csv.map(e => e.join(",")).join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `library_${type}_report_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        async function exportDatabase() {
+            window.location.href = '/api/backup/export';
+        }
+
+        async function importDatabase(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const jsonContent = JSON.parse(e.target.result);
+                    const res = await fetch('/api/backup/import', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(jsonContent)
+                    });
+                    const data = await res.json();
+                    if(data.success) {
+                        alert("Database restored successfully!");
+                        await refreshAppData();
+                    } else {
+                        alert("Restoration failed: " + data.error);
+                    }
+                } catch(err) {
+                    alert("Invalid JSON backup file.");
+                }
+            };
+            reader.readAsText(file);
         }
 
         function openModal(id) {
