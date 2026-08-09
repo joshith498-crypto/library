@@ -20,30 +20,26 @@ def load_data():
             {
                 "id": 1,
                 "admission_no": "544421",
-                "name": "Tester",
+                "name": "Joshith Sai",
                 "class_section": "10-B",
-                "book_name": "Mathematics Vol. 1",
+                "book_name": "Advanced Mathematics Vol. 1",
                 "issue_date": datetime.now().strftime("%Y-%m-%d"),
                 "due_date": (datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d")
             }
         ],
         "history": [],
-        "inventory": [
-            {"id": 1, "title": "Mathematics Vol. 1", "total_copies": 5, "available": 4},
-            {"id": 2, "title": "Physics Grade 10 Laboratory Manual", "total_copies": 3, "available": 3},
-            {"id": 3, "title": "Advanced Chemistry", "total_copies": 4, "available": 4},
-            {"id": 4, "title": "World History Atlas", "total_copies": 2, "available": 2},
-            {"id": 5, "title": "English Literature Anthology", "total_copies": 6, "available": 6}
+        "announcements": [
+            { "id": 1, "date": "09/Aug/2026", "type": "Notice", "title": "Library Hours Updated", "desc": "The library will remain open until 5:00 PM during examination prep weeks." }
         ]
     }
 
-def save_data(issues, history, inventory=None):
-    if inventory is None:
-        db = load_data()
-        inventory = db.get("inventory", [])
+def save_data(issues, history, announcements=None):
+    db = load_data()
+    if announcements is None:
+        announcements = db.get("announcements", [])
     try:
         with open(DATA_FILE, 'w') as f:
-            json.dump({"issues": issues, "history": history, "inventory": inventory}, f)
+            json.dump({"issues": issues, "history": history, "announcements": announcements}, f)
     except Exception as e:
         print("Storage error:", e)
 
@@ -102,35 +98,41 @@ def get_history():
     db = load_data()
     return jsonify(db["history"])
 
-@app.route('/api/inventory', methods=['GET'])
-def get_inventory():
+@app.route('/api/announcements', methods=['GET'])
+def get_announcements():
     db = load_data()
-    return jsonify(db.get("inventory", []))
+    return jsonify(db.get("announcements", []))
 
-@app.route('/api/inventory/add', methods=['POST'])
-def add_inventory():
+@app.route('/api/announcements/add', methods=['POST'])
+def add_announcement():
     db = load_data()
-    inventory = db.get("inventory", [])
+    announcements = db.get("announcements", [])
     data = request.json
-    title = data.get('title')
-    copies = int(data.get('copies', 1))
     
-    new_item = {
+    new_ann = {
         "id": int(datetime.now().timestamp() * 1000),
-        "title": title,
-        "total_copies": copies,
-        "available": copies
+        "date": datetime.now().strftime("%d/%b/%Y"),
+        "type": data.get("type", "Notice"),
+        "title": data.get("title"),
+        "desc": data.get("desc")
     }
-    inventory.append(new_item)
-    save_data(db["issues"], db["history"], inventory)
-    return jsonify({"success": True, "item": new_item}), 200
+    announcements.insert(0, new_ann)
+    save_data(db["issues"], db["history"], announcements)
+    return jsonify({"success": True, "announcement": new_ann}), 200
+
+@app.route('/api/announcements/delete/<int:ann_id>', methods=['POST'])
+def delete_announcement(ann_id):
+    db = load_data()
+    announcements = db.get("announcements", [])
+    announcements = [a for a in announcements if a['id'] != ann_id]
+    save_data(db["issues"], db["history"], announcements)
+    return jsonify({"success": True}), 200
 
 @app.route('/api/issue', methods=['POST'])
 def issue_book():
     db = load_data()
     issues_db = db["issues"]
     history_db = db["history"]
-    inventory_db = db.get("inventory", [])
 
     data = request.json
     admission_no = data.get('admission_no')
@@ -145,12 +147,6 @@ def issue_book():
         name = data.get('student_name', 'Unknown Student')
         class_section = data.get('class_section', '10-A')
 
-    # Update inventory availability if book matches catalog
-    for inv in inventory_db:
-        if inv['title'].lower() == book_name.lower():
-            if inv['available'] > 0:
-                inv['available'] -= 1
-
     new_entry = {
         "id": int(datetime.now().timestamp() * 1000),
         "admission_no": admission_no,
@@ -162,7 +158,7 @@ def issue_book():
     }
     
     issues_db.append(new_entry)
-    save_data(issues_db, history_db, inventory_db)
+    save_data(issues_db, history_db, db.get("announcements", []))
     return jsonify({"success": True, "entry": new_entry}), 200
 
 @app.route('/api/return/<int:item_id>', methods=['POST'])
@@ -170,20 +166,14 @@ def return_book(item_id):
     db = load_data()
     issues_db = db["issues"]
     history_db = db["history"]
-    inventory_db = db.get("inventory", [])
 
     matched = next((i for i in issues_db if i['id'] == item_id), None)
     if matched:
         matched['return_date'] = datetime.now().strftime("%Y-%m-%d")
         history_db.insert(0, matched)
         issues_db = [i for i in issues_db if i['id'] != item_id]
-        
-        # Restore book inventory count
-        for inv in inventory_db:
-            if inv['title'].lower() == matched['book_name'].lower():
-                inv['available'] = min(inv['total_copies'], inv['available'] + 1)
 
-        save_data(issues_db, history_db, inventory_db)
+        save_data(issues_db, history_db, db.get("announcements", []))
         return jsonify({"success": True}), 200
     return jsonify({"success": False}), 404
 
@@ -200,7 +190,7 @@ def update_date():
     for item in issues_db:
         if item['id'] == item_id:
             item['due_date'] = new_due_date
-            save_data(issues_db, history_db, db.get("inventory", []))
+            save_data(issues_db, history_db, db.get("announcements", []))
             return jsonify({"success": True}), 200
             
     return jsonify({"success": False}), 404
@@ -222,7 +212,7 @@ def import_backup():
         return jsonify({"success": False, "error": "Invalid payload"}), 400
     try:
         data = request.json
-        save_data(data.get("issues", []), data.get("history", []), data.get("inventory", []))
+        save_data(data.get("issues", []), data.get("history", []), data.get("announcements", []))
         return jsonify({"success": True}), 200
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
