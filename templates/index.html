@@ -23,10 +23,10 @@
     <style>
         :root {
             --bg: #000000;
-            --glass: rgba(20, 20, 22, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass: rgba(25, 25, 27, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.15);
             --bone: #FFFFFF;
-            --accent: #007AFF; /* macOS Blue */
+            --accent: #007AFF;
         }
 
         body { 
@@ -37,183 +37,194 @@
             min-height: 100vh;
         }
 
-        /* macOS Liquid Mesh Gradient Background */
+        /* macOS Liquid Mesh Background */
         .liquid-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             background: 
-                radial-gradient(circle at 0% 0%, #1a1a1a 0%, transparent 50%),
-                radial-gradient(circle at 100% 0%, #0d1b2a 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, #050505 0%, transparent 100%),
-                radial-gradient(circle at 80% 80%, #111111 0%, transparent 50%);
-            filter: blur(60px);
+                radial-gradient(circle at 10% 10%, #1a1a1a 0%, transparent 40%),
+                radial-gradient(circle at 90% 10%, #0a1a2f 0%, transparent 40%),
+                radial-gradient(circle at 50% 90%, #1a0a1a 0%, transparent 40%);
+            filter: blur(80px);
         }
 
-        /* Liquid Glass Card (macOS 27 Style) */
+        /* High-Gloss Glassmorphism */
         .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            backdrop-filter: blur(50px) saturate(200%);
+            -webkit-backdrop-filter: blur(50px) saturate(200%);
             border: 1px solid var(--glass-border);
-            border-radius: 24px; /* Squircle */
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+            border-radius: 28px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
 
-        /* Text Contrast Fix */
-        .text-bone { color: #FFFFFF; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .text-bone { color: #FFFFFF; }
         .text-dim { color: rgba(255, 255, 255, 0.5); }
-        .text-description { color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; }
+        
+        /* Navigation Highlighting */
+        .nav-link {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+        .nav-link.active {
+            color: #FFFFFF;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
 
         .btn-mac {
             background: #FFFFFF;
             color: #000;
-            font-weight: 600;
-            border-radius: 12px;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+            border-radius: 14px;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
         }
         .btn-mac:hover {
-            transform: scale(1.02);
-            background: #f0f0f0;
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+            transform: scale(1.03) translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255,255,255,0.2);
         }
 
-        /* Table Styling */
-        table { border-spacing: 0 8px; border-collapse: separate; }
-        tbody tr { background: rgba(255,255,255,0.02); transition: transform 0.2s; }
-        tbody tr:hover { background: rgba(255,255,255,0.05); transform: scale(1.002); }
-        td:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
-        td:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+        /* Table styling for maximum readability */
+        table { width: 100%; border-collapse: separate; border-spacing: 0 12px; }
+        tr { transition: all 0.2s; }
+        tr:hover td { background: rgba(255,255,255,0.05); }
+        td { background: rgba(255,255,255,0.02); padding: 20px; }
+        td:first-child { border-top-left-radius: 16px; border-bottom-left-radius: 16px; }
+        td:last-child { border-top-right-radius: 16px; border-bottom-right-radius: 16px; }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
-
-        /* Tab Transitions */
-        .tab-content { animation: slideUp 0.4s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #notification {
+            transform: translate(-50%, -100px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #notification.show { transform: translate(-50%, 40px); }
     </style>
 </head>
 <body>
 
     <div class="liquid-bg"></div>
 
-    <!-- macOS Toast -->
-    <div id="notification" class="fixed top-10 left-1/2 -translate-x-1/2 z-[100] glass-card px-8 py-4 flex items-center gap-4 opacity-0 pointer-events-none transition-all duration-500 scale-90">
-        <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
-        <span id="notifText" class="text-xs font-semibold tracking-widest uppercase text-white">Action Confirmed</span>
+    <!-- Notification Toast -->
+    <div id="notification" class="fixed top-0 left-1/2 -translate-x-1/2 z-[100] glass-card px-10 py-5 flex items-center gap-5">
+        <div class="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_15px_#007AFF]"></div>
+        <span id="notifText" class="text-sm font-bold uppercase tracking-widest">Database Synchronized</span>
     </div>
 
     <!-- Login -->
-    <div id="loginOverlay" class="fixed inset-0 z-50 bg-black flex items-center justify-center p-6">
-        <div class="max-w-md w-full space-y-10 text-center">
-            <h1 class="text-6xl italic font-serif text-bone">Archive</h1>
-            <div class="glass-card p-10 space-y-6">
-                <input type="password" id="loginPass" placeholder="Access Code" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-center text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition">
-                <button onclick="attemptLogin()" class="w-full btn-mac py-4">Unlock System</button>
-                <p id="loginError" class="text-[10px] font-mono text-red-400 uppercase hidden tracking-widest">Unauthorized Access</p>
+    <div id="loginOverlay" class="fixed inset-0 z-[60] bg-black flex items-center justify-center p-8">
+        <div class="max-w-md w-full space-y-12 text-center">
+            <h1 class="text-7xl italic font-serif text-white">Archive</h1>
+            <div class="glass-card p-12 space-y-8">
+                <input type="password" id="loginPass" placeholder="ADMIN PASSCODE" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-center text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                <button onclick="attemptLogin()" class="w-full btn-mac py-5 uppercase tracking-widest">Initialize Terminal</button>
+                <p id="loginError" class="text-xs font-bold text-red-500 uppercase hidden">Invalid Credentials</p>
             </div>
         </div>
     </div>
 
-    <!-- Main App -->
+    <!-- Main Application -->
     <div id="dashboardApp" class="hidden min-h-screen flex-col">
-        <header class="px-10 py-8 flex justify-between items-center sticky top-0 z-40 bg-black/20 backdrop-blur-md">
-            <div class="flex items-center gap-16">
-                <div class="font-serif italic text-3xl text-bone font-bold tracking-tighter">ZHS</div>
-                <nav class="hidden md:flex gap-10">
-                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="text-[11px] font-semibold uppercase tracking-widest text-bone border-b-2 border-white pb-1">Dashboard</button>
-                    <button onclick="switchTab('issue')" id="nav-issue" class="text-[11px] font-semibold uppercase tracking-widest text-dim hover:text-white transition">Issue</button>
-                    <button onclick="switchTab('ledger')" id="nav-ledger" class="text-[11px] font-semibold uppercase tracking-widest text-dim hover:text-white transition">Ledger</button>
-                    <button onclick="switchTab('history')" id="nav-history" class="text-[11px] font-semibold uppercase tracking-widest text-dim hover:text-white transition">History</button>
+        <header class="px-12 py-10 flex justify-between items-center sticky top-0 z-40 bg-black/10 backdrop-blur-2xl">
+            <div class="flex items-center gap-20">
+                <div class="font-serif italic text-4xl text-white font-black tracking-tighter">ZHS</div>
+                <nav class="hidden md:flex gap-12">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-link active">Dashboard</button>
+                    <button onclick="switchTab('issue')" id="nav-issue" class="nav-link">Issue</button>
+                    <button onclick="switchTab('ledger')" id="nav-ledger" class="nav-link">Ledger</button>
+                    <button onclick="switchTab('history')" id="nav-history" class="nav-link">History</button>
                 </nav>
             </div>
-            <div class="flex gap-8">
-                <button onclick="exportDatabase()" class="text-[10px] font-bold text-dim hover:text-white transition uppercase">Backup</button>
-                <button onclick="logout()" class="text-[10px] font-bold text-red-500/80 hover:text-red-400 transition uppercase tracking-widest">Exit</button>
+            <div class="flex gap-10">
+                <button onclick="exportDatabase()" class="text-xs font-bold text-dim hover:text-white transition uppercase">Sync Backup</button>
+                <button onclick="logout()" class="text-xs font-bold text-red-500 hover:text-red-400 transition uppercase tracking-widest">Logout</button>
             </div>
         </header>
 
-        <main class="max-w-7xl w-full mx-auto p-10 flex-grow">
+        <main class="max-w-7xl w-full mx-auto p-12 flex-grow">
             
-            <!-- Dashboard Tab -->
-            <div id="tab-dashboard" class="tab-content space-y-16">
-                <div class="py-10">
-                    <h1 class="text-7xl md:text-9xl italic tracking-tighter text-bone mb-6">Library <span class="text-white/20 italic">Archive</span></h1>
-                    <p class="text-description max-w-xl">Curating the Zee High School literary repository with precision and real-time synchronization.</p>
+            <!-- DASHBOARD -->
+            <div id="tab-dashboard" class="space-y-20">
+                <div class="space-y-4">
+                    <h1 class="text-8xl md:text-[10rem] italic tracking-tighter text-white font-serif leading-none">The <span class="opacity-20">Curator</span></h1>
+                    <p class="text-dim text-xl max-w-2xl font-light">Managing the Zee High School archival repository with persistent real-time logic.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="glass-card p-10">
-                        <p class="text-[10px] font-bold text-dim uppercase tracking-widest mb-4">Active Loans</p>
-                        <h3 id="statActiveLoans" class="text-7xl font-serif text-bone">0</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="glass-card p-12 space-y-6">
+                        <p class="text-xs font-bold text-dim uppercase tracking-[0.3em]">Active Circulation</p>
+                        <h3 id="statActiveLoans" class="text-8xl font-serif text-white">0</h3>
                     </div>
-                    <div class="glass-card p-10">
-                        <p class="text-[10px] font-bold text-dim uppercase tracking-widest mb-4">Total Scholars</p>
-                        <h3 id="statTotalStudents" class="text-7xl font-serif text-bone">0</h3>
+                    <div class="glass-card p-12 space-y-6">
+                        <p class="text-xs font-bold text-dim uppercase tracking-[0.3em]">Total Members</p>
+                        <h3 id="statTotalStudents" class="text-8xl font-serif text-white">0</h3>
                     </div>
-                    <div class="glass-card p-10 flex flex-col justify-between">
-                        <p class="text-[10px] font-bold text-dim uppercase tracking-widest">Status</p>
-                        <div class="text-[11px] font-bold text-blue-400 uppercase tracking-widest flex items-center gap-3">
-                            <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_#007AFF]"></span> Ready for Input
+                    <div class="glass-card p-12 flex flex-col justify-between">
+                        <p class="text-xs font-bold text-dim uppercase tracking-[0.3em]">System Health</p>
+                        <div class="text-sm font-bold text-blue-400 uppercase tracking-widest flex items-center gap-4">
+                            <span class="w-3 h-3 rounded-full bg-blue-500 animate-pulse shadow-[0_0_20px_#007AFF]"></span> LocalSync Active
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                    <div class="lg:col-span-7 space-y-8">
-                        <h3 class="text-2xl font-serif italic text-bone">Scholarly Leaderboard</h3>
-                        <div id="leaderboardList" class="space-y-4"></div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-20">
+                    <div class="lg:col-span-7 space-y-10">
+                        <h3 class="text-3xl italic font-serif">Engagement Board</h3>
+                        <div id="leaderboardList" class="space-y-6"></div>
                     </div>
-                    <div class="lg:col-span-5 space-y-8">
-                        <div class="flex justify-between items-center border-b border-white/10 pb-4">
-                            <h3 class="text-2xl font-serif italic text-bone">Notices</h3>
-                            <button onclick="openAnnouncementModal()" class="text-white/30 hover:text-white transition text-xl">+</button>
+                    <div class="lg:col-span-5 space-y-10">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-6">
+                            <h3 class="text-3xl italic font-serif">Internal Notices</h3>
+                            <button onclick="openAnnouncementModal()" class="text-4xl font-light opacity-30 hover:opacity-100 transition">+</button>
                         </div>
-                        <div id="announcementsList" class="space-y-8"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Issue Tab -->
-            <div id="tab-issue" class="hidden tab-content py-10 max-w-2xl mx-auto">
-                <div class="glass-card p-12 space-y-10">
-                    <h2 class="text-4xl italic text-bone">New Transaction</h2>
-                    <div class="space-y-8">
-                        <div class="space-y-3">
-                            <label class="text-[10px] font-bold text-dim uppercase">Presets</label>
-                            <div class="flex flex-wrap gap-2">
-                                <button onclick="selectPresetBook('Advanced Mathematics Vol. 1')" class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[10px] hover:bg-white/10 transition">MATH_V1</button>
-                                <button onclick="selectPresetBook('Physics Grade 10 Lab Manual')" class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[10px] hover:bg-white/10 transition">PHYS_LAB</button>
-                            </div>
-                        </div>
-                        <div class="space-y-6">
-                            <input type="text" id="admNo" oninput="checkStudentExistence()" placeholder="Admission ID" class="w-full bg-transparent border-b border-white/10 py-4 text-white focus:outline-none focus:border-blue-500 transition">
-                            <div id="newStudentBox" class="hidden p-8 glass-card border-blue-500/30 space-y-4">
-                                <p class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">New Student Record</p>
-                                <input type="text" id="studentName" placeholder="Full Student Name" class="w-full bg-transparent border-b border-white/10 py-2 text-white">
-                                <input type="text" id="studentClass" placeholder="Class & Section" class="w-full bg-transparent border-b border-white/10 py-2 text-white">
-                            </div>
-                            <input type="text" id="bookName" placeholder="Publication Title" class="w-full bg-transparent border-b border-white/10 py-4 text-white focus:outline-none focus:border-blue-500 transition">
-                        </div>
-                        <button onclick="submitIssue()" class="w-full btn-mac py-5">Register Loan</button>
+                        <div id="announcementsList" class="space-y-12"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Ledger Tab -->
-            <div id="tab-ledger" class="hidden tab-content space-y-10">
-                <div class="flex justify-between items-end pb-8">
-                    <h2 class="text-5xl italic font-bold text-bone">Active Ledger</h2>
-                    <input type="text" id="searchFilter" onkeyup="filterTable()" placeholder="Search Ledger..." class="bg-white/5 border border-white/10 rounded-xl px-6 py-3 text-sm text-white focus:ring-2 focus:ring-blue-500 outline-none w-80">
+            <!-- ISSUE -->
+            <div id="tab-issue" class="hidden max-w-2xl mx-auto py-10">
+                <div class="glass-card p-16 space-y-12">
+                    <h2 class="text-5xl italic font-serif text-white">Register Loan</h2>
+                    <div class="space-y-10">
+                        <div class="space-y-4">
+                            <label class="text-xs font-bold text-dim uppercase tracking-widest">Presets</label>
+                            <div class="flex flex-wrap gap-3">
+                                <button onclick="selectPresetBook('Advanced Mathematics Vol. 1')" class="px-5 py-2 glass-card text-xs hover:bg-white/10 transition">MATH_V1</button>
+                                <button onclick="selectPresetBook('Physics Grade 10 Lab Manual')" class="px-5 py-2 glass-card text-xs hover:bg-white/10 transition">PHYSICS_10</button>
+                            </div>
+                        </div>
+                        <div class="space-y-8">
+                            <input type="text" id="admNo" oninput="checkStudentExistence()" placeholder="Admission ID" class="w-full bg-transparent border-b-2 border-white/10 py-5 text-xl font-serif text-white focus:outline-none focus:border-blue-500 transition">
+                            
+                            <div id="newStudentBox" class="hidden p-10 glass-card border-blue-500/40 space-y-6">
+                                <p class="text-xs font-bold text-blue-400 uppercase tracking-widest">New Scholar Profile</p>
+                                <input type="text" id="studentName" placeholder="Full Legal Name" class="w-full bg-transparent border-b border-white/10 py-3 text-white">
+                                <input type="text" id="studentClass" placeholder="Class/Section" class="w-full bg-transparent border-b border-white/10 py-3 text-white">
+                            </div>
+
+                            <input type="text" id="bookName" placeholder="Publication Title" class="w-full bg-transparent border-b-2 border-white/10 py-5 text-xl font-serif text-white focus:outline-none focus:border-blue-500 transition">
+                        </div>
+                        <button onclick="submitIssue()" class="w-full btn-mac py-6 text-lg">Commit Transaction</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LEDGER -->
+            <div id="tab-ledger" class="hidden space-y-12">
+                <div class="flex justify-between items-end pb-10">
+                    <h2 class="text-6xl italic font-serif font-bold">Active Ledger</h2>
+                    <input type="text" id="searchFilter" onkeyup="filterTable()" placeholder="Filter Ledger..." class="glass-card px-8 py-4 text-sm text-white focus:ring-2 focus:ring-blue-500 outline-none w-96">
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left">
+                    <table id="ledgerTable">
                         <thead>
-                            <tr class="text-dim font-bold text-[11px] uppercase tracking-widest">
-                                <th class="p-6">Scholar</th>
-                                <th class="p-6">Publication</th>
-                                <th class="p-6">Return Deadline</th>
+                            <tr class="text-dim font-bold text-xs uppercase tracking-[0.3em]">
+                                <th class="p-6 text-left">Scholar Information</th>
+                                <th class="p-6 text-left">Publication</th>
+                                <th class="p-6 text-left">Deadline</th>
                                 <th class="p-6 text-right">Actions</th>
                             </tr>
                         </thead>
@@ -222,20 +233,20 @@
                 </div>
             </div>
 
-            <!-- History Tab -->
-            <div id="tab-history" class="hidden tab-content space-y-10">
-                <div class="flex justify-between items-end pb-8">
-                    <h2 class="text-5xl italic font-bold text-bone">Circulation History</h2>
-                    <input type="text" id="historyFilter" onkeyup="filterHistoryTable()" placeholder="Search Logs..." class="bg-white/5 border border-white/10 rounded-xl px-6 py-3 text-sm text-white focus:ring-2 focus:ring-blue-500 outline-none w-80">
+            <!-- HISTORY -->
+            <div id="tab-history" class="hidden space-y-12">
+                <div class="flex justify-between items-end pb-10">
+                    <h2 class="text-6xl italic font-serif font-bold">Historical Logs</h2>
+                    <input type="text" id="historyFilter" onkeyup="filterHistoryTable()" placeholder="Search Archives..." class="glass-card px-8 py-4 text-sm text-white focus:ring-2 focus:ring-blue-500 outline-none w-96">
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left">
+                    <table>
                         <thead>
-                            <tr class="text-dim font-bold text-[11px] uppercase tracking-widest">
-                                <th class="p-6">Scholar</th>
-                                <th class="p-6">Publication</th>
-                                <th class="p-6">Issue Date</th>
-                                <th class="p-6">Return Date</th>
+                            <tr class="text-dim font-bold text-xs uppercase tracking-[0.3em]">
+                                <th class="p-6 text-left">Scholar</th>
+                                <th class="p-6 text-left">Publication</th>
+                                <th class="p-6 text-left">Issued</th>
+                                <th class="p-6 text-left">Returned</th>
                             </tr>
                         </thead>
                         <tbody id="historyTable"></tbody>
@@ -245,14 +256,26 @@
         </main>
     </div>
 
-    <!-- Inspector Modal -->
-    <div id="detailModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl hidden items-center justify-center p-6">
-        <div class="glass-card p-12 max-w-xl w-full space-y-8 scale-95 transition-transform duration-300" id="modalScale">
-            <h3 class="text-4xl italic text-bone">Transaction Info</h3>
-            <div id="modalContent" class="space-y-6"></div>
-            <div class="flex justify-end gap-6 pt-6 border-t border-white/10">
-                <button onclick="closeModal()" class="text-sm font-bold text-dim">Dismiss</button>
-                <button id="modalReturnBtn" class="btn-mac px-10 py-3">Confirm Return</button>
+    <!-- Modals -->
+    <div id="detailModal" class="fixed inset-0 z-[70] bg-black/90 backdrop-blur-3xl hidden items-center justify-center p-8">
+        <div class="glass-card p-16 max-w-2xl w-full space-y-10 animate-in zoom-in duration-300">
+            <h3 class="text-5xl italic font-serif text-white">Metadata Inspector</h3>
+            <div id="modalContent" class="space-y-8"></div>
+            <div class="flex justify-end gap-10 pt-10 border-t border-white/10">
+                <button onclick="closeModal()" class="text-lg font-bold text-dim">Dismiss</button>
+                <button id="modalReturnBtn" class="btn-mac px-12 py-4">Process Return</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="announcementModal" class="fixed inset-0 z-[70] bg-black/90 backdrop-blur-3xl hidden items-center justify-center p-8">
+        <div class="glass-card p-16 max-w-md w-full space-y-10">
+            <h3 class="text-4xl italic font-serif text-white">Broadcast</h3>
+            <div class="space-y-8">
+                <input type="text" id="annTitle" placeholder="HEADLINE" class="w-full bg-transparent border-b border-white/10 py-4 text-xl text-white outline-none">
+                <textarea id="annDesc" rows="4" placeholder="CONTENT..." class="w-full glass-card p-6 text-sm text-dim outline-none"></textarea>
+                <button onclick="postAnnouncement()" class="w-full btn-mac py-6">Publish Notice</button>
+                <button onclick="closeAnnouncementModal()" class="w-full text-sm font-bold text-dim">Cancel</button>
             </div>
         </div>
     </div>
@@ -264,30 +287,62 @@
         let announcements = [];
 
         function showToast(text) {
-            const toast = document.getElementById('notification');
+            const t = document.getElementById('notification');
             document.getElementById('notifText').innerText = text;
-            toast.style.opacity = '1';
-            toast.style.transform = 'translate(-50%, 0) scale(1)';
-            toast.style.pointerEvents = 'auto';
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translate(-50%, -20px) scale(0.9)';
-                toast.style.pointerEvents = 'none';
-            }, 3000);
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-        function switchTab(tabName) {
-            ['dashboard', 'issue', 'ledger', 'history'].forEach(t => {
-                document.getElementById(`tab-${t}`).classList.add('hidden');
-                const nav = document.getElementById(`nav-${t}`);
-                if(nav) {
-                    nav.className = "text-[11px] font-semibold uppercase tracking-widest text-dim hover:text-white transition pb-1";
-                }
+        function switchTab(t) {
+            ['dashboard', 'issue', 'ledger', 'history'].forEach(tab => {
+                document.getElementById(`tab-${tab}`).classList.add('hidden');
+                document.getElementById(`nav-${tab}`).classList.remove('active');
             });
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-            const activeNav = document.getElementById(`nav-${tabName}`);
-            if(activeNav) {
-                activeNav.className = "text-[11px] font-semibold uppercase tracking-widest text-bone border-b-2 border-white pb-1";
+            document.getElementById(`tab-${t}`).classList.remove('hidden');
+            document.getElementById(`nav-${t}`).classList.add('active');
+        }
+
+        // PERSISTENCE FIX: This ensures data stays even if server resets
+        function persistLocal(data) {
+            localStorage.setItem('zhs_library_data', JSON.stringify(data));
+        }
+
+        async function refreshAppData() {
+            try {
+                const [stats, issues, history, students, leaderboard, anns] = await Promise.all([
+                    fetch('/api/stats').then(r => r.json()),
+                    fetch('/api/issues').then(r => r.json()),
+                    fetch('/api/history').then(r => r.json()),
+                    fetch('/api/students').then(r => r.json()),
+                    fetch('/api/leaderboard').then(r => r.json()),
+                    fetch('/api/announcements').then(r => r.json())
+                ]);
+
+                cachedIssues = issues;
+                cachedHistory = history;
+                existingStudents = students;
+                announcements = anns;
+
+                // Sync counts based on ACTUAL arrays
+                document.getElementById('statActiveLoans').innerText = cachedIssues.length;
+                document.getElementById('statTotalStudents').innerText = stats.registered_students;
+
+                renderLeaderboard(leaderboard);
+                renderTable(cachedIssues);
+                renderHistoryTable(cachedHistory);
+                renderAnnouncements();
+
+                persistLocal({issues, history, announcements: anns});
+            } catch (e) {
+                console.log("Using Offline Cache");
+                const local = JSON.parse(localStorage.getItem('zhs_library_data'));
+                if(local) {
+                    cachedIssues = local.issues;
+                    cachedHistory = local.history;
+                    document.getElementById('statActiveLoans').innerText = cachedIssues.length;
+                    renderTable(cachedIssues);
+                    renderHistoryTable(cachedHistory);
+                }
             }
         }
 
@@ -304,75 +359,27 @@
                 document.getElementById('dashboardApp').classList.remove('hidden');
                 document.getElementById('dashboardApp').classList.add('flex');
                 await refreshAppData();
-                showToast("System Secure");
+                showToast("Archive Synchronized");
             } else {
                 document.getElementById('loginError').classList.remove('hidden');
             }
         }
 
-        function logout() { location.reload(); }
-
-        async function refreshAppData() {
-            try {
-                const [stats, issues, history, students, leaderboard, anns] = await Promise.all([
-                    fetch('/api/stats').then(r => r.json()),
-                    fetch('/api/issues').then(r => r.json()),
-                    fetch('/api/history').then(r => r.json()),
-                    fetch('/api/students').then(r => r.json()),
-                    fetch('/api/leaderboard').then(r => r.json()),
-                    fetch('/api/announcements').then(r => r.json())
-                ]);
-
-                document.getElementById('statActiveLoans').innerText = stats.active_loans;
-                document.getElementById('statTotalStudents').innerText = stats.registered_students;
-
-                cachedIssues = issues;
-                cachedHistory = history;
-                existingStudents = students;
-                announcements = anns;
-
-                renderLeaderboard(leaderboard);
-                renderTable(cachedIssues);
-                renderHistoryTable(cachedHistory);
-                renderAnnouncements();
-            } catch (e) { console.error("Sync failure", e); }
-        }
-
-        function renderLeaderboard(data) {
-            const cont = document.getElementById('leaderboardList');
-            if(!data.length) { cont.innerHTML = `<p class="text-dim py-10 text-center uppercase tracking-widest">No Logs Yet</p>`; return; }
-            cont.innerHTML = data.map((item, idx) => `
-                <div class="glass-card p-6 flex justify-between items-center group cursor-pointer" onclick="switchTab('ledger')">
-                    <div class="flex items-center gap-6">
-                        <span class="text-4xl italic font-serif text-white/10 group-hover:text-blue-500 transition">0${idx+1}</span>
-                        <div>
-                            <p class="font-bold text-bone text-lg">${item.name}</p>
-                            <p class="text-[10px] font-bold text-dim uppercase mt-1">ID: ${item.admission_no}</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-2xl font-serif text-bone italic">${item.total_borrowed}</span>
-                        <p class="text-[9px] font-bold text-dim uppercase">Items</p>
-                    </div>
-                </div>
-            `).join('');
-        }
-
         function renderTable(data) {
             const tbody = document.getElementById('issuesTable');
-            if(!data.length) { tbody.innerHTML = `<tr><td colspan="4" class="py-20 text-center text-dim font-bold uppercase tracking-widest">No Active Records</td></tr>`; return; }
+            if(!data.length) { tbody.innerHTML = `<tr><td colspan="4" class="py-20 text-center text-dim font-bold uppercase">Empty Ledger</td></tr>`; return; }
             tbody.innerHTML = data.map(item => `
-                <tr onclick="openModal(${item.id})">
+                <tr onclick="openModal('${item.id}')" class="cursor-pointer">
                     <td class="p-6">
-                        <p class="font-bold text-bone text-lg">${item.name}</p>
+                        <p class="font-bold text-white text-xl">${item.name}</p>
                         <p class="text-[10px] font-bold text-dim uppercase mt-1">ID: ${item.admission_no}</p>
                     </td>
-                    <td class="p-6 italic font-serif text-white/80 text-lg">${item.book_name}</td>
-                    <td class="p-6" onclick="event.stopPropagation()">
-                        <input type="date" value="${item.due_date}" onchange="updateDueDate(${item.id}, this.value)" class="bg-white/5 border border-white/10 px-4 py-2 rounded-lg text-xs text-white focus:border-blue-500 outline-none">
+                    <td class="p-6 italic font-serif text-white/80 text-xl">${item.book_name}</td>
+                    <td class="p-6">
+                        <span class="text-sm font-mono text-dim">${item.due_date}</span>
                     </td>
                     <td class="p-6 text-right" onclick="event.stopPropagation()">
-                        <button onclick="returnBook(${item.id})" class="text-[11px] font-bold text-blue-400 hover:text-white px-4 py-2 border border-blue-400/30 rounded-lg transition uppercase">Return</button>
+                        <button onclick="returnBook('${item.id}')" class="text-xs font-bold text-blue-400 hover:text-white px-6 py-3 border border-blue-400/20 rounded-xl transition uppercase">Return</button>
                     </td>
                 </tr>
             `).join('');
@@ -380,7 +387,7 @@
 
         function renderHistoryTable(data) {
             const tbody = document.getElementById('historyTable');
-            if(!data.length) { tbody.innerHTML = `<tr><td colspan="4" class="py-20 text-center text-dim font-bold uppercase tracking-widest">History Empty</td></tr>`; return; }
+            if(!data.length) { tbody.innerHTML = `<tr><td colspan="4" class="py-20 text-center text-dim font-bold uppercase">No Logs</td></tr>`; return; }
             tbody.innerHTML = data.map(item => `
                 <tr>
                     <td class="p-6">
@@ -388,37 +395,36 @@
                         <p class="text-[10px] font-bold text-dim uppercase">ID: ${item.admission_no}</p>
                     </td>
                     <td class="p-6 italic font-serif text-dim">${item.book_name}</td>
-                    <td class="p-6 text-sm text-dim">${item.issue_date}</td>
-                    <td class="p-6 text-sm text-blue-400 font-bold uppercase">${item.return_date}</td>
+                    <td class="p-6 text-sm text-dim font-mono">${item.issue_date}</td>
+                    <td class="p-6 text-sm text-blue-400 font-bold uppercase font-mono">${item.return_date || 'N/A'}</td>
                 </tr>
             `).join('');
         }
 
-        function renderAnnouncements() {
-            const cont = document.getElementById('announcementsList');
-            if(!announcements.length) { cont.innerHTML = `<p class="text-dim text-xs">No active notices.</p>`; return; }
-            cont.innerHTML = announcements.map(item => `
-                <div class="glass-card p-8 space-y-4 group relative">
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] font-bold text-dim uppercase tracking-widest">${item.date}</span>
-                        <button onclick="deleteAnnouncement(${item.id})" class="text-red-500/50 hover:text-red-500 text-[10px] font-bold transition uppercase">Delete</button>
-                    </div>
-                    <p class="text-2xl italic font-serif text-bone leading-tight">${item.title}</p>
-                    <p class="text-description text-sm">${item.desc}</p>
-                </div>
-            `).join('');
+        async function returnBook(id) {
+            // Optimistic Update: Remove from UI immediately so it feels fast
+            cachedIssues = cachedIssues.filter(i => String(i.id) !== String(id));
+            renderTable(cachedIssues);
+            document.getElementById('statActiveLoans').innerText = cachedIssues.length;
+
+            const res = await fetch(`/api/return/${id}`, { method: 'POST' });
+            if(res.ok) {
+                await refreshAppData();
+                closeModal();
+                showToast("Entry Finalized");
+            }
         }
 
         async function submitIssue() {
             const admission_no = document.getElementById('admNo').value.trim();
             const book_name = document.getElementById('bookName').value.trim();
-            if(!admission_no || !book_name) { showToast("Data Missing"); return; }
+            if(!admission_no || !book_name) return;
 
             const payload = { admission_no, book_name };
             if (!existingStudents.includes(admission_no)) {
                 payload.student_name = document.getElementById('studentName').value.trim();
                 payload.class_section = document.getElementById('studentClass').value.trim();
-                if(!payload.student_name) { showToast("Enter Scholar Name"); return; }
+                if(!payload.student_name) return;
             }
 
             const res = await fetch('/api/issue', {
@@ -431,52 +437,68 @@
                 document.getElementById('admNo').value = '';
                 document.getElementById('bookName').value = '';
                 document.getElementById('newStudentBox').classList.add('hidden');
-                showToast("Loan Committed");
+                showToast("Loan Registered");
                 switchTab('ledger');
             }
         }
 
-        async function returnBook(id) {
-            // FIX: Ensure backend completes before refreshing UI
-            const res = await fetch(`/api/return/${id}`, { method: 'POST' });
-            if(res.ok) {
-                await refreshAppData(); // Wait for sync
-                closeModal();
-                showToast("Volume Returned");
-            } else {
-                showToast("Return Error");
-            }
+        function renderLeaderboard(data) {
+            const cont = document.getElementById('leaderboardList');
+            if(!data.length) { cont.innerHTML = `<p class="text-dim text-xs uppercase tracking-widest text-center py-10">Archive Empty</p>`; return; }
+            cont.innerHTML = data.map((item, idx) => `
+                <div class="glass-card p-8 flex justify-between items-center group cursor-pointer" onclick="switchTab('ledger')">
+                    <div class="flex items-center gap-10">
+                        <span class="text-6xl italic font-serif text-white/10 group-hover:text-blue-500 transition">0${idx+1}</span>
+                        <div>
+                            <p class="font-bold text-white text-2xl">${item.name}</p>
+                            <p class="text-xs font-bold text-dim uppercase mt-1 tracking-widest">${item.class_section} • ADM: ${item.admission_no}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-4xl font-serif text-white italic">${item.total_borrowed}</span>
+                        <p class="text-[10px] font-bold text-dim uppercase tracking-widest">Logs</p>
+                    </div>
+                </div>
+            `).join('');
         }
 
+        function renderAnnouncements() {
+            const cont = document.getElementById('announcementsList');
+            if(!announcements.length) { cont.innerHTML = `<p class="text-dim text-xs">No active broadcasts.</p>`; return; }
+            cont.innerHTML = announcements.map(item => `
+                <div class="space-y-6 group">
+                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                        <span class="text-[10px] font-bold text-dim uppercase tracking-[0.3em]">${item.date}</span>
+                        <button onclick="deleteAnnouncement('${item.id}')" class="text-red-500/30 hover:text-red-500 transition text-[10px] uppercase font-bold">Wipe</button>
+                    </div>
+                    <p class="text-3xl italic font-serif text-white leading-tight">${item.title}</p>
+                    <p class="text-dim text-lg font-light leading-relaxed">${item.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        // UI HELPERS
         function openModal(id) {
-            const item = cachedIssues.find(i => i.id == id);
+            const item = cachedIssues.find(i => String(i.id) === String(id));
             if(!item) return;
             document.getElementById('modalContent').innerHTML = `
-                <div class="grid grid-cols-2 gap-8 border border-white/10 p-8 glass-card">
-                    <div><span class="text-dim block text-[10px] font-bold uppercase mb-2">Scholar</span><span class="text-bone text-lg">${item.name}</span></div>
-                    <div><span class="text-dim block text-[10px] font-bold uppercase mb-2">Terminal</span><span class="text-bone text-lg">${item.class_section}</span></div>
-                    <div><span class="text-dim block text-[10px] font-bold uppercase mb-2">Issued</span><span class="text-dim text-lg">${item.issue_date}</span></div>
-                    <div><span class="text-dim block text-[10px] font-bold uppercase mb-2">Due</span><span class="text-bone text-lg">${item.due_date}</span></div>
+                <div class="grid grid-cols-2 gap-10 border border-white/10 p-10 glass-card">
+                    <div><span class="text-dim block text-xs font-bold uppercase mb-3 tracking-widest">Scholar</span><span class="text-white text-2xl">${item.name}</span></div>
+                    <div><span class="text-dim block text-xs font-bold uppercase mb-3 tracking-widest">Terminal</span><span class="text-white text-2xl">${item.class_section}</span></div>
+                    <div><span class="text-dim block text-xs font-bold uppercase mb-3 tracking-widest">Issued</span><span class="text-dim text-2xl font-mono">${item.issue_date}</span></div>
+                    <div><span class="text-dim block text-xs font-bold uppercase mb-3 tracking-widest">Deadline</span><span class="text-white text-2xl font-mono">${item.due_date}</span></div>
                 </div>
-                <div class="p-8 bg-blue-500/5 rounded-2xl border border-blue-500/20">
-                    <span class="text-blue-400 block text-[10px] font-bold uppercase mb-4 tracking-widest">Publication Title</span>
-                    <h4 class="text-3xl italic font-serif text-bone leading-tight">${item.book_name}</h4>
+                <div class="p-10 glass-card bg-blue-500/5 border-blue-500/20">
+                    <span class="text-blue-400 block text-xs font-bold uppercase mb-4 tracking-widest">Archival Title</span>
+                    <h4 class="text-4xl italic font-serif text-white leading-tight">${item.book_name}</h4>
                 </div>
             `;
-            document.getElementById('modalReturnBtn').onclick = () => returnBook(id);
+            document.getElementById('modalReturnBtn').onclick = () => returnBook(item.id);
             document.getElementById('detailModal').classList.remove('hidden');
             document.getElementById('detailModal').classList.add('flex');
-            setTimeout(() => { document.getElementById('modalScale').style.transform = 'scale(1)'; }, 10);
         }
 
-        function closeModal() {
-            document.getElementById('modalScale').style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                document.getElementById('detailModal').classList.add('hidden');
-                document.getElementById('detailModal').classList.remove('flex');
-            }, 200);
-        }
-
+        function closeModal() { document.getElementById('detailModal').classList.add('hidden'); }
         function selectPresetBook(t) { document.getElementById('bookName').value = t; }
         function checkStudentExistence() {
             const box = document.getElementById('newStudentBox');
@@ -488,12 +510,11 @@
             const title = document.getElementById('annTitle').value;
             const desc = document.getElementById('annDesc').value;
             await fetch('/api/announcements/add', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({title, desc}) });
-            closeAnnouncementModal(); await refreshAppData(); showToast("Notice Published");
+            closeAnnouncementModal(); await refreshAppData(); showToast("Broadcast Finalized");
         }
         async function deleteAnnouncement(id) { await fetch(`/api/announcements/delete/${id}`, { method: 'POST' }); await refreshAppData(); }
         async function exportDatabase() { window.location.href = '/api/backup/export'; }
-        async function updateDueDate(id, due_date) { await fetch('/api/update-date', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id, due_date}) }); showToast("Deadline Extended"); }
-
+        function logout() { location.reload(); }
         function filterTable() {
             const q = document.getElementById('searchFilter').value.toLowerCase();
             renderTable(cachedIssues.filter(i => i.name.toLowerCase().includes(q) || i.admission_no.includes(q) || i.book_name.toLowerCase().includes(q)));
