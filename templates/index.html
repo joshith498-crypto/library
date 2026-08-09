@@ -9,8 +9,8 @@
     <style>
         :root {
             --bg: #000000;
-            --glass: rgba(20, 20, 22, 0.8);
-            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass: rgba(15, 15, 17, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.18);
         }
 
         body { 
@@ -21,157 +21,183 @@
             min-height: 100vh;
         }
 
-        /* macOS Liquid Background */
+        /* Animated macOS Liquid Mesh */
         .liquid-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            background: 
-                radial-gradient(circle at 10% 10%, #1a1a1a 0%, transparent 40%),
-                radial-gradient(circle at 90% 10%, #0a1a2f 0%, transparent 40%),
-                radial-gradient(circle at 50% 90%, #1a0a1a 0%, transparent 40%);
-            filter: blur(80px);
+            background: linear-gradient(45deg, #000, #0a0a0a, #001220, #000);
+            background-size: 400% 400%;
+            animation: meshMove 15s ease infinite;
+        }
+
+        @keyframes meshMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .liquid-blob {
+            position: fixed;
+            width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(0, 122, 255, 0.15) 0%, transparent 70%);
+            filter: blur(100px);
+            z-index: -1;
+            animation: float 20s infinite alternate;
+        }
+
+        @keyframes float {
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(30%, 20%); }
         }
 
         .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(50px) saturate(200%);
-            -webkit-backdrop-filter: blur(50px) saturate(200%);
+            backdrop-filter: blur(60px) saturate(210%);
+            -webkit-backdrop-filter: blur(60px) saturate(210%);
             border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-radius: 32px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
         }
 
         .nav-link {
-            font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-            text-transform: uppercase; color: rgba(255, 255, 255, 0.4);
-            transition: 0.3s; padding-bottom: 4px;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+            text-transform: uppercase; color: rgba(255, 255, 255, 0.3);
+            transition: 0.4s; padding: 8px 16px; border-radius: 12px;
         }
-        .nav-link.active { color: #FFFFFF; border-bottom: 2px solid white; }
+        .nav-link.active { color: #FFFFFF; background: rgba(255,255,255,0.05); }
 
         .btn-mac {
-            background: #FFFFFF; color: #000; font-weight: 700;
-            border-radius: 14px; transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            background: #FFFFFF; color: #000; font-weight: 800;
+            border-radius: 16px; transition: 0.3s cubic-bezier(0.2, 1, 0.2, 1);
+            text-transform: uppercase; font-size: 11px; letter-spacing: 0.05em;
         }
-        .btn-mac:hover { transform: scale(1.03) translateY(-2px); box-shadow: 0 10px 25px rgba(255,255,255,0.2); }
+        .btn-mac:hover { transform: scale(1.04) translateY(-3px); box-shadow: 0 15px 30px rgba(255,255,255,0.25); }
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
-        td { background: rgba(255,255,255,0.03); padding: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
-        td:first-child { border-top-left-radius: 18px; border-bottom-left-radius: 18px; }
-        td:last-child { border-top-right-radius: 18px; border-bottom-right-radius: 18px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 12px; }
+        td { background: rgba(255,255,255,0.04); padding: 24px; border-top: 1px solid rgba(255,255,255,0.08); }
+        td:first-child { border-top-left-radius: 20px; border-bottom-left-radius: 20px; }
+        td:last-child { border-top-right-radius: 20px; border-bottom-right-radius: 20px; }
 
         #notification {
-            transform: translate(-50%, -100px);
-            transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translate(-50%, -120px);
+            transition: 0.7s cubic-bezier(0.1, 1, 0.1, 1);
         }
-        #notification.show { transform: translate(-50%, 40px); }
+        #notification.show { transform: translate(-50%, 50px); }
     </style>
 </head>
 <body>
 
     <div class="liquid-bg"></div>
+    <div class="liquid-blob"></div>
 
-    <!-- Toast Notification -->
-    <div id="notification" class="fixed top-0 left-1/2 -translate-x-1/2 z-[100] glass-card px-10 py-5 flex items-center gap-5">
-        <div class="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_15px_#007AFF]"></div>
-        <span id="notifText" class="text-sm font-bold uppercase tracking-widest">Action Confirmed</span>
+    <!-- Notification -->
+    <div id="notification" class="fixed top-0 left-1/2 -translate-x-1/2 z-[100] glass-card px-10 py-5 flex items-center gap-5 border-blue-500/30">
+        <div class="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_20px_#007AFF] animate-pulse"></div>
+        <span id="notifText" class="text-sm font-bold uppercase tracking-widest text-white">System Synchronized</span>
     </div>
 
     <!-- Login -->
     <div id="loginOverlay" class="fixed inset-0 z-[60] bg-black flex items-center justify-center p-8">
         <div class="max-w-md w-full space-y-12 text-center">
-            <h1 class="text-7xl italic font-serif text-white">Archive</h1>
-            <div class="glass-card p-12 space-y-8">
-                <input type="password" id="loginPass" placeholder="ADMIN PASSCODE" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-center text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-                <button onclick="attemptLogin()" class="w-full btn-mac py-5 uppercase tracking-widest">Unlock Terminal</button>
-                <p id="loginError" class="text-xs font-bold text-red-500 uppercase hidden">Invalid Passcode</p>
+            <h1 class="text-8xl italic font-serif text-white tracking-tighter">Archive</h1>
+            <div class="glass-card p-12 space-y-8 border-white/5">
+                <input type="password" id="loginPass" placeholder="ADMIN ACCESS CODE" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-center text-white text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                <button onclick="attemptLogin()" class="w-full btn-mac py-6">Initialize Portal</button>
+                <p id="loginError" class="text-xs font-bold text-red-500 uppercase hidden">Invalid Security Code</p>
             </div>
         </div>
     </div>
 
     <!-- App -->
     <div id="dashboardApp" class="hidden min-h-screen flex-col">
-        <header class="px-12 py-10 flex justify-between items-center sticky top-0 z-40 bg-black/10 backdrop-blur-2xl">
+        <header class="px-12 py-10 flex justify-between items-center sticky top-0 z-40 bg-black/10 backdrop-blur-3xl border-b border-white/5">
             <div class="flex items-center gap-20">
                 <div class="font-serif italic text-4xl text-white font-black tracking-tighter">ZHS</div>
-                <nav class="hidden md:flex gap-12">
+                <nav class="hidden md:flex gap-6">
                     <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-link active">Dashboard</button>
                     <button onclick="switchTab('issue')" id="nav-issue" class="nav-link">Issue</button>
                     <button onclick="switchTab('ledger')" id="nav-ledger" class="nav-link">Ledger</button>
                     <button onclick="switchTab('history')" id="nav-history" class="nav-link">History</button>
                 </nav>
             </div>
-            <button onclick="location.reload()" class="text-xs font-bold text-red-500 uppercase tracking-widest">Logout</button>
+            <div class="flex items-center gap-8">
+                <button onclick="exportBackup()" class="text-[10px] font-black text-blue-400 uppercase tracking-widest hover:text-white transition">Backup Data</button>
+                <label class="text-[10px] font-black text-emerald-400 uppercase tracking-widest hover:text-white transition cursor-pointer">
+                    Restore <input type="file" id="importFile" accept=".json" onchange="importBackup(event)" class="hidden">
+                </label>
+                <button onclick="location.reload()" class="text-[10px] font-black text-red-500 uppercase tracking-widest">Logout</button>
+            </div>
         </header>
 
         <main class="max-w-7xl w-full mx-auto p-12 flex-grow">
             
             <!-- DASHBOARD -->
-            <div id="tab-dashboard" class="space-y-20">
-                <div class="space-y-4">
-                    <h1 class="text-8xl md:text-[10rem] italic tracking-tighter text-white font-serif leading-none">The <span class="opacity-20">Archive</span></h1>
-                    <p class="text-white/50 text-xl max-w-2xl font-light">Zee High School Library | Physical-to-Digital Repository v2.6</p>
+            <div id="tab-dashboard" class="space-y-24">
+                <div class="space-y-6">
+                    <h1 class="text-9xl md:text-[12rem] italic tracking-tighter text-white font-serif leading-none">The <span class="opacity-20 italic">Archive</span></h1>
+                    <p class="text-white/40 text-2xl max-w-2xl font-light tracking-tight">Zee High School | Advanced Archival Interface v3.0</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="glass-card p-12 space-y-4">
-                        <p class="text-xs font-bold text-white/40 uppercase tracking-widest">Active Loans</p>
-                        <h3 id="statActiveLoans" class="text-8xl font-serif text-white">0</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div class="glass-card p-14 space-y-6">
+                        <p class="text-xs font-black text-white/30 uppercase tracking-[0.3em]">Volumes Borrowed</p>
+                        <h3 id="statActiveLoans" class="text-9xl font-serif text-white tracking-tighter">0</h3>
                     </div>
-                    <div class="glass-card p-12 space-y-4">
-                        <p class="text-xs font-bold text-white/40 uppercase tracking-widest">History Log</p>
-                        <h3 id="statHistory" class="text-8xl font-serif text-white">0</h3>
+                    <div class="glass-card p-14 space-y-6">
+                        <p class="text-xs font-black text-white/30 uppercase tracking-[0.3em]">Logs Archived</p>
+                        <h3 id="statHistory" class="text-9xl font-serif text-white tracking-tighter">0</h3>
                     </div>
-                    <div class="glass-card p-12 flex flex-col justify-between">
-                        <p class="text-xs font-bold text-white/40 uppercase tracking-widest">System Status</p>
-                        <div class="text-sm font-bold text-blue-400 uppercase tracking-widest flex items-center gap-4">
-                            <span class="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></span> Persistent Sync Active
+                    <div class="glass-card p-14 flex flex-col justify-between border-blue-500/20">
+                        <p class="text-xs font-black text-white/30 uppercase tracking-[0.3em]">System Engine</p>
+                        <div class="text-sm font-black text-blue-400 uppercase tracking-[0.2em] flex items-center gap-5">
+                            <span class="w-4 h-4 rounded-full bg-blue-500 animate-pulse shadow-[0_0_25px_#007AFF]"></span> Persistent Logic Active
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-20">
-                    <div class="lg:col-span-7 space-y-10">
-                        <h3 class="text-3xl italic font-serif">Leaderboard</h3>
-                        <div id="leaderboardList" class="space-y-6"></div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-24">
+                    <div class="lg:col-span-7 space-y-12">
+                        <h3 class="text-4xl italic font-serif text-white">Engagement Leaderboard</h3>
+                        <div id="leaderboardList" class="space-y-8"></div>
                     </div>
-                    <div class="lg:col-span-5 space-y-10">
-                        <div class="flex justify-between items-center border-b border-white/10 pb-6">
-                            <h3 class="text-3xl italic font-serif">Notices</h3>
-                            <button onclick="openAnnModal()" class="text-4xl opacity-30 hover:opacity-100 transition">+</button>
+                    <div class="lg:col-span-5 space-y-12">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-8">
+                            <h3 class="text-4xl italic font-serif text-white">Notices</h3>
+                            <button onclick="openAnnModal()" class="text-5xl font-light text-white/20 hover:text-white transition">+</button>
                         </div>
-                        <div id="annList" class="space-y-12"></div>
+                        <div id="annList" class="space-y-14"></div>
                     </div>
                 </div>
             </div>
 
             <!-- ISSUE -->
-            <div id="tab-issue" class="hidden max-w-2xl mx-auto py-10">
-                <div class="glass-card p-16 space-y-12">
-                    <h2 class="text-5xl italic font-serif text-white">Register Loan</h2>
-                    <div class="space-y-10">
-                        <div class="space-y-8">
-                            <input type="text" id="admNo" placeholder="ADMISSION ID" class="w-full bg-transparent border-b-2 border-white/10 py-5 text-xl font-serif text-white focus:outline-none focus:border-blue-500 transition">
-                            <input type="text" id="studentName" placeholder="STUDENT NAME" class="w-full bg-transparent border-b-2 border-white/10 py-5 text-xl font-serif text-white focus:outline-none focus:border-blue-500 transition">
-                            <input type="text" id="studentClass" placeholder="CLASS & SECTION" class="w-full bg-transparent border-b-2 border-white/10 py-5 text-xl font-serif text-white focus:outline-none focus:border-blue-500 transition">
-                            <input type="text" id="bookName" placeholder="PUBLICATION TITLE" class="w-full bg-transparent border-b-2 border-white/10 py-5 text-xl font-serif text-white focus:outline-none focus:border-blue-500 transition">
+            <div id="tab-issue" class="hidden max-w-3xl mx-auto py-10">
+                <div class="glass-card p-20 space-y-14">
+                    <h2 class="text-6xl italic font-serif text-white">Register Loan</h2>
+                    <div class="space-y-12">
+                        <div class="space-y-10">
+                            <input type="text" id="admNo" placeholder="SCHOLAR ADMISSION ID" class="w-full bg-transparent border-b-2 border-white/10 py-6 text-2xl font-serif text-white focus:outline-none focus:border-blue-500 transition placeholder:text-white/10">
+                            <input type="text" id="studentName" placeholder="SCHOLAR FULL NAME" class="w-full bg-transparent border-b-2 border-white/10 py-6 text-2xl font-serif text-white focus:outline-none focus:border-blue-500 transition placeholder:text-white/10">
+                            <input type="text" id="studentClass" placeholder="CLASS & SECTION" class="w-full bg-transparent border-b-2 border-white/10 py-6 text-2xl font-serif text-white focus:outline-none focus:border-blue-500 transition placeholder:text-white/10">
+                            <input type="text" id="bookName" placeholder="PUBLICATION TITLE" class="w-full bg-transparent border-b-2 border-white/10 py-6 text-2xl font-serif text-white focus:outline-none focus:border-blue-500 transition placeholder:text-white/10">
                         </div>
-                        <button onclick="submitIssue()" class="w-full btn-mac py-6 text-lg">Commit Transaction</button>
+                        <button onclick="submitIssue()" class="w-full btn-mac py-7 text-xl">Confirm Transaction</button>
                     </div>
                 </div>
             </div>
 
             <!-- LEDGER -->
-            <div id="tab-ledger" class="hidden space-y-12">
-                <h2 class="text-6xl italic font-serif font-bold">Active Ledger</h2>
+            <div id="tab-ledger" class="hidden space-y-14">
+                <h2 class="text-7xl italic font-serif font-bold text-white">Active Ledger</h2>
                 <div class="overflow-x-auto">
                     <table>
                         <thead>
-                            <tr class="text-white/40 font-bold text-xs uppercase tracking-widest">
-                                <th class="p-6 text-left">Scholar</th>
-                                <th class="p-6 text-left">Publication</th>
-                                <th class="p-6 text-left">Date Issued</th>
-                                <th class="p-6 text-right">Actions</th>
+                            <tr class="text-white/30 font-black text-xs uppercase tracking-[0.4em]">
+                                <th class="p-8 text-left">Scholar Information</th>
+                                <th class="p-8 text-left">Publication</th>
+                                <th class="p-8 text-left">Issue Date</th>
+                                <th class="p-8 text-right">Control</th>
                             </tr>
                         </thead>
                         <tbody id="issuesTable"></tbody>
@@ -180,16 +206,16 @@
             </div>
 
             <!-- HISTORY -->
-            <div id="tab-history" class="hidden space-y-12">
-                <h2 class="text-6xl italic font-serif font-bold">Historical Log</h2>
+            <div id="tab-history" class="hidden space-y-14">
+                <h2 class="text-7xl italic font-serif font-bold text-white">Historical Logs</h2>
                 <div class="overflow-x-auto">
                     <table>
                         <thead>
-                            <tr class="text-white/40 font-bold text-xs uppercase tracking-widest">
-                                <th class="p-6 text-left">Scholar</th>
-                                <th class="p-6 text-left">Publication</th>
-                                <th class="p-6 text-left">Issued</th>
-                                <th class="p-6 text-left">Returned</th>
+                            <tr class="text-white/30 font-black text-xs uppercase tracking-[0.4em]">
+                                <th class="p-8 text-left">Scholar</th>
+                                <th class="p-8 text-left">Publication</th>
+                                <th class="p-8 text-left">Issued</th>
+                                <th class="p-8 text-left">Returned</th>
                             </tr>
                         </thead>
                         <tbody id="historyTable"></tbody>
@@ -200,25 +226,57 @@
     </div>
 
     <!-- Notice Modal -->
-    <div id="annModal" class="fixed inset-0 z-[70] bg-black/90 backdrop-blur-3xl hidden items-center justify-center p-8">
-        <div class="glass-card p-16 max-w-md w-full space-y-8">
-            <h3 class="text-4xl italic font-serif text-white">Broadcast</h3>
-            <div class="space-y-6">
-                <input type="text" id="annTitle" placeholder="HEADLINE" class="w-full bg-transparent border-b border-white/10 py-4 text-white outline-none">
-                <textarea id="annDesc" rows="4" placeholder="CONTENT..." class="w-full glass-card p-6 text-white/50 outline-none"></textarea>
-                <button onclick="submitNotice()" class="w-full btn-mac py-5">Publish</button>
-                <button onclick="closeAnnModal()" class="w-full text-xs font-bold text-white/30">Cancel</button>
+    <div id="annModal" class="fixed inset-0 z-[70] bg-black/95 backdrop-blur-3xl hidden items-center justify-center p-8">
+        <div class="glass-card p-16 max-w-lg w-full space-y-10">
+            <h3 class="text-5xl italic font-serif text-white">Broadcast Notice</h3>
+            <div class="space-y-8">
+                <input type="text" id="annTitle" placeholder="HEADLINE" class="w-full bg-transparent border-b border-white/10 py-4 text-2xl text-white outline-none">
+                <textarea id="annDesc" rows="5" placeholder="CONTENT..." class="w-full glass-card p-8 text-white/60 text-lg outline-none border-white/5"></textarea>
+                <button onclick="submitNotice()" class="w-full btn-mac py-6">Publish Notice</button>
+                <button onclick="closeAnnModal()" class="w-full text-xs font-bold text-white/20">Cancel</button>
             </div>
         </div>
     </div>
 
     <script>
-        // DATA ENGINE (LOCAL STORAGE - Bulletproof)
-        let db = JSON.parse(localStorage.getItem('lib_db')) || { issues: [], history: [], notices: [] };
+        // CORE DATABASE (LocalStorage-Persistent)
+        let db = JSON.parse(localStorage.getItem('lib_db_v3')) || { issues: [], history: [], notices: [] };
 
         function saveData() {
-            localStorage.setItem('lib_db', JSON.stringify(db));
+            localStorage.setItem('lib_db_v3', JSON.stringify(db));
             refreshUI();
+        }
+
+        // BACKUP & RESTORE FEATURE
+        function exportBackup() {
+            const dataStr = JSON.stringify(db, null, 4);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `ZHS_Archive_Backup_${new Date().toLocaleDateString().replace(/\//g, '-')}.json`;
+            link.click();
+            showToast("BACKUP DOWNLOADED");
+        }
+
+        function importBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (importedData.issues && importedData.history) {
+                        db = importedData;
+                        saveData();
+                        showToast("SYSTEM RESTORED");
+                        setTimeout(() => location.reload(), 1000);
+                    }
+                } catch (err) {
+                    alert("Invalid Backup File");
+                }
+            };
+            reader.readAsText(file);
         }
 
         function showToast(text) {
@@ -257,7 +315,10 @@
                 book: document.getElementById('bookName').value,
                 date: new Date().toLocaleDateString()
             };
-            if(!issue.adm || !issue.book) return alert("Fill all fields");
+            if(!issue.adm || !issue.book || !issue.name) {
+                showToast("FIELDS MISSING");
+                return;
+            }
             db.issues.push(issue);
             saveData();
             showToast("BOOK ISSUED");
@@ -277,15 +338,19 @@
         }
 
         function submitNotice() {
-            db.notices.unshift({
+            const notice = {
                 id: Date.now(),
                 title: document.getElementById('annTitle').value,
                 desc: document.getElementById('annDesc').value,
                 date: new Date().toLocaleDateString()
-            });
+            };
+            if(!notice.title) return;
+            db.notices.unshift(notice);
             saveData();
             closeAnnModal();
-            showToast("NOTICE POSTED");
+            showToast("NOTICE PUBLISHED");
+            document.getElementById('annTitle').value = '';
+            document.getElementById('annDesc').value = '';
         }
 
         function deleteNotice(id) {
@@ -294,60 +359,67 @@
         }
 
         function refreshUI() {
-            // Stats
             document.getElementById('statActiveLoans').innerText = db.issues.length;
             document.getElementById('statHistory').innerText = db.history.length;
 
-            // Ledger
+            // Ledger UI
             const ledgerBody = document.getElementById('issuesTable');
             ledgerBody.innerHTML = db.issues.map(i => `
-                <tr>
-                    <td><p class="font-bold text-xl">${i.name}</p><p class="text-xs text-white/30 uppercase">ADM: ${i.adm}</p></td>
-                    <td class="italic font-serif text-xl">${i.book}</td>
+                <tr class="group">
+                    <td>
+                        <p class="font-bold text-2xl text-white">${i.name}</p>
+                        <p class="text-xs text-white/30 uppercase tracking-widest mt-1">${i.class} • ADM: ${i.adm}</p>
+                    </td>
+                    <td class="italic font-serif text-2xl text-white/80">${i.book}</td>
                     <td class="font-mono text-sm text-white/40">${i.date}</td>
-                    <td class="text-right"><button onclick="returnBook(${i.id})" class="text-xs font-bold text-blue-400 border border-blue-400/20 px-6 py-3 rounded-xl uppercase">Return</button></td>
+                    <td class="text-right">
+                        <button onclick="returnBook(${i.id})" class="text-[10px] font-black text-blue-400 border border-blue-400/20 px-8 py-4 rounded-2xl uppercase hover:bg-blue-400 hover:text-white transition">Process Return</button>
+                    </td>
                 </tr>
-            `).join('') || '<tr><td colspan="4" class="py-20 text-center opacity-20 uppercase font-bold">Ledger Empty</td></tr>';
+            `).join('') || '<tr><td colspan="4" class="py-24 text-center opacity-20 uppercase font-black tracking-[0.5em]">Empty Ledger</td></tr>';
 
-            // History
+            // History UI
             const histBody = document.getElementById('historyTable');
             histBody.innerHTML = db.history.map(i => `
                 <tr>
-                    <td><p class="font-bold">${i.name}</p><p class="text-xs text-white/30">ADM: ${i.adm}</p></td>
-                    <td class="italic font-serif text-white/50">${i.book}</td>
-                    <td class="text-sm text-white/30">${i.date}</td>
-                    <td class="text-sm text-blue-400 font-bold uppercase">${i.returnDate}</td>
+                    <td>
+                        <p class="font-bold text-xl text-white/80">${i.name}</p>
+                        <p class="text-[10px] text-white/20 uppercase">ADM: ${i.adm}</p>
+                    </td>
+                    <td class="italic font-serif text-white/40 text-xl">${i.book}</td>
+                    <td class="text-sm text-white/20 font-mono">${i.date}</td>
+                    <td class="text-sm text-blue-400 font-black uppercase font-mono">${i.returnDate}</td>
                 </tr>
-            `).join('') || '<tr><td colspan="4" class="py-20 text-center opacity-20 uppercase font-bold">No History</td></tr>';
+            `).join('') || '<tr><td colspan="4" class="py-24 text-center opacity-20 uppercase font-black tracking-[0.5em]">No Log Data</td></tr>';
 
-            // Leaderboard
+            // Leaderboard UI
             const counts = {};
             [...db.issues, ...db.history].forEach(x => counts[x.name] = (counts[x.name] || 0) + 1);
             const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 5);
             document.getElementById('leaderboardList').innerHTML = sorted.map(([name, count], idx) => `
-                <div class="glass-card p-6 flex justify-between items-center">
-                    <div class="flex items-center gap-6">
-                        <span class="text-4xl italic font-serif opacity-10">0${idx+1}</span>
-                        <p class="font-bold text-xl">${name}</p>
+                <div class="glass-card p-10 flex justify-between items-center group">
+                    <div class="flex items-center gap-10">
+                        <span class="text-6xl italic font-serif opacity-10 group-hover:opacity-100 transition duration-500">0${idx+1}</span>
+                        <p class="font-bold text-3xl text-white tracking-tight">${name}</p>
                     </div>
                     <div class="text-right">
-                        <span class="text-2xl font-serif italic">${count}</span>
-                        <p class="text-[9px] font-bold opacity-30 uppercase">Books</p>
+                        <span class="text-4xl font-serif italic text-white">${count}</span>
+                        <p class="text-[10px] font-black opacity-20 uppercase tracking-widest mt-1">Logs</p>
                     </div>
                 </div>
-            `).join('') || '<p class="opacity-20 text-center py-10 uppercase font-bold">No Data</p>';
+            `).join('') || '<p class="opacity-10 text-center py-20 uppercase font-black tracking-widest text-4xl">No Data</p>';
 
-            // Notices
+            // Notices UI
             document.getElementById('annList').innerHTML = db.notices.map(n => `
-                <div class="space-y-4">
-                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                        <span class="text-[10px] font-bold opacity-30 uppercase">${n.date}</span>
-                        <button onclick="deleteNotice(${n.id})" class="text-red-500/30 text-[10px] uppercase font-bold">Delete</button>
+                <div class="space-y-6 group">
+                    <div class="flex justify-between items-center border-b border-white/5 pb-3">
+                        <span class="text-[10px] font-black opacity-20 uppercase tracking-[0.4em]">${n.date}</span>
+                        <button onclick="deleteNotice(${n.id})" class="text-red-500/20 hover:text-red-500 text-[10px] uppercase font-black transition">Wipe</button>
                     </div>
-                    <p class="text-3xl italic font-serif leading-tight">${n.title}</p>
-                    <p class="text-white/50 text-lg font-light leading-relaxed">${n.desc}</p>
+                    <p class="text-4xl italic font-serif leading-tight text-white">${n.title}</p>
+                    <p class="text-white/40 text-xl font-light leading-relaxed">${n.desc}</p>
                 </div>
-            `).join('') || '<p class="opacity-20 text-xs uppercase font-bold">No Notices</p>';
+            `).join('') || '<p class="opacity-20 text-xs uppercase font-black tracking-widest">No Active Broadcasts</p>';
         }
 
         function openAnnModal() { document.getElementById('annModal').classList.remove('hidden'); document.getElementById('annModal').classList.add('flex'); }
