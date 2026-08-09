@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE ARCHIVE | Zee High School</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -22,226 +22,220 @@
     </script>
     <style>
         :root {
-            --bg: #050505;
-            --surface: #0d0d0f;
-            --border: rgba(255, 255, 255, 0.12);
-            --accent: #d4d4d8;
-            --bone-white: #f5f5f7;
+            --bg: #000000;
+            --glass: rgba(20, 20, 22, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --bone: #FFFFFF;
+            --accent: #007AFF; /* macOS Blue */
         }
 
         body { 
             background-color: var(--bg);
-            color: var(--bone-white); /* Improved contrast */
+            color: var(--bone);
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* Particle Canvas */
-        #particle-canvas {
+        /* macOS Liquid Mesh Gradient Background */
+        .liquid-bg {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            pointer-events: none;
+            background: 
+                radial-gradient(circle at 0% 0%, #1a1a1a 0%, transparent 50%),
+                radial-gradient(circle at 100% 0%, #0d1b2a 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, #050505 0%, transparent 100%),
+                radial-gradient(circle at 80% 80%, #111111 0%, transparent 50%);
+            filter: blur(60px);
         }
 
-        /* Subtle Faint Glow behind cards */
-        .school-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(10px);
+        /* Liquid Glass Card (macOS 27 Style) */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px; /* Squircle */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
         }
 
-        /* Typography Fix for Readability */
-        h1, h2, h3 { color: #ffffff; letter-spacing: -0.02em; }
-        .text-secondary { color: #a1a1aa; font-weight: 400; } /* Clear gray */
-        .text-muted { color: #52525b; } /* Dim gray */
+        /* Text Contrast Fix */
+        .text-bone { color: #FFFFFF; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .text-dim { color: rgba(255, 255, 255, 0.5); }
+        .text-description { color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.6; }
 
-        .stat-value {
-            font-family: 'Fraunces', serif;
-            color: #ffffff;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        .btn-mac {
+            background: #FFFFFF;
+            color: #000;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-mac:hover {
+            transform: scale(1.02);
+            background: #f0f0f0;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
         }
 
-        .btn-primary {
-            background: #ffffff;
-            color: #000000;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 0.1em;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .btn-primary:hover { 
-            background: #e4e4e7;
-            box-shadow: 0 0 15px rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
+        /* Table Styling */
+        table { border-spacing: 0 8px; border-collapse: separate; }
+        tbody tr { background: rgba(255,255,255,0.02); transition: transform 0.2s; }
+        tbody tr:hover { background: rgba(255,255,255,0.05); transform: scale(1.002); }
+        td:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+        td:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
 
-        /* Table Readability */
-        thead tr { border-bottom: 2px solid var(--border); }
-        tbody tr { transition: background 0.2s; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        tbody tr:hover { background: rgba(255, 255, 255, 0.03); }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
 
-        #notification {
-            transform: translate(-50%, 100px);
-            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-        #notification.show { transform: translate(-50%, 0); }
+        /* Tab Transitions */
+        .tab-content { animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <canvas id="particle-canvas"></canvas>
+    <div class="liquid-bg"></div>
 
-    <!-- Toast Notification -->
-    <div id="notification" class="fixed bottom-10 left-1/2 z-[100] bg-white text-black px-8 py-4 rounded-full text-xs font-bold shadow-2xl flex items-center gap-4">
-        <span id="notifIcon" class="bg-black text-white rounded-full w-5 h-5 flex items-center justify-center">✓</span>
-        <span id="notifText" class="tracking-widest uppercase">System Updated</span>
+    <!-- macOS Toast -->
+    <div id="notification" class="fixed top-10 left-1/2 -translate-x-1/2 z-[100] glass-card px-8 py-4 flex items-center gap-4 opacity-0 pointer-events-none transition-all duration-500 scale-90">
+        <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+        <span id="notifText" class="text-xs font-semibold tracking-widest uppercase text-white">Action Confirmed</span>
     </div>
 
     <!-- Login -->
-    <div id="loginOverlay" class="fixed inset-0 z-50 bg-[#050505] flex items-center justify-center p-6">
+    <div id="loginOverlay" class="fixed inset-0 z-50 bg-black flex items-center justify-center p-6">
         <div class="max-w-md w-full space-y-10 text-center">
-            <div class="space-y-2">
-                <h1 class="text-5xl italic font-serif">The Archive</h1>
-                <p class="font-mono text-[10px] text-muted tracking-[0.4em] uppercase">Authentication Required</p>
-            </div>
-            <div class="school-card p-10 space-y-6">
-                <input type="password" id="loginPass" placeholder="ENTER ACCESS CODE" class="w-full bg-transparent border-b border-zinc-800 py-4 text-center font-mono text-sm text-white focus:outline-none focus:border-white transition">
-                <button onclick="attemptLogin()" class="w-full btn-primary py-5 rounded-sm">Establish Connection</button>
-                <p id="loginError" class="text-[10px] font-mono text-rose-500 uppercase hidden tracking-widest">Unauthorized Terminal</p>
+            <h1 class="text-6xl italic font-serif text-bone">Archive</h1>
+            <div class="glass-card p-10 space-y-6">
+                <input type="password" id="loginPass" placeholder="Access Code" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-center text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition">
+                <button onclick="attemptLogin()" class="w-full btn-mac py-4">Unlock System</button>
+                <p id="loginError" class="text-[10px] font-mono text-red-400 uppercase hidden tracking-widest">Unauthorized Access</p>
             </div>
         </div>
     </div>
 
     <!-- Main App -->
     <div id="dashboardApp" class="hidden min-h-screen flex-col">
-        <header class="border-b border-white/10 px-10 py-6 flex justify-between items-center sticky top-0 z-40 bg-black/60 backdrop-blur-xl">
-            <div class="flex items-center gap-12">
-                <div class="font-serif italic text-3xl text-white font-bold tracking-tighter">ZHS</div>
+        <header class="px-10 py-8 flex justify-between items-center sticky top-0 z-40 bg-black/20 backdrop-blur-md">
+            <div class="flex items-center gap-16">
+                <div class="font-serif italic text-3xl text-bone font-bold tracking-tighter">ZHS</div>
                 <nav class="hidden md:flex gap-10">
-                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="text-[10px] font-mono uppercase tracking-[0.2em] text-white border-b border-white pb-1">Dashboard</button>
-                    <button onclick="switchTab('issue')" id="nav-issue" class="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500 hover:text-white transition">Issue</button>
-                    <button onclick="switchTab('ledger')" id="nav-ledger" class="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500 hover:text-white transition">Ledger</button>
-                    <button onclick="switchTab('history')" id="nav-history" class="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500 hover:text-white transition">History</button>
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="text-[11px] font-semibold uppercase tracking-widest text-bone border-b-2 border-white pb-1">Dashboard</button>
+                    <button onclick="switchTab('issue')" id="nav-issue" class="text-[11px] font-semibold uppercase tracking-widest text-dim hover:text-white transition">Issue</button>
+                    <button onclick="switchTab('ledger')" id="nav-ledger" class="text-[11px] font-semibold uppercase tracking-widest text-dim hover:text-white transition">Ledger</button>
+                    <button onclick="switchTab('history')" id="nav-history" class="text-[11px] font-semibold uppercase tracking-widest text-dim hover:text-white transition">History</button>
                 </nav>
             </div>
             <div class="flex gap-8">
-                <button onclick="exportDatabase()" class="text-[10px] font-mono text-zinc-500 hover:text-white transition uppercase">Backup</button>
-                <button onclick="logout()" class="text-[10px] font-mono text-rose-400 hover:text-rose-300 transition uppercase">Exit</button>
+                <button onclick="exportDatabase()" class="text-[10px] font-bold text-dim hover:text-white transition uppercase">Backup</button>
+                <button onclick="logout()" class="text-[10px] font-bold text-red-500/80 hover:text-red-400 transition uppercase tracking-widest">Exit</button>
             </div>
         </header>
 
         <main class="max-w-7xl w-full mx-auto p-10 flex-grow">
             
-            <!-- Dashboard -->
-            <div id="tab-dashboard" class="space-y-16">
+            <!-- Dashboard Tab -->
+            <div id="tab-dashboard" class="tab-content space-y-16">
                 <div class="py-10">
-                    <span class="font-mono text-[10px] text-zinc-500 uppercase tracking-[0.4em] mb-4 block">System Status: Active</span>
-                    <h1 class="text-7xl md:text-9xl italic tracking-tighter mb-6">Library <span class="text-zinc-800 italic">Curator</span></h1>
-                    <p class="text-secondary text-lg max-w-xl leading-relaxed">High-fidelity circulation management for the Zee High School digital archive.</p>
+                    <h1 class="text-7xl md:text-9xl italic tracking-tighter text-bone mb-6">Library <span class="text-white/20 italic">Archive</span></h1>
+                    <p class="text-description max-w-xl">Curating the Zee High School literary repository with precision and real-time synchronization.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border border-white/10">
-                    <div class="p-12 border-r border-white/10 bg-white/[0.01]">
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-6">Volumes Afield</p>
-                        <h3 id="statActiveLoans" class="stat-value text-8xl">0</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-card p-10">
+                        <p class="text-[10px] font-bold text-dim uppercase tracking-widest mb-4">Active Loans</p>
+                        <h3 id="statActiveLoans" class="text-7xl font-serif text-bone">0</h3>
                     </div>
-                    <div class="p-12 border-r border-white/10">
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-500 mb-6">Total Scholars</p>
-                        <h3 id="statTotalStudents" class="stat-value text-8xl">0</h3>
+                    <div class="glass-card p-10">
+                        <p class="text-[10px] font-bold text-dim uppercase tracking-widest mb-4">Total Scholars</p>
+                        <h3 id="statTotalStudents" class="text-7xl font-serif text-bone">0</h3>
                     </div>
-                    <div class="p-12 bg-white/[0.02] flex flex-col justify-between">
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-zinc-500">Archive Link</p>
-                        <div class="text-xs font-mono text-emerald-400 uppercase tracking-[0.3em] flex items-center gap-4">
-                            <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_10px_#34d399]"></span> Synchronized
+                    <div class="glass-card p-10 flex flex-col justify-between">
+                        <p class="text-[10px] font-bold text-dim uppercase tracking-widest">Status</p>
+                        <div class="text-[11px] font-bold text-blue-400 uppercase tracking-widest flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_#007AFF]"></span> Ready for Input
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-20">
-                    <div class="lg:col-span-7 space-y-10">
-                        <h3 class="text-3xl italic">Engagement Leaderboard</h3>
-                        <div id="leaderboardList" class="divide-y divide-white/5"></div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    <div class="lg:col-span-7 space-y-8">
+                        <h3 class="text-2xl font-serif italic text-bone">Scholarly Leaderboard</h3>
+                        <div id="leaderboardList" class="space-y-4"></div>
                     </div>
-                    <div class="lg:col-span-5 space-y-10">
-                        <div class="flex justify-between items-center border-b border-white/10 pb-6">
-                            <h3 class="text-3xl italic">Notices</h3>
-                            <button onclick="openAnnouncementModal()" class="text-white bg-white/10 p-2 rounded-full hover:bg-white/20 transition">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="2"/></svg>
-                            </button>
+                    <div class="lg:col-span-5 space-y-8">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-4">
+                            <h3 class="text-2xl font-serif italic text-bone">Notices</h3>
+                            <button onclick="openAnnouncementModal()" class="text-white/30 hover:text-white transition text-xl">+</button>
                         </div>
-                        <div id="announcementsList" class="space-y-10"></div>
+                        <div id="announcementsList" class="space-y-8"></div>
                     </div>
                 </div>
             </div>
 
             <!-- Issue Tab -->
-            <div id="tab-issue" class="hidden py-20 max-w-2xl mx-auto">
-                <div class="school-card p-16 space-y-12">
-                    <div class="space-y-2">
-                        <h2 class="text-4xl italic">New Circulation</h2>
-                        <p class="text-secondary font-mono text-[10px] uppercase tracking-widest">Register a publication loan</p>
-                    </div>
+            <div id="tab-issue" class="hidden tab-content py-10 max-w-2xl mx-auto">
+                <div class="glass-card p-12 space-y-10">
+                    <h2 class="text-4xl italic text-bone">New Transaction</h2>
                     <div class="space-y-8">
-                        <div class="space-y-4">
-                            <label class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Presets</label>
-                            <div class="flex flex-wrap gap-3">
-                                <button onclick="selectPresetBook('Advanced Mathematics Vol. 1')" class="px-5 py-2 border border-white/10 text-[10px] font-mono hover:border-white transition uppercase">Math_V1</button>
-                                <button onclick="selectPresetBook('Physics Lab Manual')" class="px-5 py-2 border border-white/10 text-[10px] font-mono hover:border-white transition uppercase">Physics</button>
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-bold text-dim uppercase">Presets</label>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="selectPresetBook('Advanced Mathematics Vol. 1')" class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[10px] hover:bg-white/10 transition">MATH_V1</button>
+                                <button onclick="selectPresetBook('Physics Grade 10 Lab Manual')" class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[10px] hover:bg-white/10 transition">PHYS_LAB</button>
                             </div>
                         </div>
                         <div class="space-y-6">
-                            <input type="text" id="admNo" oninput="checkStudentExistence()" placeholder="ADMISSION ID" class="w-full bg-transparent border-b border-zinc-800 py-4 text-sm font-mono text-white focus:outline-none focus:border-white transition">
-                            <div id="newStudentBox" class="hidden p-10 bg-white/[0.03] border border-white/10 space-y-6">
-                                <p class="font-mono text-[10px] text-emerald-400 uppercase">New Scholar Record</p>
-                                <input type="text" id="studentName" placeholder="FULL NAME" class="w-full bg-transparent border-b border-zinc-800 py-2 text-sm text-white">
-                                <input type="text" id="studentClass" placeholder="CLASS & SECTION" class="w-full bg-transparent border-b border-zinc-800 py-2 text-sm text-white">
+                            <input type="text" id="admNo" oninput="checkStudentExistence()" placeholder="Admission ID" class="w-full bg-transparent border-b border-white/10 py-4 text-white focus:outline-none focus:border-blue-500 transition">
+                            <div id="newStudentBox" class="hidden p-8 glass-card border-blue-500/30 space-y-4">
+                                <p class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">New Student Record</p>
+                                <input type="text" id="studentName" placeholder="Full Student Name" class="w-full bg-transparent border-b border-white/10 py-2 text-white">
+                                <input type="text" id="studentClass" placeholder="Class & Section" class="w-full bg-transparent border-b border-white/10 py-2 text-white">
                             </div>
-                            <input type="text" id="bookName" placeholder="PUBLICATION TITLE" class="w-full bg-transparent border-b border-zinc-800 py-4 text-sm text-white focus:outline-none focus:border-white transition">
+                            <input type="text" id="bookName" placeholder="Publication Title" class="w-full bg-transparent border-b border-white/10 py-4 text-white focus:outline-none focus:border-blue-500 transition">
                         </div>
-                        <button onclick="submitIssue()" class="w-full btn-primary py-6 text-sm">Commit Transaction</button>
+                        <button onclick="submitIssue()" class="w-full btn-mac py-5">Register Loan</button>
                     </div>
                 </div>
             </div>
 
             <!-- Ledger Tab -->
-            <div id="tab-ledger" class="hidden space-y-10">
-                <div class="flex justify-between items-end border-b border-white/10 pb-8">
-                    <h2 class="text-5xl italic font-bold">Active Ledger</h2>
-                    <input type="text" id="searchFilter" onkeyup="filterTable()" placeholder="FILTER ARCHIVE..." class="bg-transparent border border-white/10 px-8 py-4 text-[11px] font-mono text-white focus:border-white outline-none w-96">
+            <div id="tab-ledger" class="hidden tab-content space-y-10">
+                <div class="flex justify-between items-end pb-8">
+                    <h2 class="text-5xl italic font-bold text-bone">Active Ledger</h2>
+                    <input type="text" id="searchFilter" onkeyup="filterTable()" placeholder="Search Ledger..." class="bg-white/5 border border-white/10 rounded-xl px-6 py-3 text-sm text-white focus:ring-2 focus:ring-blue-500 outline-none w-80">
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left">
                         <thead>
-                            <tr class="text-zinc-500 font-mono text-[10px] uppercase tracking-[0.2em]">
-                                <th class="py-8 px-6">Scholar</th>
-                                <th class="py-8 px-6">Publication</th>
-                                <th class="py-8 px-6">Due Date</th>
-                                <th class="py-8 px-6 text-right">Actions</th>
+                            <tr class="text-dim font-bold text-[11px] uppercase tracking-widest">
+                                <th class="p-6">Scholar</th>
+                                <th class="p-6">Publication</th>
+                                <th class="p-6">Return Deadline</th>
+                                <th class="p-6 text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="issuesTable" class="text-sm"></tbody>
+                        <tbody id="issuesTable"></tbody>
                     </table>
                 </div>
             </div>
 
             <!-- History Tab -->
-            <div id="tab-history" class="hidden space-y-10">
-                <div class="flex justify-between items-end border-b border-white/10 pb-8">
-                    <h2 class="text-5xl italic font-bold">History Log</h2>
-                    <input type="text" id="historyFilter" onkeyup="filterHistoryTable()" placeholder="SEARCH LOGS..." class="bg-transparent border border-white/10 px-8 py-4 text-[11px] font-mono text-white focus:border-white outline-none w-96">
+            <div id="tab-history" class="hidden tab-content space-y-10">
+                <div class="flex justify-between items-end pb-8">
+                    <h2 class="text-5xl italic font-bold text-bone">Circulation History</h2>
+                    <input type="text" id="historyFilter" onkeyup="filterHistoryTable()" placeholder="Search Logs..." class="bg-white/5 border border-white/10 rounded-xl px-6 py-3 text-sm text-white focus:ring-2 focus:ring-blue-500 outline-none w-80">
                 </div>
-                <div class="overflow-x-auto text-sm">
+                <div class="overflow-x-auto">
                     <table class="w-full text-left">
                         <thead>
-                            <tr class="text-zinc-500 font-mono text-[10px] uppercase tracking-[0.2em]">
-                                <th class="py-8 px-6">Scholar</th>
-                                <th class="py-8 px-6">Publication</th>
-                                <th class="py-8 px-6">Issued</th>
-                                <th class="py-8 px-6">Returned</th>
+                            <tr class="text-dim font-bold text-[11px] uppercase tracking-widest">
+                                <th class="p-6">Scholar</th>
+                                <th class="p-6">Publication</th>
+                                <th class="p-6">Issue Date</th>
+                                <th class="p-6">Return Date</th>
                             </tr>
                         </thead>
                         <tbody id="historyTable"></tbody>
@@ -252,78 +246,18 @@
     </div>
 
     <!-- Inspector Modal -->
-    <div id="detailModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl hidden items-center justify-center p-6">
-        <div class="school-card p-12 max-w-xl w-full space-y-10">
-            <h3 class="text-4xl italic text-white">Metadata</h3>
-            <div id="modalContent" class="space-y-8"></div>
-            <div class="flex justify-end gap-8 pt-8 border-t border-white/10">
-                <button onclick="closeModal()" class="font-mono text-[10px] uppercase text-zinc-500">Dismiss</button>
-                <button id="modalReturnBtn" class="btn-primary px-10 py-4">Confirm Return</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Announcement Modal -->
-    <div id="announcementModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl hidden items-center justify-center p-6">
-        <div class="school-card p-16 max-w-md w-full space-y-10">
-            <h3 class="text-4xl italic text-white">Broadcast</h3>
-            <div class="space-y-8">
-                <input type="text" id="annTitle" placeholder="HEADLINE" class="w-full bg-transparent border-b border-zinc-800 py-3 text-sm text-white focus:border-white outline-none">
-                <textarea id="annDesc" rows="4" placeholder="MESSAGE..." class="w-full bg-zinc-900 border border-white/10 p-5 text-sm text-zinc-300 focus:border-white outline-none"></textarea>
-                <button onclick="postAnnouncement()" class="w-full btn-primary py-5">Publish Notice</button>
-                <button onclick="closeAnnouncementModal()" class="w-full font-mono text-[9px] uppercase text-zinc-500">Cancel</button>
+    <div id="detailModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl hidden items-center justify-center p-6">
+        <div class="glass-card p-12 max-w-xl w-full space-y-8 scale-95 transition-transform duration-300" id="modalScale">
+            <h3 class="text-4xl italic text-bone">Transaction Info</h3>
+            <div id="modalContent" class="space-y-6"></div>
+            <div class="flex justify-end gap-6 pt-6 border-t border-white/10">
+                <button onclick="closeModal()" class="text-sm font-bold text-dim">Dismiss</button>
+                <button id="modalReturnBtn" class="btn-mac px-10 py-3">Confirm Return</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- PARTICLE ENGINE ---
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5;
-                this.speedX = (Math.random() - 0.5) * 0.3;
-                this.speedY = (Math.random() - 0.5) * 0.3;
-                this.opacity = Math.random() * 0.5;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0;
-                if (this.y < 0) this.y = canvas.height;
-            }
-            draw() {
-                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        for (let i = 0; i < 100; i++) particles.push(new Particle());
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // --- APP LOGIC ---
         let cachedIssues = [];
         let cachedHistory = [];
         let existingStudents = [];
@@ -332,19 +266,29 @@
         function showToast(text) {
             const toast = document.getElementById('notification');
             document.getElementById('notifText').innerText = text;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
+            toast.style.opacity = '1';
+            toast.style.transform = 'translate(-50%, 0) scale(1)';
+            toast.style.pointerEvents = 'auto';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, -20px) scale(0.9)';
+                toast.style.pointerEvents = 'none';
+            }, 3000);
         }
 
         function switchTab(tabName) {
             ['dashboard', 'issue', 'ledger', 'history'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
                 const nav = document.getElementById(`nav-${t}`);
-                if(nav) nav.className = "text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500 hover:text-white transition";
+                if(nav) {
+                    nav.className = "text-[11px] font-semibold uppercase tracking-widest text-dim hover:text-white transition pb-1";
+                }
             });
             document.getElementById(`tab-${tabName}`).classList.remove('hidden');
             const activeNav = document.getElementById(`nav-${tabName}`);
-            if(activeNav) activeNav.className = "text-[10px] font-mono uppercase tracking-[0.2em] text-white border-b border-white pb-1";
+            if(activeNav) {
+                activeNav.className = "text-[11px] font-semibold uppercase tracking-widest text-bone border-b-2 border-white pb-1";
+            }
         }
 
         async function attemptLogin() {
@@ -360,7 +304,7 @@
                 document.getElementById('dashboardApp').classList.remove('hidden');
                 document.getElementById('dashboardApp').classList.add('flex');
                 await refreshAppData();
-                showToast("System Online");
+                showToast("System Secure");
             } else {
                 document.getElementById('loginError').classList.remove('hidden');
             }
@@ -369,44 +313,46 @@
         function logout() { location.reload(); }
 
         async function refreshAppData() {
-            const [stats, issues, history, students, leaderboard, anns] = await Promise.all([
-                fetch('/api/stats').then(r => r.json()),
-                fetch('/api/issues').then(r => r.json()),
-                fetch('/api/history').then(r => r.json()),
-                fetch('/api/students').then(r => r.json()),
-                fetch('/api/leaderboard').then(r => r.json()),
-                fetch('/api/announcements').then(r => r.json())
-            ]);
+            try {
+                const [stats, issues, history, students, leaderboard, anns] = await Promise.all([
+                    fetch('/api/stats').then(r => r.json()),
+                    fetch('/api/issues').then(r => r.json()),
+                    fetch('/api/history').then(r => r.json()),
+                    fetch('/api/students').then(r => r.json()),
+                    fetch('/api/leaderboard').then(r => r.json()),
+                    fetch('/api/announcements').then(r => r.json())
+                ]);
 
-            document.getElementById('statActiveLoans').innerText = stats.active_loans;
-            document.getElementById('statTotalStudents').innerText = stats.registered_students;
+                document.getElementById('statActiveLoans').innerText = stats.active_loans;
+                document.getElementById('statTotalStudents').innerText = stats.registered_students;
 
-            cachedIssues = issues;
-            cachedHistory = history;
-            existingStudents = students;
-            announcements = anns;
+                cachedIssues = issues;
+                cachedHistory = history;
+                existingStudents = students;
+                announcements = anns;
 
-            renderLeaderboard(leaderboard);
-            renderTable(cachedIssues);
-            renderHistoryTable(cachedHistory);
-            renderAnnouncements();
+                renderLeaderboard(leaderboard);
+                renderTable(cachedIssues);
+                renderHistoryTable(cachedHistory);
+                renderAnnouncements();
+            } catch (e) { console.error("Sync failure", e); }
         }
 
         function renderLeaderboard(data) {
             const cont = document.getElementById('leaderboardList');
-            if(!data.length) { cont.innerHTML = `<p class="font-mono text-[10px] text-muted py-10 uppercase tracking-widest text-center">No Data</p>`; return; }
+            if(!data.length) { cont.innerHTML = `<p class="text-dim py-10 text-center uppercase tracking-widest">No Logs Yet</p>`; return; }
             cont.innerHTML = data.map((item, idx) => `
-                <div class="flex justify-between items-center py-8 group cursor-pointer" onclick="switchTab('ledger')">
-                    <div class="flex items-center gap-10">
-                        <span class="font-serif italic text-zinc-800 text-5xl font-bold group-hover:text-white transition">0${idx+1}</span>
+                <div class="glass-card p-6 flex justify-between items-center group cursor-pointer" onclick="switchTab('ledger')">
+                    <div class="flex items-center gap-6">
+                        <span class="text-4xl italic font-serif text-white/10 group-hover:text-blue-500 transition">0${idx+1}</span>
                         <div>
-                            <p class="font-bold text-white text-lg">${item.name}</p>
-                            <p class="font-mono text-[10px] uppercase tracking-widest text-secondary mt-1">${item.class_section} • ADM: ${item.admission_no}</p>
+                            <p class="font-bold text-bone text-lg">${item.name}</p>
+                            <p class="text-[10px] font-bold text-dim uppercase mt-1">ID: ${item.admission_no}</p>
                         </div>
                     </div>
                     <div class="text-right">
-                        <span class="font-serif italic font-bold text-3xl text-white">${item.total_borrowed}</span>
-                        <p class="font-mono text-[9px] text-muted uppercase">Logs</p>
+                        <span class="text-2xl font-serif text-bone italic">${item.total_borrowed}</span>
+                        <p class="text-[9px] font-bold text-dim uppercase">Items</p>
                     </div>
                 </div>
             `).join('');
@@ -414,19 +360,19 @@
 
         function renderTable(data) {
             const tbody = document.getElementById('issuesTable');
-            if(!data.length) { tbody.innerHTML = `<tr><td colspan="4" class="py-20 text-center font-mono text-[11px] text-muted uppercase tracking-widest">Archive Empty</td></tr>`; return; }
+            if(!data.length) { tbody.innerHTML = `<tr><td colspan="4" class="py-20 text-center text-dim font-bold uppercase tracking-widest">No Active Records</td></tr>`; return; }
             tbody.innerHTML = data.map(item => `
-                <tr onclick="openModal(${item.id})" class="cursor-pointer">
-                    <td class="py-8 px-6">
-                        <p class="font-bold text-white text-base">${item.name}</p>
-                        <p class="font-mono text-[10px] text-secondary uppercase">ID: ${item.admission_no}</p>
+                <tr onclick="openModal(${item.id})">
+                    <td class="p-6">
+                        <p class="font-bold text-bone text-lg">${item.name}</p>
+                        <p class="text-[10px] font-bold text-dim uppercase mt-1">ID: ${item.admission_no}</p>
                     </td>
-                    <td class="py-8 px-6 italic font-serif text-secondary text-base">${item.book_name}</td>
-                    <td class="py-8 px-6" onclick="event.stopPropagation()">
-                        <input type="date" value="${item.due_date}" onchange="updateDueDate(${item.id}, this.value)" class="bg-black/50 border border-white/10 px-4 py-2 font-mono text-[10px] text-white focus:border-white transition outline-none">
+                    <td class="p-6 italic font-serif text-white/80 text-lg">${item.book_name}</td>
+                    <td class="p-6" onclick="event.stopPropagation()">
+                        <input type="date" value="${item.due_date}" onchange="updateDueDate(${item.id}, this.value)" class="bg-white/5 border border-white/10 px-4 py-2 rounded-lg text-xs text-white focus:border-blue-500 outline-none">
                     </td>
-                    <td class="py-8 px-6 text-right" onclick="event.stopPropagation()">
-                        <button onclick="returnBook(${item.id})" class="font-mono text-[10px] text-white border border-white/20 px-4 py-2 uppercase hover:bg-white hover:text-black transition">Process Return</button>
+                    <td class="p-6 text-right" onclick="event.stopPropagation()">
+                        <button onclick="returnBook(${item.id})" class="text-[11px] font-bold text-blue-400 hover:text-white px-4 py-2 border border-blue-400/30 rounded-lg transition uppercase">Return</button>
                     </td>
                 </tr>
             `).join('');
@@ -434,31 +380,31 @@
 
         function renderHistoryTable(data) {
             const tbody = document.getElementById('historyTable');
-            if(!data.length) { tbody.innerHTML = `<tr><td colspan="4" class="py-20 text-center font-mono text-[11px] text-muted uppercase tracking-widest">No Logs</td></tr>`; return; }
+            if(!data.length) { tbody.innerHTML = `<tr><td colspan="4" class="py-20 text-center text-dim font-bold uppercase tracking-widest">History Empty</td></tr>`; return; }
             tbody.innerHTML = data.map(item => `
                 <tr>
-                    <td class="py-8 px-6">
-                        <p class="font-bold text-zinc-300 text-base">${item.name}</p>
-                        <p class="font-mono text-[10px] text-muted uppercase">ID: ${item.admission_no}</p>
+                    <td class="p-6">
+                        <p class="font-bold text-bone">${item.name}</p>
+                        <p class="text-[10px] font-bold text-dim uppercase">ID: ${item.admission_no}</p>
                     </td>
-                    <td class="py-8 px-6 italic font-serif text-muted text-base">${item.book_name}</td>
-                    <td class="py-8 px-6 font-mono text-[11px] text-muted">${item.issue_date}</td>
-                    <td class="py-8 px-6 font-mono text-[11px] text-emerald-400 uppercase font-bold">${item.return_date}</td>
+                    <td class="p-6 italic font-serif text-dim">${item.book_name}</td>
+                    <td class="p-6 text-sm text-dim">${item.issue_date}</td>
+                    <td class="p-6 text-sm text-blue-400 font-bold uppercase">${item.return_date}</td>
                 </tr>
             `).join('');
         }
 
         function renderAnnouncements() {
             const cont = document.getElementById('announcementsList');
-            if(!announcements.length) { cont.innerHTML = `<p class="font-mono text-[10px] text-muted uppercase">No active notices.</p>`; return; }
+            if(!announcements.length) { cont.innerHTML = `<p class="text-dim text-xs">No active notices.</p>`; return; }
             cont.innerHTML = announcements.map(item => `
-                <div class="space-y-4 group relative">
+                <div class="glass-card p-8 space-y-4 group relative">
                     <div class="flex justify-between items-center">
-                        <span class="font-mono text-[9px] text-muted uppercase tracking-widest">${item.date}</span>
-                        <button onclick="deleteAnnouncement(${item.id})" class="font-mono text-[9px] text-rose-500 uppercase opacity-0 group-hover:opacity-100 transition">Delete</button>
+                        <span class="text-[10px] font-bold text-dim uppercase tracking-widest">${item.date}</span>
+                        <button onclick="deleteAnnouncement(${item.id})" class="text-red-500/50 hover:text-red-500 text-[10px] font-bold transition uppercase">Delete</button>
                     </div>
-                    <p class="font-serif italic font-bold text-white text-xl">${item.title}</p>
-                    <p class="text-secondary text-sm leading-relaxed font-light">${item.desc}</p>
+                    <p class="text-2xl italic font-serif text-bone leading-tight">${item.title}</p>
+                    <p class="text-description text-sm">${item.desc}</p>
                 </div>
             `).join('');
         }
@@ -466,13 +412,13 @@
         async function submitIssue() {
             const admission_no = document.getElementById('admNo').value.trim();
             const book_name = document.getElementById('bookName').value.trim();
-            if(!admission_no || !book_name) return;
+            if(!admission_no || !book_name) { showToast("Data Missing"); return; }
 
             const payload = { admission_no, book_name };
             if (!existingStudents.includes(admission_no)) {
                 payload.student_name = document.getElementById('studentName').value.trim();
                 payload.class_section = document.getElementById('studentClass').value.trim();
-                if(!payload.student_name) return;
+                if(!payload.student_name) { showToast("Enter Scholar Name"); return; }
             }
 
             const res = await fetch('/api/issue', {
@@ -481,21 +427,24 @@
                 body: JSON.stringify(payload)
             });
             if(res.ok) {
+                await refreshAppData();
                 document.getElementById('admNo').value = '';
                 document.getElementById('bookName').value = '';
                 document.getElementById('newStudentBox').classList.add('hidden');
-                await refreshAppData();
-                showToast("Transaction Recorded");
+                showToast("Loan Committed");
                 switchTab('ledger');
             }
         }
 
         async function returnBook(id) {
+            // FIX: Ensure backend completes before refreshing UI
             const res = await fetch(`/api/return/${id}`, { method: 'POST' });
             if(res.ok) {
-                await refreshAppData();
+                await refreshAppData(); // Wait for sync
                 closeModal();
-                showToast("Publication Returned");
+                showToast("Volume Returned");
+            } else {
+                showToast("Return Error");
             }
         }
 
@@ -503,25 +452,29 @@
             const item = cachedIssues.find(i => i.id == id);
             if(!item) return;
             document.getElementById('modalContent').innerHTML = `
-                <div class="grid grid-cols-2 gap-10 border border-white/10 p-10 font-mono text-[11px] uppercase tracking-widest">
-                    <div><span class="text-muted block mb-2">Scholar</span><span class="text-white text-sm">${item.name}</span></div>
-                    <div><span class="text-muted block mb-2">Terminal</span><span class="text-white text-sm">${item.class_section}</span></div>
-                    <div><span class="text-muted block mb-2">Issued</span><span class="text-zinc-400 text-sm">${item.issue_date}</span></div>
-                    <div><span class="text-muted block mb-2">Deadline</span><span class="text-white text-sm">${item.due_date}</span></div>
+                <div class="grid grid-cols-2 gap-8 border border-white/10 p-8 glass-card">
+                    <div><span class="text-dim block text-[10px] font-bold uppercase mb-2">Scholar</span><span class="text-bone text-lg">${item.name}</span></div>
+                    <div><span class="text-dim block text-[10px] font-bold uppercase mb-2">Terminal</span><span class="text-bone text-lg">${item.class_section}</span></div>
+                    <div><span class="text-dim block text-[10px] font-bold uppercase mb-2">Issued</span><span class="text-dim text-lg">${item.issue_date}</span></div>
+                    <div><span class="text-dim block text-[10px] font-bold uppercase mb-2">Due</span><span class="text-bone text-lg">${item.due_date}</span></div>
                 </div>
-                <div class="p-10 bg-white/[0.02]">
-                    <span class="font-mono text-[10px] text-muted uppercase block mb-4 tracking-[0.2em]">Publication Item</span>
-                    <h4 class="text-3xl italic font-serif text-white font-bold">${item.book_name}</h4>
+                <div class="p-8 bg-blue-500/5 rounded-2xl border border-blue-500/20">
+                    <span class="text-blue-400 block text-[10px] font-bold uppercase mb-4 tracking-widest">Publication Title</span>
+                    <h4 class="text-3xl italic font-serif text-bone leading-tight">${item.book_name}</h4>
                 </div>
             `;
             document.getElementById('modalReturnBtn').onclick = () => returnBook(id);
             document.getElementById('detailModal').classList.remove('hidden');
             document.getElementById('detailModal').classList.add('flex');
+            setTimeout(() => { document.getElementById('modalScale').style.transform = 'scale(1)'; }, 10);
         }
 
         function closeModal() {
-            document.getElementById('detailModal').classList.add('hidden');
-            document.getElementById('detailModal').classList.remove('flex');
+            document.getElementById('modalScale').style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                document.getElementById('detailModal').classList.add('hidden');
+                document.getElementById('detailModal').classList.remove('flex');
+            }, 200);
         }
 
         function selectPresetBook(t) { document.getElementById('bookName').value = t; }
@@ -535,7 +488,7 @@
             const title = document.getElementById('annTitle').value;
             const desc = document.getElementById('annDesc').value;
             await fetch('/api/announcements/add', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({title, desc}) });
-            closeAnnouncementModal(); await refreshAppData(); showToast("Broadcasted");
+            closeAnnouncementModal(); await refreshAppData(); showToast("Notice Published");
         }
         async function deleteAnnouncement(id) { await fetch(`/api/announcements/delete/${id}`, { method: 'POST' }); await refreshAppData(); }
         async function exportDatabase() { window.location.href = '/api/backup/export'; }
