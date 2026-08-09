@@ -22,28 +22,60 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #0b0e14; }
-        ::-webkit-scrollbar-thumb { background: #1f293d; border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: #07090e; }
+        ::-webkit-scrollbar-thumb { background: #1a2338; border-radius: 4px; }
+
+        /* Stardust Ambient Glowing Background Effects */
+        .stardust-bg {
+            background-color: #07090e;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(139, 92, 246, 0.07) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.04) 0%, transparent 60%);
+            position: relative;
+        }
+
         .school-card {
-            background: linear-gradient(145deg, #131823 0%, #0e121b 100%);
+            background: linear-gradient(145deg, #111622 0%, #0b0f17 100%);
             border: 1px solid rgba(255, 255, 255, 0.07);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle glowing stardust corner accent */
+        .school-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent);
+        }
+
+        .glow-button {
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.35);
+            transition: all 0.3s ease;
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.6);
         }
     </style>
 </head>
-<body class="bg-[#0b0e14] text-zinc-100 min-h-screen flex flex-col selection:bg-indigo-600 selection:text-white">
+<body class="stardust-bg text-zinc-100 min-h-screen flex flex-col selection:bg-indigo-600 selection:text-white">
 
-    <!-- Auth Portal -->
-    <div id="loginOverlay" class="fixed inset-0 z-50 bg-[#0b0e14]/95 backdrop-blur-xl flex items-center justify-center p-4">
-        <div class="school-card p-8 rounded-3xl w-full max-w-md space-y-6 shadow-2xl border border-white/10">
+    <!-- Auth Portal Overlay -->
+    <div id="loginOverlay" class="fixed inset-0 z-50 bg-[#07090e]/95 backdrop-blur-xl flex items-center justify-center p-4">
+        <div class="school-card p-8 rounded-3xl w-full max-w-md space-y-6 shadow-2xl">
             <div class="text-center space-y-3">
-                <div class="h-14 w-14 rounded-2xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center mx-auto text-2xl font-bold shadow-inner">🏫</div>
+                <div class="h-14 w-14 rounded-2xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center mx-auto text-2xl font-bold shadow-inner border border-indigo-500/20">🏫</div>
                 <h2 class="text-lg font-bold text-white tracking-tight">Zee High School Library</h2>
-                <p class="text-xs text-zinc-400">Enter librarian credentials to manage system.</p>
+                <p class="text-xs text-zinc-400">Enter librarian credentials to access management console.</p>
             </div>
             <div class="space-y-4">
                 <input type="password" id="loginPass" placeholder="Passcode (librarian123)" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500 transition">
-                <button onclick="attemptLogin()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3.5 rounded-xl text-sm transition shadow-lg shadow-indigo-600/30">Login to Portal</button>
+                <button onclick="attemptLogin()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3.5 rounded-xl text-sm transition glow-button">Login to Portal</button>
                 <p id="loginError" class="text-xs text-rose-400 text-center hidden font-medium">Invalid security passcode.</p>
             </div>
         </div>
@@ -53,21 +85,20 @@
     <div id="dashboardApp" class="hidden flex-col flex-grow min-h-screen">
         
         <!-- School Top Header Bar -->
-        <header class="bg-[#111622] border-b border-white/10 sticky top-0 z-40 px-8 py-4 flex items-center justify-between shadow-md">
+        <header class="bg-[#0e131f]/80 backdrop-blur-md border-b border-white/10 sticky top-0 z-40 px-8 py-4 flex items-center justify-between shadow-md">
             <div class="flex items-center gap-8 overflow-x-auto">
                 <div class="flex items-center gap-3 min-w-max">
-                    <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 text-white flex items-center justify-center font-extrabold text-base shadow-lg">ZHS</div>
+                    <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 text-white flex items-center justify-center font-extrabold text-base shadow-lg shadow-indigo-600/20">ZHS</div>
                     <div>
                         <span class="text-xs font-bold tracking-wide text-white block">Zee High School</span>
-                        <span class="text-[10px] text-zinc-400 font-mono">Academic Year 2026 - 2027</span>
+                        <span class="text-[10px] text-indigo-400/80 font-mono">Library Management Portal</span>
                     </div>
                 </div>
                 
                 <!-- Navigation Tabs -->
                 <nav class="hidden md:flex items-center gap-1.5 text-xs font-semibold">
-                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-4 py-2.5 rounded-xl bg-indigo-600 text-white transition flex items-center gap-2 shadow-sm">📊 Dashboard</button>
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-4 py-2.5 rounded-xl bg-indigo-600 text-white transition flex items-center gap-2 glow-button">📊 Dashboard</button>
                     <button onclick="switchTab('issue')" id="nav-issue" class="px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-2">📚 Issue Book</button>
-                    <button onclick="switchTab('catalog')" id="nav-catalog" class="px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-2">📖 Book Catalog</button>
                     <button onclick="switchTab('ledger')" id="nav-ledger" class="px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-2">📋 Active Ledger</button>
                     <button onclick="switchTab('history')" id="nav-history" class="px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-2">📜 History Log</button>
                 </nav>
@@ -91,55 +122,55 @@
             <!-- TAB 1: DASHBOARD -->
             <div id="tab-dashboard" class="space-y-8">
                 <!-- Welcome Banner -->
-                <div class="school-card p-8 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative overflow-hidden">
+                <div class="school-card p-8 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative">
                     <div class="absolute right-0 top-0 translate-x-12 -translate-y-12 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
                     <div class="space-y-2 z-10">
-                        <span class="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-semibold border border-indigo-500/20">Central Library Management</span>
+                        <span class="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-semibold border border-indigo-500/20">Central Library Console</span>
                         <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">Welcome back, Administrator</h1>
-                        <p class="text-xs md:text-sm text-zinc-400 max-w-xl">Monitor active book loans, track student reading habits, manage circulation logs, and publish announcements instantly.</p>
+                        <p class="text-xs md:text-sm text-zinc-400 max-w-xl">Monitor active book loans, track student reading leaderboards, review circulation archives, and post school notices instantly.</p>
                     </div>
                     <div class="flex gap-3 z-10">
-                        <button onclick="switchTab('issue')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-5 py-3 rounded-xl text-xs transition shadow-lg shadow-indigo-600/30 flex items-center gap-2">➕ Issue New Book</button>
+                        <button onclick="switchTab('issue')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-5 py-3 rounded-xl text-xs transition glow-button flex items-center gap-2">➕ Issue New Book</button>
                     </div>
                 </div>
 
-                <!-- Top Row Metric Cards -->
+                <!-- Top Metric Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="school-card p-6 rounded-3xl flex items-center justify-between">
                         <div>
                             <p class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Active Borrowings</p>
                             <h3 id="statActiveLoans" class="text-4xl font-extrabold text-white mt-2">0</h3>
-                            <p class="text-[11px] text-zinc-500 mt-1">Books currently checked out</p>
+                            <p class="text-[11px] text-indigo-400 mt-1">Books currently checked out</p>
                         </div>
-                        <div class="h-14 w-14 rounded-2xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-2xl shadow-inner">📖</div>
+                        <div class="h-14 w-14 rounded-2xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-2xl shadow-inner border border-indigo-500/20">📖</div>
                     </div>
                     <div class="school-card p-6 rounded-3xl flex items-center justify-between">
                         <div>
-                            <p class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Total Students</p>
+                            <p class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Total Members</p>
                             <h3 id="statTotalStudents" class="text-4xl font-extrabold text-white mt-2">0</h3>
-                            <p class="text-[11px] text-zinc-500 mt-1">Registered library members</p>
+                            <p class="text-[11px] text-blue-400 mt-1">Registered student readers</p>
                         </div>
-                        <div class="h-14 w-14 rounded-2xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-2xl shadow-inner">🎓</div>
+                        <div class="h-14 w-14 rounded-2xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-2xl shadow-inner border border-blue-500/20">🎓</div>
                     </div>
                     <div class="school-card p-6 rounded-3xl flex items-center justify-between">
                         <div>
-                            <p class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Library Status</p>
+                            <p class="text-xs font-bold text-zinc-400 uppercase tracking-wider">System Status</p>
                             <h3 class="text-xl font-bold text-emerald-400 mt-2">Fully Operational</h3>
-                            <p class="text-[11px] text-zinc-500 mt-1">All database nodes active</p>
+                            <p class="text-[11px] text-emerald-500/80 mt-1">Stardust cloud sync active</p>
                         </div>
-                        <div class="h-14 w-14 rounded-2xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-2xl shadow-inner">🟢</div>
+                        <div class="h-14 w-14 rounded-2xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-2xl shadow-inner border border-emerald-500/20">🟢</div>
                     </div>
                 </div>
 
-                <!-- Middle Split: Leaderboard & Interactive Announcements -->
+                <!-- Leaderboard & Notice Board Split -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-12">
                     <div class="school-card p-6 md:p-8 rounded-3xl lg:col-span-8 space-y-6">
                         <div class="flex justify-between items-center border-b border-white/10 pb-4">
                             <div>
                                 <h3 class="text-base font-bold text-white flex items-center gap-2">🏆 Circulation Leaderboard</h3>
-                                <p class="text-xs text-zinc-400 mt-0.5">Top student readers based on lifetime book loans</p>
+                                <p class="text-xs text-zinc-400 mt-0.5">Top student readers ranked by lifetime book borrowings</p>
                             </div>
-                            <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-3 py-1 rounded-full font-semibold">Lifetime Volume</span>
+                            <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-3 py-1 rounded-full font-semibold">Top Readers</span>
                         </div>
                         <div id="leaderboardList" class="space-y-3">
                             <p class="text-zinc-500 text-center py-8 text-xs">Loading leaderboard...</p>
@@ -154,7 +185,7 @@
                             </div>
                             <div id="announcementsList" class="space-y-3 text-xs text-zinc-300 max-h-[340px] overflow-y-auto pr-1"></div>
                         </div>
-                        <p class="text-[11px] text-zinc-500 text-center pt-4 border-t border-white/5">Visible to all students & staff portal views.</p>
+                        <p class="text-[11px] text-zinc-500 text-center pt-4 border-t border-white/5">Visible across student portals.</p>
                     </div>
                 </div>
             </div>
@@ -164,9 +195,21 @@
                 <div class="school-card p-8 rounded-3xl max-w-2xl mx-auto space-y-6">
                     <div>
                         <h2 class="text-lg font-bold text-white">Issue New Publication</h2>
-                        <p class="text-xs text-zinc-400 mt-1">Register a new book borrowing transaction for any student in the school.</p>
+                        <p class="text-xs text-zinc-400 mt-1">Register a new book checkout transaction for any student.</p>
                     </div>
-                    <div class="space-y-5 text-xs">
+
+                    <!-- Quick Preset Book Buttons -->
+                    <div class="space-y-2">
+                        <label class="block font-semibold text-zinc-400 text-[11px] uppercase tracking-wider">Quick Select Popular Books</label>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="selectPresetBook('Advanced Mathematics Vol. 1')" class="bg-white/5 hover:bg-indigo-600/20 text-zinc-300 hover:text-indigo-300 border border-white/10 hover:border-indigo-500/30 px-3 py-1.5 rounded-xl text-xs transition">📐 Mathematics Vol. 1</button>
+                            <button onclick="selectPresetBook('Physics Grade 10 Lab Manual')" class="bg-white/5 hover:bg-indigo-600/20 text-zinc-300 hover:text-indigo-300 border border-white/10 hover:border-indigo-500/30 px-3 py-1.5 rounded-xl text-xs transition">⚡ Physics Lab Manual</button>
+                            <button onclick="selectPresetBook('Advanced Chemistry')" class="bg-white/5 hover:bg-indigo-600/20 text-zinc-300 hover:text-indigo-300 border border-white/10 hover:border-indigo-500/30 px-3 py-1.5 rounded-xl text-xs transition">🧪 Advanced Chemistry</button>
+                            <button onclick="selectPresetBook('English Literature Anthology')" class="bg-white/5 hover:bg-indigo-600/20 text-zinc-300 hover:text-indigo-300 border border-white/10 hover:border-indigo-500/30 px-3 py-1.5 rounded-xl text-xs transition">📚 Literature Anthology</button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-5 text-xs pt-2">
                         <div>
                             <label class="block font-semibold text-zinc-300 mb-2">Student Admission Number</label>
                             <input type="text" id="admNo" oninput="checkStudentExistence()" placeholder="e.g. 544421" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500 font-mono">
@@ -177,47 +220,15 @@
                             <input type="text" id="studentClass" placeholder="Class & Section (e.g. 10-B)" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white text-xs">
                         </div>
                         <div>
-                            <label class="block font-semibold text-zinc-300 mb-2">Select Book from Catalog or Type Custom</label>
-                            <select id="bookSelect" onchange="document.getElementById('bookName').value = this.value" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-xs text-white mb-2 focus:outline-none focus:border-indigo-500">
-                                <option value="">-- Choose from Inventory Catalog --</option>
-                            </select>
-                            <input type="text" id="bookName" placeholder="e.g. Physics Grade 10 Laboratory Manual" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500">
+                            <label class="block font-semibold text-zinc-300 mb-2">Book Name & Edition</label>
+                            <input type="text" id="bookName" placeholder="e.g. Advanced Mathematics Vol. 1" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500">
                         </div>
-                        <button onclick="submitIssue()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3.5 rounded-xl text-sm transition shadow-lg shadow-indigo-600/30">Commit Transaction</button>
+                        <button onclick="submitIssue()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3.5 rounded-xl text-sm transition glow-button">Commit Transaction</button>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 3: BOOK CATALOG INVENTORY -->
-            <div id="tab-catalog" class="hidden space-y-6 pb-12">
-                <div class="school-card p-8 rounded-3xl space-y-6">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-5">
-                        <div>
-                            <h2 class="text-lg font-bold text-white">Library Book Catalog & Inventory</h2>
-                            <p class="text-xs text-zinc-400 mt-1">Manage physical book stock, total copies, and real-time availability.</p>
-                        </div>
-                        <button onclick="openCatalogModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition shadow-lg shadow-indigo-600/30">+ Add New Title</button>
-                    </div>
-
-                    <div class="overflow-x-auto border border-white/10 rounded-2xl bg-black/30 shadow-inner">
-                        <table class="w-full text-left text-xs border-collapse">
-                            <thead>
-                                <tr class="bg-white/[0.03] border-b border-white/10 text-zinc-400 font-bold uppercase tracking-wider text-[10px]">
-                                    <th class="p-4">Publication Title</th>
-                                    <th class="p-4">Total Copies</th>
-                                    <th class="p-4">Available Copies</th>
-                                    <th class="p-4 text-right">Stock Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="catalogTable" class="divide-y divide-white/5">
-                                <tr><td colspan="4" class="text-center py-16 text-zinc-500">Loading catalog...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 4: ACTIVE LEDGER TABLE -->
+            <!-- TAB 3: ACTIVE LEDGER TABLE -->
             <div id="tab-ledger" class="hidden space-y-6 pb-12">
                 <div class="school-card p-8 rounded-3xl space-y-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-5">
@@ -249,13 +260,13 @@
                 </div>
             </div>
 
-            <!-- TAB 5: PERMANENT HISTORY LOG -->
+            <!-- TAB 4: PERMANENT HISTORY LOG -->
             <div id="tab-history" class="hidden space-y-6 pb-12">
                 <div class="school-card p-8 rounded-3xl space-y-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-5">
                         <div>
                             <h2 class="text-lg font-bold text-white">Circulation History Log</h2>
-                            <p class="text-xs text-zinc-400 mt-1">Permanent archive of all returned book transactions and student borrow logs.</p>
+                            <p class="text-xs text-zinc-400 mt-1">Permanent archive of all returned book transactions and student logs.</p>
                         </div>
                         <div class="flex items-center gap-3 w-full sm:w-auto">
                             <input type="text" id="historyFilter" onkeyup="filterHistoryTable()" placeholder="Search history records..." class="w-full sm:w-60 bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500">
@@ -299,44 +310,23 @@
         </div>
     </div>
 
-    <!-- Add Catalog Item Modal -->
-    <div id="catalogModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="school-card p-6 md:p-8 rounded-3xl w-full max-w-md space-y-6 border border-white/10 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-white/10 pb-4">
-                <h3 class="text-base font-bold text-white">Add New Book to Inventory</h3>
-                <button onclick="closeCatalogModal()" class="text-zinc-400 hover:text-white text-sm font-bold">✕</button>
-            </div>
-            <div class="space-y-4 text-xs">
-                <div>
-                    <label class="block font-semibold text-zinc-300 mb-1.5">Book Title & Edition</label>
-                    <input type="text" id="catTitle" placeholder="e.g. Advanced Biology Grade 12" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white">
-                </div>
-                <div>
-                    <label class="block font-semibold text-zinc-300 mb-1.5">Total Physical Copies</label>
-                    <input type="number" id="catCopies" value="5" min="1" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white">
-                </div>
-                <button onclick="submitCatalogItem()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl text-xs transition shadow-lg shadow-indigo-600/30">Save to Catalog</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Add Announcement Modal -->
     <div id="announcementModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
         <div class="school-card p-6 md:p-8 rounded-3xl w-full max-w-md space-y-6 border border-white/10 shadow-2xl">
             <div class="flex justify-between items-center border-b border-white/10 pb-4">
-                <h3 class="text-base font-bold text-white">Publish New Announcement</h3>
+                <h3 class="text-base font-bold text-white">Publish New School Notice</h3>
                 <button onclick="closeAnnouncementModal()" class="text-zinc-400 hover:text-white text-sm font-bold">✕</button>
             </div>
             <div class="space-y-4 text-xs">
                 <div>
-                    <label class="block font-semibold text-zinc-300 mb-1.5">Announcement Title</label>
+                    <label class="block font-semibold text-zinc-300 mb-1.5">Notice Title</label>
                     <input type="text" id="annTitle" placeholder="e.g. Library Closure for Exam Week" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white">
                 </div>
                 <div>
                     <label class="block font-semibold text-zinc-300 mb-1.5">Notice Description</label>
-                    <textarea id="annDesc" rows="3" placeholder="Provide details for students and staff..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white resize-none"></textarea>
+                    <textarea id="annDesc" rows="3" placeholder="Provide details for students..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white resize-none"></textarea>
                 </div>
-                <button onclick="postAnnouncement()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl text-xs transition shadow-lg shadow-indigo-600/30">Publish to Portal</button>
+                <button onclick="postAnnouncement()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl text-xs transition glow-button">Publish to Portal</button>
             </div>
         </div>
     </div>
@@ -344,16 +334,11 @@
     <script>
         let cachedIssues = [];
         let cachedHistory = [];
-        let cachedInventory = [];
         let existingStudents = [];
-
-        let announcements = [
-            { id: 1, date: '7/Aug/2026', type: 'Notice', title: 'Return Overdue Books', desc: 'All students must return checked-out publications before the weekend holiday.' },
-            { id: 2, date: '23/Jul/2026', type: 'Update', title: 'New Arrivals Added', desc: 'Check out the new computer science and science fiction editions in the catalog.' }
-        ];
+        let announcements = [];
 
         function switchTab(tabName) {
-            ['dashboard', 'issue', 'catalog', 'ledger', 'history'].forEach(t => {
+            ['dashboard', 'issue', 'ledger', 'history'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
                 if(document.getElementById(`nav-${t}`)) {
                     document.getElementById(`nav-${t}`).className = "px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition flex items-center gap-2";
@@ -361,7 +346,7 @@
             });
             document.getElementById(`tab-${tabName}`).classList.remove('hidden');
             if(document.getElementById(`nav-${tabName}`)) {
-                document.getElementById(`nav-${tabName}`).className = "px-4 py-2.5 rounded-xl bg-indigo-600 text-white transition flex items-center gap-2 shadow-sm";
+                document.getElementById(`nav-${tabName}`).className = "px-4 py-2.5 rounded-xl bg-indigo-600 text-white transition flex items-center gap-2 glow-button";
             }
         }
 
@@ -379,7 +364,6 @@
                     document.getElementById('dashboardApp').classList.remove('hidden');
                     document.getElementById('dashboardApp').classList.add('flex');
                     refreshAppData();
-                    renderAnnouncements();
                 } else {
                     document.getElementById('loginError').classList.remove('hidden');
                 }
@@ -397,13 +381,13 @@
 
         async function refreshAppData() {
             try {
-                const [statsRes, issuesRes, historyRes, studentsRes, leaderboardRes, inventoryRes] = await Promise.all([
+                const [statsRes, issuesRes, historyRes, studentsRes, leaderboardRes, annRes] = await Promise.all([
                     fetch('/api/stats').then(r => r.json()),
                     fetch('/api/issues').then(r => r.json()),
                     fetch('/api/history').then(r => r.json()),
                     fetch('/api/students').then(r => r.json()),
                     fetch('/api/leaderboard').then(r => r.json()),
-                    fetch('/api/inventory').then(r => r.json())
+                    fetch('/api/announcements').then(r => r.json())
                 ]);
 
                 document.getElementById('statActiveLoans').innerText = statsRes.active_loans;
@@ -412,82 +396,19 @@
                 cachedIssues = issuesRes;
                 cachedHistory = historyRes;
                 existingStudents = studentsRes;
-                cachedInventory = inventoryRes;
+                announcements = annRes;
 
                 renderLeaderboard(leaderboardRes);
                 renderTable(cachedIssues);
                 renderHistoryTable(cachedHistory);
-                renderCatalogTable(cachedInventory);
-                populateBookSelect(cachedInventory);
+                renderAnnouncements();
             } catch (e) {
                 console.error("Failed to refresh application data", e);
             }
         }
 
-        function populateBookSelect(inventory) {
-            const select = document.getElementById('bookSelect');
-            select.innerHTML = '<option value="">-- Choose from Inventory Catalog --</option>';
-            inventory.forEach(item => {
-                select.innerHTML += `<option value="${item.title}">${item.title} (${item.available} available)</option>`;
-            });
-        }
-
-        function renderCatalogTable(inventory) {
-            const tbody = document.getElementById('catalogTable');
-            if(!inventory || inventory.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-16 text-zinc-500">No books found in catalog.</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = '';
-            inventory.forEach(item => {
-                const badgeColor = item.available > 0 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border-rose-500/20';
-                const statusText = item.available > 0 ? `${item.available} Available` : 'Out of Stock';
-                tbody.innerHTML += `
-                    <tr class="hover:bg-white/[0.03] transition">
-                        <td class="p-4 font-bold text-white">${item.title}</td>
-                        <td class="p-4 text-zinc-300">${item.total_copies}</td>
-                        <td class="p-4 text-indigo-400 font-semibold">${item.available}</td>
-                        <td class="p-4 text-right">
-                            <span class="px-3 py-1 rounded-full text-[10px] font-bold border ${badgeColor}">${statusText}</span>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function openCatalogModal() {
-            document.getElementById('catalogModal').classList.remove('hidden');
-            document.getElementById('catalogModal').classList.add('flex');
-        }
-
-        function closeCatalogModal() {
-            document.getElementById('catalogModal').classList.add('hidden');
-            document.getElementById('catalogModal').classList.remove('flex');
-            document.getElementById('catTitle').value = '';
-            document.getElementById('catCopies').value = '5';
-        }
-
-        async function submitCatalogItem() {
-            const title = document.getElementById('catTitle').value.trim();
-            const copies = parseInt(document.getElementById('catCopies').value) || 1;
-            if(!title) { alert("Please enter a book title."); return; }
-
-            try {
-                const res = await fetch('/api/inventory/add', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ title, copies })
-                });
-                const data = await res.json();
-                if(data.success) {
-                    closeCatalogModal();
-                    await refreshAppData();
-                } else {
-                    alert("Failed to add book to catalog.");
-                }
-            } catch(e) {
-                alert("Network error.");
-            }
+        function selectPresetBook(title) {
+            document.getElementById('bookName').value = title;
         }
 
         function renderLeaderboard(sorted) {
@@ -520,6 +441,10 @@
 
         function renderAnnouncements() {
             const container = document.getElementById('announcementsList');
+            if(!announcements || announcements.length === 0) {
+                container.innerHTML = `<p class="text-zinc-500 text-center py-6 text-xs">No notices posted.</p>`;
+                return;
+            }
             container.innerHTML = '';
             announcements.forEach(item => {
                 container.innerHTML += `
@@ -547,19 +472,33 @@
             document.getElementById('annDesc').value = '';
         }
 
-        function postAnnouncement() {
+        async function postAnnouncement() {
             const title = document.getElementById('annTitle').value.trim();
             const desc = document.getElementById('annDesc').value.trim();
             if(!title || !desc) { alert("Please fill out both fields."); return; }
-            const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/ /g, '/');
-            announcements.unshift({ id: Date.now(), date: today, type: 'Notice', title, desc });
-            renderAnnouncements();
-            closeAnnouncementModal();
+            try {
+                const res = await fetch('/api/announcements/add', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ title, desc, type: 'Notice' })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    closeAnnouncementModal();
+                    await refreshAppData();
+                }
+            } catch(e) {
+                alert("Failed to post announcement.");
+            }
         }
 
-        function deleteAnnouncement(id) {
-            announcements = announcements.filter(a => a.id !== id);
-            renderAnnouncements();
+        async function deleteAnnouncement(id) {
+            try {
+                await fetch(`/api/announcements/delete/${id}`, { method: 'POST' });
+                await refreshAppData();
+            } catch(e) {
+                console.error("Failed to delete notice", e);
+            }
         }
 
         function checkStudentExistence() {
