@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="mainHtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,93 +11,68 @@
             --bg: #000000;
             --glass: rgba(12, 12, 14, 0.75);
             --glass-border: rgba(255, 255, 255, 0.12);
-            --accent-blue: #007AFF;
+            --text-main: #FFFFFF;
+            --text-dim: rgba(255, 255, 255, 0.35);
+        }
+
+        .light-theme {
+            --bg: #f5f5f7;
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --text-main: #1d1d1f;
+            --text-dim: rgba(0, 0, 0, 0.45);
         }
 
         body { 
             background-color: var(--bg);
-            color: #FFFFFF;
+            color: var(--text-main);
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+            transition: background 0.5s ease;
             min-height: 100vh;
         }
 
-        /* Sovereign Liquid Background */
         .liquid-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at 50% 50%, #0a0a0c 0%, #000 100%);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: var(--bg);
         }
 
         .liquid-mesh {
-            position: fixed;
-            width: 140vw; height: 140vh;
-            top: -20vh; left: -20vw;
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(0, 122, 255, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.06) 0%, transparent 40%),
-                radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 30%);
-            z-index: -1;
-            filter: blur(100px);
-            animation: drift 25s ease-in-out infinite alternate;
+            position: fixed; width: 140vw; height: 140vh; top: -20vh; left: -20vw;
+            background-image: radial-gradient(circle at 20% 30%, rgba(0, 122, 255, 0.15) 0%, transparent 40%);
+            z-index: -1; filter: blur(100px); animation: drift 25s infinite alternate;
         }
 
-        @keyframes drift {
-            from { transform: rotate(0deg) scale(1); }
-            to { transform: rotate(5deg) scale(1.1); }
-        }
-
-        /* Glass Text Effect */
         .hero-text {
             font-family: 'Fraunces', serif;
-            background: linear-gradient(to bottom, #FFFFFF 30%, rgba(255,255,255,0.1) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            background: linear-gradient(to bottom, var(--text-main) 30%, var(--text-dim) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        /* Squircle Premium Cards */
         .sovereign-card {
             background: var(--glass);
             backdrop-filter: blur(40px) saturate(180%);
             -webkit-backdrop-filter: blur(40px) saturate(180%);
             border: 1px solid var(--glass-border);
             border-radius: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
 
-        .sovereign-card:hover {
-            border-color: rgba(255,255,255,0.25);
-            transform: translateY(-5px);
-            box-shadow: 0 20px 60px rgba(0,122,255,0.1);
-        }
-
-        /* Luxury Nav */
         .nav-link {
             font-size: 10px; font-weight: 800; letter-spacing: 0.2em;
-            text-transform: uppercase; color: rgba(255, 255, 255, 0.35);
+            text-transform: uppercase; color: var(--text-dim);
             transition: 0.3s; padding: 10px 20px; border-radius: 14px;
         }
-        .nav-link.active { color: #FFFFFF; background: rgba(255,255,255,0.08); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .nav-link.active { color: var(--text-main); background: rgba(122,122,122,0.1); }
 
         .btn-sovereign {
-            background: #FFFFFF; color: #000; font-weight: 800;
-            border-radius: 18px; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            text-transform: uppercase; font-size: 11px; letter-spacing: 0.1em;
+            background: var(--text-main); color: var(--bg); font-weight: 800;
+            border-radius: 18px; transition: 0.4s; text-transform: uppercase; font-size: 11px;
         }
-        .btn-sovereign:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(255,255,255,0.3); }
-
-        /* Smooth Entry */
-        .reveal { animation: revealEffect 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes revealEffect { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         #notification { transform: translate(-50%, -150px); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
         #notification.show { transform: translate(-50%, 60px); }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        input, textarea { background: rgba(122,122,122,0.05); border: 1px solid var(--glass-border); border-radius: 12px; color: var(--text-main); padding: 12px; outline: none; }
     </style>
 </head>
 <body>
@@ -105,207 +80,184 @@
     <div class="liquid-bg"></div>
     <div class="liquid-mesh"></div>
 
-    <!-- Notification -->
-    <div id="notification" class="fixed top-0 left-1/2 -translate-x-1/2 z-[100] sovereign-card px-12 py-5 flex items-center gap-5 border-blue-500/40">
-        <div class="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_20px_#007AFF] animate-pulse"></div>
-        <span id="notifText" class="text-xs font-black uppercase tracking-[0.3em] text-white">System Synchronized</span>
+    <div id="notification" class="fixed top-0 left-1/2 -translate-x-1/2 z-[100] sovereign-card px-10 py-5 flex items-center gap-4 border-blue-500">
+        <div class="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
+        <span id="notifText" class="text-xs font-black uppercase tracking-widest">Done</span>
     </div>
 
-    <!-- Login -->
-    <div id="loginOverlay" class="fixed inset-0 z-[60] bg-black flex items-center justify-center p-8">
-        <div class="max-w-md w-full space-y-16 text-center reveal">
-            <h1 class="text-8xl italic font-serif text-white tracking-tighter">Archive</h1>
-            <div class="sovereign-card p-12 space-y-8">
-                <input type="password" id="loginPass" placeholder="TERMINAL PASSKEY" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-center text-white text-lg focus:outline-none focus:border-white transition">
-                <button onclick="attemptLogin()" class="w-full btn-sovereign py-6">Authorize Entry</button>
-                <p id="loginError" class="text-[10px] font-bold text-red-500 uppercase hidden tracking-widest">Access Denied</p>
+    <!-- Auth System (Login/Register) -->
+    <div id="authOverlay" class="fixed inset-0 z-[60] bg-black/90 backdrop-blur-xl flex items-center justify-center p-8">
+        <div class="max-w-md w-full space-y-10 text-center">
+            <h1 class="text-7xl italic font-serif text-white tracking-tighter">Archive</h1>
+            <div class="sovereign-card p-10 space-y-6 bg-white/5 border-white/10">
+                <div class="flex gap-4 p-1 bg-black/20 rounded-xl mb-4">
+                    <button onclick="toggleAuthMode('login')" id="loginTab" class="flex-1 py-2 rounded-lg text-[10px] font-bold uppercase bg-white/10 text-white">Login</button>
+                    <button onclick="toggleAuthMode('register')" id="registerTab" class="flex-1 py-2 rounded-lg text-[10px] font-bold uppercase text-white/40">Register</button>
+                </div>
+                <input type="text" id="authUser" placeholder="USERNAME" class="w-full text-center">
+                <input type="password" id="authPass" placeholder="PASSWORD" class="w-full text-center">
+                <button onclick="handleAuth()" id="authBtn" class="w-full btn-sovereign py-5 bg-white text-black">Enter Archive</button>
+                <p id="authError" class="text-[10px] font-bold text-red-500 uppercase hidden">Error</p>
             </div>
         </div>
     </div>
 
-    <!-- App -->
+    <!-- Main App -->
     <div id="dashboardApp" class="hidden min-h-screen flex-col">
-        <header class="px-12 py-12 flex justify-between items-center sticky top-0 z-40 bg-black/10 backdrop-blur-3xl border-b border-white/5">
-            <div class="flex items-center gap-24">
-                <div class="font-serif italic text-4xl text-white font-black tracking-tighter hover:scale-110 transition cursor-pointer">ZHS</div>
+        <header class="px-12 py-10 flex justify-between items-center sticky top-0 z-40 bg-white/5 backdrop-blur-3xl border-b border-white/5">
+            <div class="flex items-center gap-20">
+                <div class="font-serif italic text-4xl font-black tracking-tighter">ZHS</div>
                 <nav class="hidden md:flex gap-4">
                     <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-link active">Dashboard</button>
                     <button onclick="switchTab('issue')" id="nav-issue" class="nav-link">Issue</button>
                     <button onclick="switchTab('ledger')" id="nav-ledger" class="nav-link">Ledger</button>
                     <button onclick="switchTab('history')" id="nav-history" class="nav-link">History</button>
+                    <button onclick="switchTab('settings')" id="nav-settings" class="nav-link">Settings</button>
                 </nav>
             </div>
-            <div class="flex items-center gap-8">
-                <button onclick="exportBackup()" class="text-[9px] font-black text-blue-400 uppercase tracking-[0.3em] hover:text-white transition">Backup</button>
-                <label class="text-[9px] font-black text-emerald-400 uppercase tracking-[0.3em] hover:text-white transition cursor-pointer">
-                    Restore <input type="file" id="importFile" accept=".json" onchange="importBackup(event)" class="hidden">
-                </label>
-                <button onclick="location.reload()" class="text-[9px] font-black text-red-500/50 uppercase tracking-[0.3em]">Exit</button>
-            </div>
+            <button onclick="logout()" class="text-[9px] font-black text-red-500 uppercase tracking-widest">Logout</button>
         </header>
 
-        <main class="max-w-7xl w-full mx-auto p-12 flex-grow reveal">
+        <main class="max-w-7xl w-full mx-auto p-12 flex-grow">
             
-            <!-- DASHBOARD -->
-            <div id="tab-dashboard" class="space-y-28">
-                <div class="space-y-6">
-                    <h1 class="text-[12rem] italic tracking-tighter leading-none hero-text">The Archive</h1>
-                    <p class="text-white/30 text-xl font-medium tracking-[0.3em] uppercase">Zee High School | Library Management Suite</p>
+            <!-- Dashboard -->
+            <div id="tab-dashboard" class="space-y-20">
+                <div class="space-y-4">
+                    <h1 class="text-9xl italic tracking-tighter leading-none hero-text">The Archive</h1>
+                    <p class="text-[10px] font-bold tracking-[0.4em] uppercase opacity-40">Library Management Suite</p>
                 </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="sovereign-card p-12"><p class="text-[10px] font-bold uppercase opacity-40 mb-4">Books Loaned</p><h3 id="statActiveLoans" class="text-8xl font-serif">0</h3></div>
+                    <div class="sovereign-card p-12"><p class="text-[10px] font-bold uppercase opacity-40 mb-4">Total Archived</p><h3 id="statHistory" class="text-8xl font-serif">0</h3></div>
+                    <div class="sovereign-card p-12 flex flex-col justify-center items-center"><p id="currentUserDisplay" class="text-xs font-mono uppercase tracking-widest text-blue-500">Curator Active</p></div>
+                </div>
+                <div class="grid lg:grid-cols-12 gap-20">
+                    <div id="leaderboardList" class="lg:col-span-8 space-y-6"></div>
+                    <div id="annList" class="lg:col-span-4 space-y-10"></div>
+                </div>
+            </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                    <div class="sovereign-card p-14 space-y-6">
-                        <p class="text-[10px] font-black text-white/30 uppercase tracking-[0.4em]">Active Circulation</p>
-                        <h3 id="statActiveLoans" class="text-9xl font-serif text-white tracking-tighter">0</h3>
-                    </div>
-                    <div class="sovereign-card p-14 space-y-6">
-                        <p class="text-[10px] font-black text-white/30 uppercase tracking-[0.4em]">Logs Archived</p>
-                        <h3 id="statHistory" class="text-9xl font-serif text-white tracking-tighter">0</h3>
-                    </div>
-                    <div class="sovereign-card p-14 flex flex-col justify-between">
-                        <p class="text-[10px] font-black text-white/30 uppercase tracking-[0.4em]">Archival Status</p>
-                        <div class="text-[11px] font-black text-blue-500 uppercase tracking-[0.3em] flex items-center gap-5">
-                            <span class="w-4 h-4 rounded-full bg-blue-500 animate-pulse shadow-[0_0_25px_#007AFF]"></span> Persistent Synced
+            <!-- Settings Tab -->
+            <div id="tab-settings" class="hidden max-w-2xl mx-auto space-y-12 py-10">
+                <div class="sovereign-card p-12 space-y-10">
+                    <h2 class="text-4xl italic font-serif">System Settings</h2>
+                    
+                    <div class="space-y-4 border-b border-white/5 pb-8">
+                        <p class="text-[10px] font-bold uppercase tracking-widest opacity-40">Appearance</p>
+                        <div class="flex gap-4">
+                            <button onclick="setTheme('dark')" class="flex-1 py-4 sovereign-card text-[10px] font-bold uppercase border-white/10">Dark Mode</button>
+                            <button onclick="setTheme('light')" class="flex-1 py-4 sovereign-card text-[10px] font-bold uppercase bg-white text-black border-none">Light Mode</button>
                         </div>
                     </div>
-                </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-24">
-                    <div class="lg:col-span-8 space-y-14">
-                        <h3 class="text-3xl italic font-serif text-white/80 uppercase tracking-widest">Scholar Engagement</h3>
-                        <div id="leaderboardList" class="space-y-8"></div>
+                    <div class="space-y-6">
+                        <p class="text-[10px] font-bold uppercase tracking-widest opacity-40">Change Password</p>
+                        <input type="password" id="newPass" placeholder="NEW PASSWORD" class="w-full">
+                        <button onclick="updatePassword()" class="w-full btn-sovereign py-4">Save Password</button>
                     </div>
-                    <div class="lg:col-span-4 space-y-14">
-                        <div class="flex justify-between items-center border-b border-white/10 pb-8">
-                            <h3 class="text-3xl italic font-serif text-white/80 uppercase tracking-widest">Notices</h3>
-                            <button onclick="openAnnModal()" class="text-4xl font-light text-white/20 hover:text-white transition hover:scale-125">+</button>
-                        </div>
-                        <div id="annList" class="space-y-14"></div>
+
+                    <div class="space-y-4 pt-10">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-red-500">Database Control</p>
+                        <button onclick="exportBackup()" class="w-full text-[10px] font-bold uppercase tracking-widest border border-white/10 py-3 rounded-xl hover:bg-blue-500/10">Export Master Backup (.json)</button>
                     </div>
                 </div>
             </div>
 
-            <!-- ISSUE -->
-            <div id="tab-issue" class="hidden max-w-3xl mx-auto py-10">
-                <div class="sovereign-card p-20 space-y-16">
-                    <h2 class="text-5xl italic font-serif text-white">Create Entry</h2>
-                    <div class="space-y-12">
-                        <div class="space-y-12">
-                            <input type="text" id="admNo" placeholder="SCHOLAR ADMISSION ID" class="w-full bg-transparent border-b border-white/10 py-6 text-2xl font-serif text-white focus:outline-none focus:border-white transition placeholder:text-white/5">
-                            <input type="text" id="studentName" placeholder="SCHOLAR FULL NAME" class="w-full bg-transparent border-b border-white/10 py-6 text-2xl font-serif text-white focus:outline-none focus:border-white transition placeholder:text-white/5">
-                            <input type="text" id="studentClass" placeholder="CLASS & SECTION" class="w-full bg-transparent border-b border-white/10 py-6 text-2xl font-serif text-white focus:outline-none focus:border-white transition placeholder:text-white/5">
-                            <input type="text" id="bookName" placeholder="PUBLICATION TITLE" class="w-full bg-transparent border-b border-white/10 py-6 text-2xl font-serif text-white focus:outline-none focus:border-white transition placeholder:text-white/5">
-                        </div>
-                        <button onclick="submitIssue()" class="w-full btn-sovereign py-7 text-xl">Register Loan</button>
-                    </div>
-                </div>
-            </div>
+            <!-- Tabs: Issue, Ledger, History (Remained Same Logic) -->
+            <div id="tab-issue" class="hidden max-w-2xl mx-auto py-10"><div class="sovereign-card p-16 space-y-10">
+                <h2 class="text-5xl italic font-serif">Issue Book</h2>
+                <input type="text" id="admNo" placeholder="ADMISSION ID" class="w-full"><input type="text" id="studentName" placeholder="STUDENT NAME" class="w-full"><input type="text" id="bookName" placeholder="BOOK TITLE" class="w-full"><button onclick="submitIssue()" class="w-full btn-sovereign py-6">Commit Transaction</button>
+            </div></div>
+            <div id="tab-ledger" class="hidden space-y-8"><h2 class="text-6xl italic font-serif">Ledger</h2><div id="issuesTable" class="space-y-4"></div></div>
+            <div id="tab-history" class="hidden space-y-8"><h2 class="text-6xl italic font-serif">History</h2><div id="historyTable" class="space-y-4"></div></div>
 
-            <!-- LEDGER -->
-            <div id="tab-ledger" class="hidden space-y-14">
-                <h2 class="text-6xl italic font-serif font-bold text-white tracking-tighter">Active Ledger</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead>
-                            <tr class="text-white/30 font-black text-[10px] uppercase tracking-[0.4em]">
-                                <th class="p-8 text-left">Scholar</th>
-                                <th class="p-8 text-left">Publication</th>
-                                <th class="p-8 text-left">Issue Date</th>
-                                <th class="p-8 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="issuesTable"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- HISTORY -->
-            <div id="tab-history" class="hidden space-y-14">
-                <h2 class="text-6xl italic font-serif font-bold text-white tracking-tighter">History</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead>
-                            <tr class="text-white/30 font-black text-[10px] uppercase tracking-[0.4em]">
-                                <th class="p-8 text-left">Scholar</th>
-                                <th class="p-8 text-left">Publication</th>
-                                <th class="p-8 text-left">Issued</th>
-                                <th class="p-8 text-left">Returned</th>
-                            </tr>
-                        </thead>
-                        <tbody id="historyTable"></tbody>
-                    </table>
-                </div>
-            </div>
         </main>
     </div>
 
-    <!-- Notice Modal -->
-    <div id="annModal" class="fixed inset-0 z-[70] bg-black/95 backdrop-blur-3xl hidden items-center justify-center p-8">
-        <div class="sovereign-card p-16 max-w-lg w-full space-y-10 reveal">
-            <h3 class="text-4xl italic font-serif text-white">Broadcast Notice</h3>
-            <div class="space-y-8">
-                <input type="text" id="annTitle" placeholder="HEADLINE" class="w-full bg-transparent border-b border-white/10 py-4 text-2xl text-white outline-none">
-                <textarea id="annDesc" rows="4" placeholder="CONTENT..." class="w-full bg-white/5 border border-white/10 rounded-2xl p-6 text-white/50 outline-none"></textarea>
-                <button onclick="submitNotice()" class="w-full btn-sovereign py-6">Publish Broadcast</button>
-                <button onclick="closeAnnModal()" class="w-full text-[10px] font-black uppercase text-white/20 tracking-widest">Cancel</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // PERSISTENT ARCHIVE LOGIC
-        let db = JSON.parse(localStorage.getItem('zhs_sovereign_db')) || { issues: [], history: [], notices: [] };
+        let users = JSON.parse(localStorage.getItem('lib_users')) || [];
+        let db = JSON.parse(localStorage.getItem('lib_db_sovereign')) || { issues: [], history: [], notices: [] };
+        let activeUser = null;
+        let authMode = 'login';
 
+        // AUTH ENGINE
+        function toggleAuthMode(mode) {
+            authMode = mode;
+            document.getElementById('loginTab').className = mode === 'login' ? 'flex-1 py-2 rounded-lg text-[10px] font-bold uppercase bg-white/10 text-white' : 'flex-1 py-2 rounded-lg text-[10px] font-bold uppercase text-white/40';
+            document.getElementById('registerTab').className = mode === 'register' ? 'flex-1 py-2 rounded-lg text-[10px] font-bold uppercase bg-white/10 text-white' : 'flex-1 py-2 rounded-lg text-[10px] font-bold uppercase text-white/40';
+            document.getElementById('authBtn').innerText = mode === 'login' ? 'Enter Archive' : 'Create Account';
+        }
+
+        function handleAuth() {
+            const u = document.getElementById('authUser').value.trim();
+            const p = document.getElementById('authPass').value.trim();
+            const error = document.getElementById('authError');
+
+            if(!u || !p) return alert("Fields Required");
+
+            if(authMode === 'register') {
+                if(users.find(user => user.username === u)) {
+                    error.innerText = "Username Taken";
+                    error.classList.remove('hidden');
+                    return;
+                }
+                const newUser = { username: u, password: p, theme: 'dark' };
+                users.push(newUser);
+                localStorage.setItem('lib_users', JSON.stringify(users));
+                showToast("Account Registered");
+                toggleAuthMode('login');
+            } else {
+                const user = users.find(user => user.username === u && user.password === p);
+                if(user) {
+                    activeUser = user;
+                    document.getElementById('authOverlay').style.display = 'none';
+                    document.getElementById('dashboardApp').classList.remove('hidden');
+                    document.getElementById('currentUserDisplay').innerText = `Curator: ${u}`;
+                    setTheme(user.theme);
+                    refreshUI();
+                } else {
+                    error.innerText = "Invalid Login";
+                    error.classList.remove('hidden');
+                }
+            }
+        }
+
+        // SETTINGS & THEME
+        function setTheme(theme) {
+            const html = document.getElementById('mainHtml');
+            if(theme === 'light') html.classList.add('light-theme');
+            else html.classList.remove('light-theme');
+            if(activeUser) {
+                activeUser.theme = theme;
+                localStorage.setItem('lib_users', JSON.stringify(users));
+            }
+        }
+
+        function updatePassword() {
+            const np = document.getElementById('newPass').value;
+            if(!np) return alert("Enter New Password");
+            activeUser.password = np;
+            localStorage.setItem('lib_users', JSON.stringify(users));
+            showToast("Password Updated");
+        }
+
+        function logout() { location.reload(); }
+
+        // LIBRARY LOGIC
         function saveData() {
-            localStorage.setItem('zhs_sovereign_db', JSON.stringify(db));
+            localStorage.setItem('lib_db_sovereign', JSON.stringify(db));
             refreshUI();
         }
 
-        // BACKUP & RESTORE
-        function exportBackup() {
-            const blob = new Blob([JSON.stringify(db, null, 4)], { type: 'application/json' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `ZHS_Archive_v3_Backup.json`;
-            link.click();
-            showToast("BACKUP SECURED");
-        }
-
-        function importBackup(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    db = JSON.parse(e.target.result);
-                    saveData();
-                    showToast("SYSTEM RESTORED");
-                    setTimeout(() => location.reload(), 1000);
-                } catch (err) { alert("Invalid File"); }
-            };
-            reader.readAsText(file);
-        }
-
-        function showToast(text) {
+        function showToast(txt) {
             const t = document.getElementById('notification');
-            document.getElementById('notifText').innerText = text;
+            document.getElementById('notifText').innerText = txt;
             t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-        function attemptLogin() {
-            if(document.getElementById('loginPass').value === 'librarian123') {
-                document.getElementById('loginOverlay').style.display = 'none';
-                document.getElementById('dashboardApp').classList.remove('hidden');
-                document.getElementById('dashboardApp').classList.add('flex');
-                refreshUI();
-            } else {
-                document.getElementById('loginError').classList.remove('hidden');
-            }
-        }
-
         function switchTab(t) {
-            ['dashboard', 'issue', 'ledger', 'history'].forEach(tab => {
+            ['dashboard', 'issue', 'ledger', 'history', 'settings'].forEach(tab => {
                 document.getElementById(`tab-${tab}`).classList.add('hidden');
                 document.getElementById(`nav-${tab}`).classList.remove('active');
             });
@@ -314,111 +266,50 @@
         }
 
         function submitIssue() {
-            const issue = {
-                id: Date.now(),
-                adm: document.getElementById('admNo').value,
-                name: document.getElementById('studentName').value,
-                class: document.getElementById('studentClass').value,
-                book: document.getElementById('bookName').value,
-                date: new Date().toLocaleDateString()
-            };
-            if(!issue.adm || !issue.book || !issue.name) { showToast("DATA INCOMPLETE"); return; }
-            db.issues.push(issue);
+            const i = { id: Date.now(), adm: document.getElementById('admNo').value, name: document.getElementById('studentName').value, book: document.getElementById('bookName').value, date: new Date().toLocaleDateString() };
+            db.issues.push(i);
             saveData();
-            showToast("BOOK ISSUED");
+            showToast("Issued Successfully");
             switchTab('ledger');
-            ['admNo', 'studentName', 'studentClass', 'bookName'].forEach(id => document.getElementById(id).value = '');
         }
 
         function returnBook(id) {
-            const idx = db.issues.findIndex(i => i.id === id);
-            if(idx > -1) {
-                const book = db.issues.splice(idx, 1)[0];
-                book.returnDate = new Date().toLocaleDateString();
-                db.history.unshift(book);
-                saveData();
-                showToast("BOOK RETURNED");
-            }
-        }
-
-        function submitNotice() {
-            db.notices.unshift({
-                id: Date.now(),
-                title: document.getElementById('annTitle').value,
-                desc: document.getElementById('annDesc').value,
-                date: new Date().toLocaleDateString()
-            });
+            const idx = db.issues.findIndex(item => item.id === id);
+            const book = db.issues.splice(idx, 1)[0];
+            book.returnDate = new Date().toLocaleDateString();
+            db.history.unshift(book);
             saveData();
-            closeAnnModal();
-            showToast("NOTICE BROADCASTED");
-        }
-
-        function deleteNotice(id) {
-            db.notices = db.notices.filter(n => n.id !== id);
-            saveData();
+            showToast("Returned Successfully");
         }
 
         function refreshUI() {
             document.getElementById('statActiveLoans').innerText = db.issues.length;
             document.getElementById('statHistory').innerText = db.history.length;
 
-            // Ledger UI
             document.getElementById('issuesTable').innerHTML = db.issues.map(i => `
-                <tr class="reveal group">
-                    <td class="p-8">
-                        <p class="font-bold text-2xl text-white group-hover:text-blue-400 transition">${i.name}</p>
-                        <p class="text-[10px] font-black text-white/30 uppercase mt-2">${i.class} • ADM: ${i.adm}</p>
-                    </td>
-                    <td class="p-8 italic font-serif text-2xl text-white/70">${i.book}</td>
-                    <td class="p-8 font-mono text-[11px] text-white/40">${i.date}</td>
-                    <td class="p-8 text-right">
-                        <button onclick="returnBook(${i.id})" class="text-[9px] font-black text-blue-400 border border-blue-400/20 px-8 py-4 rounded-2xl hover:bg-white hover:text-black hover:border-white transition uppercase">Return</button>
-                    </td>
-                </tr>
-            `).join('') || '<tr><td colspan="4" class="py-24 text-center opacity-10 uppercase font-black text-2xl">Ledger Empty</td></tr>';
+                <div class="sovereign-card p-8 flex justify-between items-center">
+                    <div><p class="font-bold text-xl">${i.name}</p><p class="text-[10px] opacity-40 uppercase">ID: ${i.adm}</p></div>
+                    <div class="italic font-serif text-xl opacity-80">${i.book}</div>
+                    <button onclick="returnBook(${i.id})" class="text-[10px] font-bold text-blue-500 border border-blue-500/20 px-6 py-2 rounded-xl">Return</button>
+                </div>
+            `).join('') || '<p class="text-center py-20 opacity-20 uppercase font-black tracking-widest">No Active Loans</p>';
 
-            // History UI
             document.getElementById('historyTable').innerHTML = db.history.map(i => `
-                <tr class="reveal">
-                    <td class="p-8"><p class="font-bold text-xl text-white/80">${i.name}</p><p class="text-[10px] text-white/20 uppercase mt-1">ADM: ${i.adm}</p></td>
-                    <td class="p-8 italic font-serif text-white/30 text-2xl">${i.book}</td>
-                    <td class="p-8 text-[11px] text-white/20 font-mono uppercase">${i.date}</td>
-                    <td class="p-8 text-[11px] text-blue-500 font-black font-mono uppercase">${i.returnDate}</td>
-                </tr>
-            `).join('') || '<tr><td colspan="4" class="py-24 text-center opacity-10 uppercase font-black text-2xl">No Log Data</td></tr>';
-
-            // Leaderboard UI
-            const counts = {};
-            [...db.issues, ...db.history].forEach(x => counts[x.name] = (counts[x.name] || 0) + 1);
-            const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 5);
-            document.getElementById('leaderboardList').innerHTML = sorted.map(([name, count], idx) => `
-                <div class="sovereign-card p-10 flex justify-between items-center group reveal" style="animation-delay: ${idx * 0.1}s">
-                    <div class="flex items-center gap-10">
-                        <span class="text-6xl italic font-serif text-white/10 group-hover:text-blue-500 transition duration-500">0${idx+1}</span>
-                        <p class="font-bold text-3xl text-white">${name}</p>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-5xl font-serif italic text-white">${count}</span>
-                        <p class="text-[10px] font-black opacity-20 uppercase tracking-widest mt-2">Books</p>
-                    </div>
+                <div class="sovereign-card p-8 flex justify-between items-center opacity-60">
+                    <div><p class="font-bold text-lg">${i.name}</p><p class="text-[9px] opacity-40">ID: ${i.adm}</p></div>
+                    <div class="italic font-serif text-lg">${i.book}</div>
+                    <div class="text-[9px] font-bold text-blue-500 uppercase">${i.returnDate}</div>
                 </div>
-            `).join('') || '<p class="opacity-10 text-center py-20 uppercase font-black text-2xl tracking-widest">No Leaderboard Data</p>';
-
-            // Notices UI
-            document.getElementById('annList').innerHTML = db.notices.map(n => `
-                <div class="space-y-8 reveal group">
-                    <div class="flex justify-between items-center border-b border-white/5 pb-3">
-                        <span class="text-[9px] font-black opacity-20 uppercase tracking-[0.4em]">${n.date}</span>
-                        <button onclick="deleteNotice(${n.id})" class="text-red-500/10 hover:text-red-500 text-[9px] font-black transition uppercase">Wipe</button>
-                    </div>
-                    <p class="text-4xl italic font-serif leading-tight text-white/90">${n.title}</p>
-                    <p class="text-white/30 text-xl font-light leading-relaxed">${n.desc}</p>
-                </div>
-            `).join('') || '<p class="opacity-10 text-xs uppercase font-black tracking-widest">No Active Broadcasts</p>';
+            `).join('') || '<p class="text-center py-20 opacity-20 uppercase font-black tracking-widest">No History</p>';
         }
 
-        function openAnnModal() { document.getElementById('annModal').classList.remove('hidden'); document.getElementById('annModal').classList.add('flex'); }
-        function closeAnnModal() { document.getElementById('annModal').classList.add('hidden'); }
+        function exportBackup() {
+            const blob = new Blob([JSON.stringify(db)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `ZHS_Master_Archive.json`;
+            link.click();
+        }
     </script>
 </body>
 </html>
