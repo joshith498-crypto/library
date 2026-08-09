@@ -164,18 +164,22 @@ def issue_book():
 @app.route('/api/return/<int:item_id>', methods=['POST'])
 def return_book(item_id):
     db = load_data()
-    issues_db = db["issues"]
-    history_db = db["history"]
+    issues_db = db.get("issues", [])
+    history_db = db.get("history", [])
 
-    matched = next((i for i in issues_db if i['id'] == item_id), None)
+    matched = next((i for i in issues_db if int(i.get('id', 0)) == int(item_id)), None)
+    
     if matched:
         matched['return_date'] = datetime.now().strftime("%Y-%m-%d")
         history_db.insert(0, matched)
-        issues_db = [i for i in issues_db if i['id'] != item_id]
+        
+        db["issues"] = [i for i in issues_db if int(i.get('id', 0)) != int(item_id)]
+        db["history"] = history_db
 
-        save_data(issues_db, history_db, db.get("announcements", []))
+        save_data(db["issues"], db["history"], db.get("announcements", []))
         return jsonify({"success": True}), 200
-    return jsonify({"success": False}), 404
+        
+    return jsonify({"success": False, "error": "Item not found"}), 404
 
 @app.route('/api/update-date', methods=['POST'])
 def update_date():
