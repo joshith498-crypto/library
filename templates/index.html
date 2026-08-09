@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE ARCHIVE | Zee High School</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #000000;
-            --glass: rgba(12, 12, 14, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass: rgba(15, 15, 17, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.15);
             --text-main: #FFFFFF;
             --text-dim: rgba(255, 255, 255, 0.35);
         }
 
         .light-theme {
             --bg: #f5f5f7;
-            --glass: rgba(255, 255, 255, 0.7);
+            --glass: rgba(255, 255, 255, 0.6);
             --glass-border: rgba(0, 0, 0, 0.1);
             --text-main: #1d1d1f;
             --text-dim: rgba(0, 0, 0, 0.45);
@@ -27,10 +27,12 @@
             background-color: var(--bg);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
-            transition: background 0.5s ease;
+            transition: background 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
+        /* macOS Liquid Mesh Background */
         .liquid-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
             background: var(--bg);
@@ -38,23 +40,27 @@
 
         .liquid-mesh {
             position: fixed; width: 140vw; height: 140vh; top: -20vh; left: -20vw;
-            background-image: radial-gradient(circle at 20% 30%, rgba(0, 122, 255, 0.15) 0%, transparent 40%);
-            z-index: -1; filter: blur(100px); animation: drift 25s infinite alternate;
+            background-image: radial-gradient(circle at 20% 30%, rgba(0, 122, 255, 0.15) 0%, transparent 40%),
+                              radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.1) 0%, transparent 40%);
+            z-index: -1; filter: blur(100px); animation: drift 30s infinite alternate;
         }
 
+        @keyframes drift { from { transform: rotate(0deg) scale(1); } to { transform: rotate(5deg) scale(1.1); } }
+
+        /* The Glass Text effect you liked */
         .hero-text {
             font-family: 'Fraunces', serif;
             background: linear-gradient(to bottom, var(--text-main) 30%, var(--text-dim) 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        .sovereign-card {
+        .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            backdrop-filter: blur(50px) saturate(200%);
+            -webkit-backdrop-filter: blur(50px) saturate(200%);
             border: 1px solid var(--glass-border);
-            border-radius: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border-radius: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
         }
 
         .nav-link {
@@ -64,15 +70,27 @@
         }
         .nav-link.active { color: var(--text-main); background: rgba(122,122,122,0.1); }
 
-        .btn-sovereign {
+        .btn-mac {
             background: var(--text-main); color: var(--bg); font-weight: 800;
-            border-radius: 18px; transition: 0.4s; text-transform: uppercase; font-size: 11px;
+            border-radius: 18px; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase; font-size: 11px; letter-spacing: 0.1em;
         }
+        .btn-mac:hover { transform: scale(1.04); box-shadow: 0 10px 30px rgba(122,122,122,0.2); }
+
+        input, textarea { 
+            background: rgba(122,122,122,0.05); 
+            border: 1px solid var(--glass-border); 
+            border-radius: 16px; color: var(--text-main); 
+            padding: 16px 20px; outline: none; transition: 0.3s;
+        }
+        input:focus { border-color: #007AFF; background: rgba(0, 122, 255, 0.05); }
+
+        /* Ledger Table styles from original look */
+        .ledger-row { background: rgba(122,122,122,0.03); border-radius: 18px; transition: 0.3s; }
+        .ledger-row:hover { background: rgba(122,122,122,0.06); }
 
         #notification { transform: translate(-50%, -150px); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
         #notification.show { transform: translate(-50%, 60px); }
-
-        input, textarea { background: rgba(122,122,122,0.05); border: 1px solid var(--glass-border); border-radius: 12px; color: var(--text-main); padding: 12px; outline: none; }
     </style>
 </head>
 <body>
@@ -80,33 +98,36 @@
     <div class="liquid-bg"></div>
     <div class="liquid-mesh"></div>
 
-    <div id="notification" class="fixed top-0 left-1/2 -translate-x-1/2 z-[100] sovereign-card px-10 py-5 flex items-center gap-4 border-blue-500">
-        <div class="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
-        <span id="notifText" class="text-xs font-black uppercase tracking-widest">Done</span>
+    <!-- Notification Toast -->
+    <div id="notification" class="fixed top-0 left-1/2 -translate-x-1/2 z-[100] glass-card px-10 py-5 flex items-center gap-5">
+        <div class="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_20px_#007AFF] animate-pulse"></div>
+        <span id="notifText" class="text-sm font-bold uppercase tracking-widest text-white">Done</span>
     </div>
 
-    <!-- Auth System (Login/Register) -->
-    <div id="authOverlay" class="fixed inset-0 z-[60] bg-black/90 backdrop-blur-xl flex items-center justify-center p-8">
-        <div class="max-w-md w-full space-y-10 text-center">
-            <h1 class="text-7xl italic font-serif text-white tracking-tighter">Archive</h1>
-            <div class="sovereign-card p-10 space-y-6 bg-white/5 border-white/10">
-                <div class="flex gap-4 p-1 bg-black/20 rounded-xl mb-4">
-                    <button onclick="toggleAuthMode('login')" id="loginTab" class="flex-1 py-2 rounded-lg text-[10px] font-bold uppercase bg-white/10 text-white">Login</button>
-                    <button onclick="toggleAuthMode('register')" id="registerTab" class="flex-1 py-2 rounded-lg text-[10px] font-bold uppercase text-white/40">Register</button>
+    <!-- Multi-User Auth Overlay -->
+    <div id="authOverlay" class="fixed inset-0 z-[60] bg-black flex items-center justify-center p-8">
+        <div class="max-w-md w-full space-y-12 text-center">
+            <h1 class="text-8xl italic font-serif text-white tracking-tighter">Archive</h1>
+            <div class="glass-card p-12 space-y-8">
+                <div class="flex gap-4 p-1 bg-black/20 rounded-2xl mb-4">
+                    <button onclick="toggleAuthMode('login')" id="loginTab" class="flex-1 py-3 rounded-xl text-[10px] font-black uppercase bg-white/10 text-white">Login</button>
+                    <button onclick="toggleAuthMode('register')" id="registerTab" class="flex-1 py-3 rounded-xl text-[10px] font-black uppercase text-white/40">Register</button>
                 </div>
-                <input type="text" id="authUser" placeholder="USERNAME" class="w-full text-center">
-                <input type="password" id="authPass" placeholder="PASSWORD" class="w-full text-center">
-                <button onclick="handleAuth()" id="authBtn" class="w-full btn-sovereign py-5 bg-white text-black">Enter Archive</button>
-                <p id="authError" class="text-[10px] font-bold text-red-500 uppercase hidden">Error</p>
+                <div class="space-y-4">
+                    <input type="text" id="authUser" placeholder="USERNAME" class="w-full text-center">
+                    <input type="password" id="authPass" placeholder="PASSWORD" class="w-full text-center">
+                </div>
+                <button onclick="handleAuth()" id="authBtn" class="w-full btn-mac py-6">Enter Archive</button>
+                <p id="authError" class="text-[10px] font-bold text-red-500 uppercase hidden">Invalid Login</p>
             </div>
         </div>
     </div>
 
-    <!-- Main App -->
+    <!-- Dashboard App -->
     <div id="dashboardApp" class="hidden min-h-screen flex-col">
-        <header class="px-12 py-10 flex justify-between items-center sticky top-0 z-40 bg-white/5 backdrop-blur-3xl border-b border-white/5">
+        <header class="px-12 py-10 flex justify-between items-center sticky top-0 z-40 bg-black/10 backdrop-blur-3xl border-b border-white/5">
             <div class="flex items-center gap-20">
-                <div class="font-serif italic text-4xl font-black tracking-tighter">ZHS</div>
+                <div class="font-serif italic text-4xl text-white font-black tracking-tighter cursor-pointer" onclick="switchTab('dashboard')">ZHS</div>
                 <nav class="hidden md:flex gap-4">
                     <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-link active">Dashboard</button>
                     <button onclick="switchTab('issue')" id="nav-issue" class="nav-link">Issue</button>
@@ -115,137 +136,183 @@
                     <button onclick="switchTab('settings')" id="nav-settings" class="nav-link">Settings</button>
                 </nav>
             </div>
-            <button onclick="logout()" class="text-[9px] font-black text-red-500 uppercase tracking-widest">Logout</button>
+            <button onclick="logout()" class="text-[9px] font-black text-red-500 uppercase tracking-widest">Logout System</button>
         </header>
 
         <main class="max-w-7xl w-full mx-auto p-12 flex-grow">
             
-            <!-- Dashboard -->
+            <!-- TAB 1: DASHBOARD -->
             <div id="tab-dashboard" class="space-y-20">
                 <div class="space-y-4">
-                    <h1 class="text-9xl italic tracking-tighter leading-none hero-text">The Archive</h1>
-                    <p class="text-[10px] font-bold tracking-[0.4em] uppercase opacity-40">Library Management Suite</p>
+                    <h1 class="text-9xl md:text-[11rem] italic tracking-tighter leading-none hero-text">The Archive</h1>
+                    <p class="text-xs font-bold tracking-[0.5em] uppercase opacity-40">Zee High School | Library Suite</p>
                 </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="sovereign-card p-12"><p class="text-[10px] font-bold uppercase opacity-40 mb-4">Books Loaned</p><h3 id="statActiveLoans" class="text-8xl font-serif">0</h3></div>
-                    <div class="sovereign-card p-12"><p class="text-[10px] font-bold uppercase opacity-40 mb-4">Total Archived</p><h3 id="statHistory" class="text-8xl font-serif">0</h3></div>
-                    <div class="sovereign-card p-12 flex flex-col justify-center items-center"><p id="currentUserDisplay" class="text-xs font-mono uppercase tracking-widest text-blue-500">Curator Active</p></div>
+                    <div class="glass-card p-12 space-y-4">
+                        <p class="text-[10px] font-bold uppercase opacity-30 tracking-widest">Active Loans</p>
+                        <h3 id="statActiveLoans" class="text-8xl font-serif">0</h3>
+                    </div>
+                    <div class="glass-card p-12 space-y-4">
+                        <p class="text-[10px] font-bold uppercase opacity-30 tracking-widest">Logs Archived</p>
+                        <h3 id="statHistory" class="text-8xl font-serif">0</h3>
+                    </div>
+                    <div class="glass-card p-12 flex flex-col justify-center items-center">
+                        <p id="curatorDisplay" class="text-xs font-bold text-blue-500 uppercase tracking-widest">Curator Active</p>
+                        <div class="mt-4 w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
+                    </div>
                 </div>
+
                 <div class="grid lg:grid-cols-12 gap-20">
-                    <div id="leaderboardList" class="lg:col-span-8 space-y-6"></div>
-                    <div id="annList" class="lg:col-span-4 space-y-10"></div>
+                    <div class="lg:col-span-8 space-y-10">
+                        <h3 class="text-3xl italic font-serif opacity-80">Scholar Engagement</h3>
+                        <div id="leaderboardList" class="space-y-6"></div>
+                    </div>
+                    <div class="lg:col-span-4 space-y-10">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-6">
+                            <h3 class="text-3xl italic font-serif opacity-80">Notices</h3>
+                            <button onclick="openAnnModal()" class="text-3xl font-light opacity-30 hover:opacity-100 transition">+</button>
+                        </div>
+                        <div id="annList" class="space-y-12"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Settings Tab -->
-            <div id="tab-settings" class="hidden max-w-2xl mx-auto space-y-12 py-10">
-                <div class="sovereign-card p-12 space-y-10">
-                    <h2 class="text-4xl italic font-serif">System Settings</h2>
+            <!-- TAB 2: ISSUE BOOK -->
+            <div id="tab-issue" class="hidden max-w-3xl mx-auto py-10">
+                <div class="glass-card p-16 space-y-12">
+                    <h2 class="text-6xl italic font-serif">Register Loan</h2>
+                    <div class="space-y-8">
+                        <input type="text" id="admNo" placeholder="SCHOLAR ADMISSION ID" class="w-full text-xl font-serif">
+                        <input type="text" id="studentName" placeholder="SCHOLAR FULL NAME" class="w-full text-xl font-serif">
+                        <input type="text" id="bookName" placeholder="PUBLICATION TITLE" class="w-full text-xl font-serif">
+                        <button onclick="submitIssue()" class="w-full btn-mac py-7 text-lg">Commit Transaction</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: LEDGER -->
+            <div id="tab-ledger" class="hidden space-y-12">
+                <h2 class="text-6xl italic font-serif">Active Ledger</h2>
+                <div id="issuesTable" class="space-y-6"></div>
+            </div>
+
+            <!-- TAB 4: HISTORY -->
+            <div id="tab-history" class="hidden space-y-12">
+                <h2 class="text-6xl italic font-serif">History Log</h2>
+                <div id="historyTable" class="space-y-6"></div>
+            </div>
+
+            <!-- TAB 5: SETTINGS -->
+            <div id="tab-settings" class="hidden max-w-3xl mx-auto space-y-12 py-10">
+                <div class="glass-card p-16 space-y-12">
+                    <h2 class="text-5xl italic font-serif">Settings</h2>
                     
-                    <div class="space-y-4 border-b border-white/5 pb-8">
-                        <p class="text-[10px] font-bold uppercase tracking-widest opacity-40">Appearance</p>
-                        <div class="flex gap-4">
-                            <button onclick="setTheme('dark')" class="flex-1 py-4 sovereign-card text-[10px] font-bold uppercase border-white/10">Dark Mode</button>
-                            <button onclick="setTheme('light')" class="flex-1 py-4 sovereign-card text-[10px] font-bold uppercase bg-white text-black border-none">Light Mode</button>
+                    <div class="space-y-4 border-b border-white/10 pb-10">
+                        <p class="text-[10px] font-bold uppercase tracking-widest opacity-30">Interface Theme</p>
+                        <div class="flex gap-6">
+                            <button onclick="setTheme('dark')" class="flex-1 py-5 glass-card text-[10px] font-bold uppercase hover:bg-white/5 transition">Dark Obsidian</button>
+                            <button onclick="setTheme('light')" class="flex-1 py-5 glass-card text-[10px] font-bold uppercase bg-white text-black border-none hover:bg-zinc-200 transition">Light Alpine</button>
                         </div>
                     </div>
 
-                    <div class="space-y-6">
-                        <p class="text-[10px] font-bold uppercase tracking-widest opacity-40">Change Password</p>
-                        <input type="password" id="newPass" placeholder="NEW PASSWORD" class="w-full">
-                        <button onclick="updatePassword()" class="w-full btn-sovereign py-4">Save Password</button>
+                    <div class="space-y-6 border-b border-white/10 pb-10">
+                        <p class="text-[10px] font-bold uppercase tracking-widest opacity-30">Account Security</p>
+                        <input type="password" id="newPass" placeholder="NEW PASSWORD" class="w-full font-mono">
+                        <button onclick="updatePassword()" class="w-full btn-mac py-5">Update Passcode</button>
                     </div>
 
-                    <div class="space-y-4 pt-10">
-                        <p class="text-[10px] font-bold uppercase tracking-widest text-red-500">Database Control</p>
-                        <button onclick="exportBackup()" class="w-full text-[10px] font-bold uppercase tracking-widest border border-white/10 py-3 rounded-xl hover:bg-blue-500/10">Export Master Backup (.json)</button>
+                    <div class="space-y-6">
+                        <p class="text-[10px] font-bold uppercase tracking-widest opacity-30">Database Management</p>
+                        <div class="grid grid-cols-2 gap-6">
+                            <button onclick="exportBackup()" class="py-4 border border-blue-500/30 rounded-2xl text-[10px] font-bold text-blue-500 uppercase hover:bg-blue-500/10">Export Master Backup</button>
+                            <label class="py-4 border border-emerald-500/30 rounded-2xl text-[10px] font-bold text-emerald-500 uppercase text-center cursor-pointer hover:bg-emerald-500/10">
+                                Import Backup <input type="file" id="importFile" accept=".json" onchange="importBackup(event)" class="hidden">
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Tabs: Issue, Ledger, History (Remained Same Logic) -->
-            <div id="tab-issue" class="hidden max-w-2xl mx-auto py-10"><div class="sovereign-card p-16 space-y-10">
-                <h2 class="text-5xl italic font-serif">Issue Book</h2>
-                <input type="text" id="admNo" placeholder="ADMISSION ID" class="w-full"><input type="text" id="studentName" placeholder="STUDENT NAME" class="w-full"><input type="text" id="bookName" placeholder="BOOK TITLE" class="w-full"><button onclick="submitIssue()" class="w-full btn-sovereign py-6">Commit Transaction</button>
-            </div></div>
-            <div id="tab-ledger" class="hidden space-y-8"><h2 class="text-6xl italic font-serif">Ledger</h2><div id="issuesTable" class="space-y-4"></div></div>
-            <div id="tab-history" class="hidden space-y-8"><h2 class="text-6xl italic font-serif">History</h2><div id="historyTable" class="space-y-4"></div></div>
-
         </main>
     </div>
 
+    <!-- Notice Modal -->
+    <div id="annModal" class="fixed inset-0 z-[70] bg-black/95 backdrop-blur-3xl hidden items-center justify-center p-8">
+        <div class="glass-card p-16 max-w-lg w-full space-y-10">
+            <h3 class="text-4xl italic font-serif">Broadcast</h3>
+            <div class="space-y-8">
+                <input type="text" id="annTitle" placeholder="HEADLINE" class="w-full text-xl">
+                <textarea id="annDesc" rows="4" placeholder="MESSAGE..." class="w-full text-lg"></textarea>
+                <button onclick="submitNotice()" class="w-full btn-mac py-6">Publish</button>
+                <button onclick="closeAnnModal()" class="w-full text-[10px] font-bold uppercase opacity-30">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        let users = JSON.parse(localStorage.getItem('lib_users')) || [];
-        let db = JSON.parse(localStorage.getItem('lib_db_sovereign')) || { issues: [], history: [], notices: [] };
+        // ACCOUNT & DATA ENGINE
+        let users = JSON.parse(localStorage.getItem('zhs_users')) || [];
+        let db = JSON.parse(localStorage.getItem('zhs_main_db')) || { issues: [], history: [], notices: [] };
         let activeUser = null;
         let authMode = 'login';
 
-        // AUTH ENGINE
         function toggleAuthMode(mode) {
             authMode = mode;
-            document.getElementById('loginTab').className = mode === 'login' ? 'flex-1 py-2 rounded-lg text-[10px] font-bold uppercase bg-white/10 text-white' : 'flex-1 py-2 rounded-lg text-[10px] font-bold uppercase text-white/40';
-            document.getElementById('registerTab').className = mode === 'register' ? 'flex-1 py-2 rounded-lg text-[10px] font-bold uppercase bg-white/10 text-white' : 'flex-1 py-2 rounded-lg text-[10px] font-bold uppercase text-white/40';
+            document.getElementById('loginTab').className = mode === 'login' ? 'flex-1 py-3 rounded-xl text-[10px] font-black uppercase bg-white/10 text-white' : 'flex-1 py-3 rounded-xl text-[10px] font-black uppercase text-white/40';
+            document.getElementById('registerTab').className = mode === 'register' ? 'flex-1 py-3 rounded-xl text-[10px] font-black uppercase bg-white/10 text-white' : 'flex-1 py-3 rounded-xl text-[10px] font-black uppercase text-white/40';
             document.getElementById('authBtn').innerText = mode === 'login' ? 'Enter Archive' : 'Create Account';
         }
 
         function handleAuth() {
             const u = document.getElementById('authUser').value.trim();
             const p = document.getElementById('authPass').value.trim();
-            const error = document.getElementById('authError');
-
-            if(!u || !p) return alert("Fields Required");
+            if(!u || !p) return;
 
             if(authMode === 'register') {
-                if(users.find(user => user.username === u)) {
-                    error.innerText = "Username Taken";
-                    error.classList.remove('hidden');
-                    return;
-                }
-                const newUser = { username: u, password: p, theme: 'dark' };
-                users.push(newUser);
-                localStorage.setItem('lib_users', JSON.stringify(users));
-                showToast("Account Registered");
+                if(users.find(x => x.username === u)) return alert("User exists");
+                users.push({ username: u, password: p, theme: 'dark' });
+                localStorage.setItem('zhs_users', JSON.stringify(users));
+                showToast("Registered Successfully");
                 toggleAuthMode('login');
             } else {
-                const user = users.find(user => user.username === u && user.password === p);
+                const user = users.find(x => x.username === u && x.password === p);
                 if(user) {
                     activeUser = user;
                     document.getElementById('authOverlay').style.display = 'none';
                     document.getElementById('dashboardApp').classList.remove('hidden');
-                    document.getElementById('currentUserDisplay').innerText = `Curator: ${u}`;
+                    document.getElementById('curatorDisplay').innerText = `Curator: ${u}`;
                     setTheme(user.theme);
                     refreshUI();
                 } else {
-                    error.innerText = "Invalid Login";
-                    error.classList.remove('hidden');
+                    document.getElementById('authError').classList.remove('hidden');
                 }
             }
         }
 
-        // SETTINGS & THEME
-        function setTheme(theme) {
+        // THEME ENGINE
+        function setTheme(t) {
             const html = document.getElementById('mainHtml');
-            if(theme === 'light') html.classList.add('light-theme');
+            if(t === 'light') html.classList.add('light-theme');
             else html.classList.remove('light-theme');
             if(activeUser) {
-                activeUser.theme = theme;
-                localStorage.setItem('lib_users', JSON.stringify(users));
+                activeUser.theme = t;
+                localStorage.setItem('zhs_users', JSON.stringify(users));
             }
         }
 
         function updatePassword() {
             const np = document.getElementById('newPass').value;
-            if(!np) return alert("Enter New Password");
+            if(!np) return;
             activeUser.password = np;
-            localStorage.setItem('lib_users', JSON.stringify(users));
-            showToast("Password Updated");
+            localStorage.setItem('zhs_users', JSON.stringify(users));
+            showToast("Passcode Updated");
         }
 
         function logout() { location.reload(); }
 
-        // LIBRARY LOGIC
+        // CORE LOGIC
         function saveData() {
-            localStorage.setItem('lib_db_sovereign', JSON.stringify(db));
+            localStorage.setItem('zhs_main_db', JSON.stringify(db));
             refreshUI();
         }
 
@@ -266,20 +333,21 @@
         }
 
         function submitIssue() {
-            const i = { id: Date.now(), adm: document.getElementById('admNo').value, name: document.getElementById('studentName').value, book: document.getElementById('bookName').value, date: new Date().toLocaleDateString() };
-            db.issues.push(i);
+            const entry = { id: Date.now(), adm: document.getElementById('admNo').value, name: document.getElementById('studentName').value, book: document.getElementById('bookName').value, date: new Date().toLocaleDateString() };
+            if(!entry.adm || !entry.book) return;
+            db.issues.push(entry);
             saveData();
-            showToast("Issued Successfully");
+            showToast("Book Issued");
             switchTab('ledger');
         }
 
         function returnBook(id) {
-            const idx = db.issues.findIndex(item => item.id === id);
-            const book = db.issues.splice(idx, 1)[0];
-            book.returnDate = new Date().toLocaleDateString();
-            db.history.unshift(book);
+            const idx = db.issues.findIndex(x => x.id === id);
+            const item = db.issues.splice(idx, 1)[0];
+            item.returnDate = new Date().toLocaleDateString();
+            db.history.unshift(item);
             saveData();
-            showToast("Returned Successfully");
+            showToast("Book Returned");
         }
 
         function refreshUI() {
@@ -287,29 +355,75 @@
             document.getElementById('statHistory').innerText = db.history.length;
 
             document.getElementById('issuesTable').innerHTML = db.issues.map(i => `
-                <div class="sovereign-card p-8 flex justify-between items-center">
-                    <div><p class="font-bold text-xl">${i.name}</p><p class="text-[10px] opacity-40 uppercase">ID: ${i.adm}</p></div>
-                    <div class="italic font-serif text-xl opacity-80">${i.book}</div>
-                    <button onclick="returnBook(${i.id})" class="text-[10px] font-bold text-blue-500 border border-blue-500/20 px-6 py-2 rounded-xl">Return</button>
+                <div class="ledger-row p-10 flex justify-between items-center glass-card">
+                    <div><p class="font-bold text-2xl">${i.name}</p><p class="text-[10px] opacity-30 uppercase tracking-widest mt-1">ADM: ${i.adm}</p></div>
+                    <div class="italic font-serif text-2xl opacity-80">${i.book}</div>
+                    <button onclick="returnBook(${i.id})" class="btn-mac px-8 py-3 text-[10px]">Return</button>
                 </div>
-            `).join('') || '<p class="text-center py-20 opacity-20 uppercase font-black tracking-widest">No Active Loans</p>';
+            `).join('') || '<p class="text-center py-20 opacity-20 uppercase font-black tracking-widest">Ledger Empty</p>';
 
             document.getElementById('historyTable').innerHTML = db.history.map(i => `
-                <div class="sovereign-card p-8 flex justify-between items-center opacity-60">
-                    <div><p class="font-bold text-lg">${i.name}</p><p class="text-[9px] opacity-40">ID: ${i.adm}</p></div>
-                    <div class="italic font-serif text-lg">${i.book}</div>
-                    <div class="text-[9px] font-bold text-blue-500 uppercase">${i.returnDate}</div>
+                <div class="ledger-row p-8 flex justify-between items-center glass-card opacity-50">
+                    <div><p class="font-bold text-xl">${i.name}</p><p class="text-[9px] opacity-30">ADM: ${i.adm}</p></div>
+                    <div class="italic font-serif text-xl">${i.book}</div>
+                    <div class="text-[10px] font-bold text-blue-500 font-mono uppercase">${i.returnDate}</div>
                 </div>
-            `).join('') || '<p class="text-center py-20 opacity-20 uppercase font-black tracking-widest">No History</p>';
+            `).join('') || '<p class="text-center py-20 opacity-20 uppercase font-black tracking-widest">No Logs</p>';
+
+            // Notices
+            document.getElementById('annList').innerHTML = db.notices.map(n => `
+                <div class="space-y-6">
+                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                        <span class="text-[9px] font-bold opacity-30 uppercase">${n.date}</span>
+                        <button onclick="deleteNotice(${n.id})" class="text-red-500/20 hover:text-red-500 text-[9px] font-bold transition">Wipe</button>
+                    </div>
+                    <p class="text-3xl italic font-serif leading-tight">${n.title}</p>
+                    <p class="text-lg font-light opacity-50">${n.desc}</p>
+                </div>
+            `).join('');
+
+            // Leaderboard
+            const counts = {};
+            [...db.issues, ...db.history].forEach(x => counts[x.name] = (counts[x.name] || 0) + 1);
+            const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 5);
+            document.getElementById('leaderboardList').innerHTML = sorted.map(([name, count], idx) => `
+                <div class="glass-card p-10 flex justify-between items-center group">
+                    <div class="flex items-center gap-10">
+                        <span class="text-6xl italic font-serif opacity-10 group-hover:opacity-100 transition duration-500">0${idx+1}</span>
+                        <p class="font-bold text-3xl tracking-tight">${name}</p>
+                    </div>
+                    <div class="text-right"><span class="text-4xl font-serif italic">${count}</span></div>
+                </div>
+            `).join('') || '<p class="opacity-10 text-center py-20 uppercase font-black text-2xl tracking-widest">No Data</p>';
         }
 
+        // BACKUP
         function exportBackup() {
             const blob = new Blob([JSON.stringify(db)], { type: 'application/json' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `ZHS_Master_Archive.json`;
-            link.click();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'ZHS_Archive_Master.json'; a.click();
         }
+
+        function importBackup(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                db = JSON.parse(event.target.result);
+                saveData();
+                showToast("System Restored");
+            };
+            reader.readAsText(file);
+        }
+
+        function submitNotice() {
+            db.notices.unshift({ id: Date.now(), title: document.getElementById('annTitle').value, desc: document.getElementById('annDesc').value, date: new Date().toLocaleDateString() });
+            saveData(); closeAnnModal(); showToast("Published Notice");
+        }
+
+        function deleteNotice(id) { db.notices = db.notices.filter(n => n.id !== id); saveData(); }
+        function openAnnModal() { document.getElementById('annModal').classList.remove('hidden'); document.getElementById('annModal').classList.add('flex'); }
+        function closeAnnModal() { document.getElementById('annModal').classList.add('hidden'); }
     </script>
 </body>
 </html>
