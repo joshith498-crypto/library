@@ -21,7 +21,7 @@ def load_data():
                 "id": 1,
                 "admission_no": "544421",
                 "name": "Joshith Sai",
-                "class_section": "10-B",
+                "class_section": "9-C",
                 "book_name": "Advanced Mathematics Vol. 1",
                 "issue_date": datetime.now().strftime("%Y-%m-%d"),
                 "due_date": (datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d")
