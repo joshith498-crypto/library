@@ -5,25 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE ARCHIVE | Zee High School</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,900&family=Inter:wght@400;500;700;800;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900&family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #000000;
-            --glass: rgba(8, 8, 10, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --edge-light: rgba(255, 255, 255, 0.15);
+            --glass: rgba(10, 10, 12, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.12);
             --text-main: #FFFFFF;
-            --text-dim: rgba(255, 255, 255, 0.3);
+            --text-dim: rgba(255, 255, 255, 0.4);
             --accent: #007AFF;
         }
 
         .light-theme {
-            --bg: #f2f2f7;
-            --glass: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(0, 0, 0, 0.05);
-            --edge-light: rgba(255, 255, 255, 0.8);
-            --text-main: #1d1d1f;
-            --text-dim: #86868b;
+            --bg: #f5f5f7;
+            --glass: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --text-main: #000000;
+            --text-dim: #666666;
             --accent: #007AFF;
         }
 
@@ -31,120 +29,114 @@
             background-color: var(--bg);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
-            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             min-height: 100vh;
             overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
         }
 
-        /* Sovereign Atmospheric Background */
+        /* Sovereign Background */
         .liquid-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: var(--bg); }
         .liquid-mesh {
-            position: absolute; width: 180vw; height: 180vh; top: -40vh; left: -40vw;
-            background-image: 
-                radial-gradient(circle at 30% 20%, rgba(0, 122, 255, 0.18) 0%, transparent 40%),
-                radial-gradient(circle at 70% 80%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0) 0%, var(--bg) 100%);
-            filter: blur(140px);
-            animation: drift 50s linear infinite;
+            position: absolute; width: 140vw; height: 140vh; top: -20vh; left: -20vw;
+            background-image: radial-gradient(circle at 20% 30%, rgba(0, 122, 255, 0.15) 0%, transparent 40%),
+                              radial-gradient(circle at 80% 70%, rgba(255, 0, 128, 0.05) 0%, transparent 40%);
+            filter: blur(120px); animation: drift 40s infinite alternate;
         }
-        @keyframes drift { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes drift { from { transform: rotate(0deg); } to { transform: rotate(10deg) scale(1.1); } }
 
-        /* The Ultimate Liquid Glass Material */
+        /* Liquid Glass Card */
         .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(100px) saturate(220%) brightness(110%);
-            -webkit-backdrop-filter: blur(100px) saturate(220%) brightness(110%);
+            backdrop-filter: blur(60px) saturate(210%);
+            -webkit-backdrop-filter: blur(60px) saturate(210%);
             border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--edge-light); /* Top Bevel */
-            border-radius: 48px;
-            box-shadow: 0 40px 120px -20px rgba(0,0,0,0.9), inset 0 0 0 1px rgba(255,255,255,0.02);
+            border-radius: 40px;
+            box-shadow: 0 40px 100px -30px rgba(0,0,0,0.8);
             position: relative;
             overflow: hidden;
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border 0.3s ease;
         }
 
-        .glass-card::before {
+        .glass-card::after {
             content: ""; position: absolute; inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            opacity: 0.04; pointer-events: none; mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.03; pointer-events: none;
         }
 
         .hero-text {
             font-family: 'Fraunces', serif; font-weight: 900;
-            background: linear-gradient(180deg, var(--text-main) 60%, rgba(255,255,255,0.1) 120%);
+            background: linear-gradient(180deg, var(--text-main) 70%, var(--text-dim) 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            letter-spacing: -0.04em;
         }
 
         .nav-link {
-            font-size: 10px; font-weight: 800; letter-spacing: 0.25em;
+            font-size: 11px; font-weight: 900; letter-spacing: 0.2em;
             text-transform: uppercase; color: var(--text-dim);
-            transition: 0.4s; padding: 14px 32px; border-radius: 24px;
+            transition: 0.3s; padding: 12px 24px; border-radius: 18px;
         }
-        .nav-link.active { color: var(--text-main); background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); }
+        .nav-link.active { color: var(--text-main); background: rgba(255,255,255,0.1); }
 
         .btn-action {
-            background: #FFFFFF; color: #000000; font-weight: 900;
-            border-radius: 28px; transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            text-transform: uppercase; font-size: 13px; letter-spacing: 0.15em;
-            box-shadow: 0 10px 30px rgba(255,255,255,0.1);
+            background: var(--text-main); color: var(--bg); font-weight: 900;
+            border-radius: 20px; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase; font-size: 12px; letter-spacing: 0.1em;
         }
-        .btn-action:hover { transform: scale(1.05) translateY(-8px); box-shadow: 0 40px 60px rgba(0,122,255,0.3); }
+        .btn-action:hover { transform: scale(1.04) translateY(-5px); box-shadow: 0 20px 40px rgba(255,255,255,0.1); }
 
+        /* Smoothed Inputs */
         input {
             background: transparent !important; border: none !important;
-            border-bottom: 5px solid var(--glass-border) !important;
+            border-bottom: 3px solid var(--glass-border) !important;
             border-radius: 0 !important; color: var(--text-main) !important;
-            padding: 2rem 0 !important; outline: none !important;
-            transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); font-family: 'Fraunces', serif;
-            font-style: italic; font-weight: 900; font-size: 3.2rem; width: 100%;
+            padding: 1.5rem 0 !important; outline: none !important;
+            transition: 0.4s ease; font-family: 'Fraunces', serif;
+            font-style: italic; font-weight: 700; font-size: 2.2rem; width: 100%;
         }
-        input:focus { border-bottom-color: var(--accent) !important; padding-left: 1.5rem !important; }
+        input:focus { border-bottom-color: var(--accent) !important; }
 
-        .reveal { animation: revealEffect 1.8s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes revealEffect { from { opacity: 0; transform: translateY(80px); } to { opacity: 1; transform: translateY(0); } }
+        .reveal { animation: revealEffect 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes revealEffect { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
-        #notification { transform: translate(-50%, -150px); transition: 0.8s cubic-bezier(0.16, 1, 0.3, 1); z-index: 2000; }
-        #notification.show { transform: translate(-50%, 80px); }
+        #notification { transform: translate(-50%, -150px); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); z-index: 1000; }
+        #notification.show { transform: translate(-50%, 60px); }
 
-        .tag-mono { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; background: rgba(0,122,255,0.1); color: var(--accent); padding: 4px 10px; border-radius: 6px; text-transform: uppercase; }
+        .tag-mono { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; background: rgba(0,122,255,0.15); color: var(--accent); padding: 4px 10px; border-radius: 6px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
     <div class="liquid-bg"><div class="liquid-mesh"></div></div>
 
-    <div id="notification" class="fixed top-0 left-1/2 -translate-x-1/2 glass-card px-14 py-7 flex items-center gap-6 border-blue-500/50">
-        <div class="w-4 h-4 rounded-full bg-blue-500 shadow-[0_0_30px_#007AFF] animate-pulse"></div>
-        <span id="notifText" class="text-base font-black uppercase tracking-[0.4em] text-white">System Synchronized</span>
+    <!-- Notification -->
+    <div id="notification" class="fixed top-0 left-1/2 -translate-x-1/2 glass-card px-10 py-5 flex items-center gap-5 border-blue-500/40">
+        <div class="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_20px_#007AFF] animate-pulse"></div>
+        <span id="notifText" class="text-sm font-black uppercase tracking-widest text-white">System Synchronized</span>
     </div>
 
-    <!-- Login -->
+    <!-- Auth Overlay -->
     <div id="authOverlay" class="fixed inset-0 z-[60] bg-black flex items-center justify-center p-8">
-        <div class="max-w-md w-full space-y-16 text-center reveal">
-            <h1 class="text-[12rem] italic font-serif text-white tracking-tighter leading-none">Archive</h1>
-            <div class="glass-card p-16 space-y-12">
-                <div class="flex gap-4 p-2 bg-white/5 rounded-[2.5rem]">
-                    <button onclick="toggleAuth('login')" id="logTab" class="flex-1 py-5 rounded-[2rem] text-xs font-black uppercase bg-white/10 text-white transition">Login</button>
-                    <button onclick="toggleAuth('register')" id="regTab" class="flex-1 py-5 rounded-[2rem] text-xs font-black uppercase text-white/10 transition">Register</button>
+        <div class="max-w-md w-full space-y-16 text-center">
+            <h1 class="text-9xl italic font-serif text-white tracking-tighter leading-none">Archive</h1>
+            <div class="glass-card p-14 space-y-10">
+                <div class="flex gap-4 p-1 bg-white/5 rounded-3xl">
+                    <button onclick="toggleAuth('login')" id="logTab" class="flex-1 py-4 rounded-2xl text-xs font-black uppercase bg-white/10 text-white transition">Login</button>
+                    <button onclick="toggleAuth('register')" id="regTab" class="flex-1 py-4 rounded-2xl text-xs font-black uppercase text-white/30 transition">Register</button>
                 </div>
-                <div class="space-y-6">
-                    <input type="text" id="authUser" placeholder="USERNAME" class="text-center">
-                    <input type="password" id="authPass" placeholder="PASSKEY" class="text-center">
+                <div class="space-y-4">
+                    <input type="text" id="authUser" placeholder="USERNAME" class="text-center !text-2xl">
+                    <input type="password" id="authPass" placeholder="PASSCODE" class="text-center !text-2xl">
                 </div>
-                <button onclick="handleAuth()" id="authBtn" class="w-full btn-action py-8 text-xl">Establish Link</button>
-                <p id="authError" class="text-xs font-black text-red-500 uppercase hidden">Access Denied</p>
+                <button onclick="handleAuth()" id="authBtn" class="w-full btn-action py-7 text-lg uppercase">Link Identity</button>
+                <p id="authError" class="text-xs font-black text-red-500 uppercase hidden">Unauthorized</p>
             </div>
         </div>
     </div>
 
-    <!-- Main View -->
+    <!-- Main Application -->
     <div id="dashboardApp" class="hidden min-h-screen flex-col">
-        <header class="px-12 py-12 flex justify-between items-center sticky top-0 z-40 bg-black/5 backdrop-blur-3xl border-b border-white/5">
-            <div class="flex items-center gap-24">
-                <div class="font-serif italic text-6xl text-white font-black tracking-tighter cursor-pointer" onclick="switchTab('dashboard')">ZHS</div>
-                <nav class="hidden md:flex gap-6">
+        <header class="px-12 py-10 flex justify-between items-center sticky top-0 z-40 bg-black/5 backdrop-blur-3xl border-b border-white/5">
+            <div class="flex items-center gap-20">
+                <div class="font-serif italic text-4xl text-white font-black tracking-tighter cursor-pointer" onclick="switchTab('dashboard')">ZHS</div>
+                <nav class="hidden md:flex gap-4">
                     <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-link active">Dashboard</button>
                     <button onclick="switchTab('issue')" id="nav-issue" class="nav-link">Issue</button>
                     <button onclick="switchTab('ledger')" id="nav-ledger" class="nav-link">Ledger</button>
@@ -152,102 +144,102 @@
                     <button onclick="switchTab('settings')" id="nav-settings" class="nav-link">Settings</button>
                 </nav>
             </div>
-            <button onclick="location.reload()" class="text-xs font-black text-red-500 uppercase tracking-[0.5em] hover:opacity-50 transition underline underline-offset-8">Terminal Exit</button>
+            <button onclick="location.reload()" class="text-xs font-black text-red-500 uppercase tracking-widest hover:opacity-50 transition underline decoration-2 underline-offset-8">Logout</button>
         </header>
 
-        <main class="max-w-[1800px] w-full mx-auto p-12 flex-grow">
+        <main class="max-w-[1600px] w-full mx-auto p-12 flex-grow">
             
             <!-- Dashboard -->
-            <div id="tab-dashboard" class="space-y-48 reveal">
-                <div class="space-y-12">
-                    <h1 class="text-[18rem] italic tracking-tighter leading-[0.6] hero-text">The Archive</h1>
-                    <p id="curatorBadge" class="text-2xl font-black tracking-[0.8em] uppercase opacity-20">Persistent Library Management Suite</p>
+            <div id="tab-dashboard" class="space-y-24 reveal">
+                <div class="space-y-6">
+                    <h1 class="text-[12rem] italic tracking-tighter leading-[0.8] hero-text">The Archive</h1>
+                    <p id="curatorBadge" class="text-lg font-black tracking-[0.5em] uppercase opacity-40">Zee High School | Library Management Suite</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-20">
-                    <div class="glass-card p-24 space-y-10">
-                        <p class="text-xs font-black opacity-30 uppercase tracking-[0.6em]">In Circulation</p>
-                        <h3 id="statActive" class="text-[14rem] font-serif tracking-tighter leading-none">0</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div class="glass-card p-14 space-y-6">
+                        <p class="text-xs font-black opacity-30 uppercase tracking-[0.4em]">Active Circulation</p>
+                        <h3 id="statActive" class="text-9xl font-serif tracking-tighter">0</h3>
                     </div>
-                    <div class="glass-card p-24 space-y-10">
-                        <p class="text-xs font-black opacity-30 uppercase tracking-[0.6em]">Archived Entries</p>
-                        <h3 id="statHistory" class="text-[14rem] font-serif tracking-tighter leading-none">0</h3>
+                    <div class="glass-card p-14 space-y-6">
+                        <p class="text-xs font-black opacity-30 uppercase tracking-[0.4em]">Archived Logs</p>
+                        <h3 id="statHistory" class="text-9xl font-serif tracking-tighter">0</h3>
                     </div>
-                    <div class="glass-card p-24 flex flex-col justify-center items-center border-blue-500/20">
-                        <div class="text-blue-500 uppercase tracking-[0.7em] font-black text-base mb-16">Core Link Active</div>
-                        <div class="w-16 h-16 rounded-full bg-blue-500 animate-pulse shadow-[0_0_120px_#007AFF]"></div>
+                    <div class="glass-card p-14 flex flex-col justify-center items-center border-blue-500/20">
+                        <div class="text-blue-500 uppercase tracking-[0.4em] font-black text-xs mb-8">System Active</div>
+                        <div class="w-8 h-8 rounded-full bg-blue-500 animate-pulse shadow-[0_0_50px_#007AFF]"></div>
                     </div>
                 </div>
 
-                <div class="grid lg:grid-cols-12 gap-40">
-                    <div class="lg:col-span-8 space-y-24">
-                        <h3 class="text-7xl italic font-serif opacity-90 tracking-tighter">Reader Activity</h3>
-                        <div id="leadGrid" class="space-y-12"></div>
+                <div class="grid lg:grid-cols-12 gap-24">
+                    <div class="lg:col-span-8 space-y-12">
+                        <h3 class="text-4xl italic font-serif opacity-90 tracking-widest">Scholar Engagement</h3>
+                        <div id="leadGrid" class="space-y-8"></div>
                     </div>
-                    <div class="lg:col-span-4 space-y-24">
-                        <div class="flex justify-between items-center border-b-8 border-white/10 pb-12">
-                            <h3 class="text-7xl italic font-serif opacity-90 tracking-tighter">Notices</h3>
-                            <button onclick="openNote()" class="text-8xl font-light text-white/10 hover:text-white transition hover:rotate-90">+</button>
+                    <div class="lg:col-span-4 space-y-12">
+                        <div class="flex justify-between items-center border-b-2 border-white/10 pb-8">
+                            <h3 class="text-4xl italic font-serif opacity-90 tracking-widest">Notices</h3>
+                            <button onclick="openNote()" class="text-4xl font-light text-white/20 hover:text-white transition hover:scale-125">+</button>
                         </div>
-                        <div id="noteList" class="space-y-24"></div>
+                        <div id="noteList" class="space-y-16"></div>
                     </div>
                 </div>
             </div>
 
             <!-- Issue -->
-            <div id="tab-issue" class="hidden max-w-6xl mx-auto py-10 reveal">
-                <div class="glass-card p-32 space-y-32">
-                    <h2 class="text-[10rem] italic font-serif leading-none tracking-tighter">Issue</h2>
-                    <div class="flex flex-col space-y-16">
-                        <input type="text" id="iAdm" placeholder="SCHOLAR ADMISSION ID" onkeyup="checkStudent(this.value)" autocomplete="off">
+            <div id="tab-issue" class="hidden max-w-4xl mx-auto py-10 reveal">
+                <div class="glass-card p-24 space-y-20">
+                    <h2 class="text-7xl italic font-serif">Create Entry</h2>
+                    <div class="flex flex-col space-y-12">
+                        <input type="text" id="iAdm" placeholder="ADMISSION ID" onkeyup="checkStudent(this.value)" autocomplete="off">
                         
-                        <div id="studentStatus" class="hidden p-14 border-l-[12px] border-blue-500 bg-blue-500/5 rounded-3xl reveal">
-                            <p class="text-blue-400 font-black text-base uppercase tracking-[0.4em] mb-4">Identity Verified</p>
-                            <h4 id="foundName" class="text-8xl italic font-serif text-white">Full Name</h4>
+                        <div id="studentStatus" class="hidden p-12 border-l-8 border-blue-500 bg-blue-500/5 rounded-3xl reveal">
+                            <p class="text-blue-400 font-black text-xs uppercase tracking-widest mb-2">Scholar Verified</p>
+                            <h4 id="foundName" class="text-6xl italic font-serif text-white">Full Name</h4>
                         </div>
 
                         <div id="nameContainer" class="hidden reveal">
-                            <p class="text-blue-500 text-xs font-black uppercase mb-6 tracking-widest">Initialization: New Scholar</p>
+                            <p class="text-blue-500 text-[10px] font-black uppercase mb-4 tracking-widest">New Student Detected</p>
                             <input type="text" id="iName" placeholder="SCHOLAR FULL NAME">
                         </div>
 
                         <input type="text" id="iBook" placeholder="BOOK CODE">
-                        <button onclick="issueNow()" class="btn-action py-14 mt-20 text-4xl">Register Record</button>
+                        <button onclick="issueNow()" class="btn-action py-10 mt-12 text-2xl">Confirm Loan</button>
                     </div>
                 </div>
             </div>
 
             <!-- Ledger -->
-            <div id="tab-ledger" class="hidden space-y-24 reveal">
-                <h2 class="text-[12rem] italic font-serif font-black tracking-tighter uppercase leading-none">Ledger</h2>
-                <div id="ledgerGrid" class="space-y-14"></div>
+            <div id="tab-ledger" class="hidden space-y-14 reveal">
+                <h2 class="text-8xl italic font-serif font-bold tracking-tighter uppercase">Ledger</h2>
+                <div id="ledgerGrid" class="space-y-8"></div>
             </div>
 
             <!-- History -->
-            <div id="tab-history" class="hidden space-y-24 reveal">
-                <h2 class="text-[12rem] italic font-serif font-black tracking-tighter uppercase leading-none">History</h2>
-                <div id="historyGrid" class="space-y-14"></div>
+            <div id="tab-history" class="hidden space-y-14 reveal">
+                <h2 class="text-8xl italic font-serif font-bold tracking-tighter uppercase">History</h2>
+                <div id="historyGrid" class="space-y-8"></div>
             </div>
 
             <!-- Settings -->
-            <div id="tab-settings" class="hidden max-w-6xl mx-auto py-10 reveal">
-                <div class="glass-card p-32 space-y-32">
-                    <h2 class="text-9xl italic font-serif">System</h2>
-                    <div class="space-y-16">
-                        <p class="text-sm font-black uppercase tracking-[0.8em] opacity-30">Theme Material</p>
-                        <div class="grid grid-cols-2 gap-12">
-                            <button onclick="setMode('dark')" class="py-10 glass-card text-xs font-black uppercase hover:border-white transition">Obsidian</button>
-                            <button onclick="setMode('light')" class="py-10 glass-card text-xs font-black uppercase bg-white text-black border-none transition">Alpine Sequoia</button>
+            <div id="tab-settings" class="hidden max-w-4xl mx-auto py-10 reveal">
+                <div class="glass-card p-24 space-y-20">
+                    <h2 class="text-7xl italic font-serif">System</h2>
+                    <div class="space-y-12">
+                        <p class="text-xs font-black uppercase tracking-[0.4em] opacity-30">Theme Interface</p>
+                        <div class="grid grid-cols-2 gap-8">
+                            <button onclick="setMode('dark')" class="py-7 glass-card text-xs font-black uppercase hover:border-white transition">Obsidian</button>
+                            <button onclick="setMode('light')" class="py-7 glass-card text-xs font-black uppercase bg-white text-black border-none transition">Alpine</button>
                         </div>
                     </div>
-                    <div class="space-y-16 border-t-4 border-white/10 pt-24">
-                        <p class="text-sm font-black uppercase tracking-[0.8em] opacity-30">Archive Management</p>
-                        <div class="grid grid-cols-2 gap-12">
-                            <button onclick="exportJSON()" class="py-10 border-8 border-blue-500/20 rounded-[3rem] text-xs font-black text-blue-400 uppercase tracking-widest hover:bg-blue-500/10 transition">Full Backup (.json)</button>
-                            <button onclick="exportCSV()" class="py-10 border-8 border-emerald-500/20 rounded-[3rem] text-xs font-black text-emerald-400 uppercase tracking-widest hover:bg-emerald-500/10 transition">Spreadsheet (.csv)</button>
+                    <div class="space-y-12 border-t-2 border-white/10 pt-16">
+                        <p class="text-xs font-black uppercase tracking-[0.4em] opacity-30">Data Transfer</p>
+                        <div class="grid grid-cols-2 gap-8">
+                            <button onclick="exportJSON()" class="py-6 border-4 border-blue-500/40 rounded-3xl text-xs font-black text-blue-400 uppercase tracking-widest hover:bg-blue-500/10 transition">JSON Backup</button>
+                            <button onclick="exportCSV()" class="py-6 border-4 border-emerald-500/40 rounded-3xl text-xs font-black text-emerald-400 uppercase tracking-widest hover:bg-emerald-500/10 transition">Sheets (.csv)</button>
                         </div>
-                        <label class="block w-full py-10 glass-card text-center text-sm font-black uppercase text-amber-400 cursor-pointer border-amber-400/20 hover:border-amber-400 transition">
-                            Reconstruct System From Archive <input type="file" onchange="importBackup(event)" class="hidden">
+                        <label class="block w-full py-6 glass-card text-center text-xs font-black uppercase text-amber-400 cursor-pointer border-amber-400/20 hover:border-amber-400 transition">
+                            Reconstruct System Archive <input type="file" onchange="importBackup(event)" class="hidden">
                         </label>
                     </div>
                 </div>
@@ -257,29 +249,29 @@
     </div>
 
     <!-- Notice Modal -->
-    <div id="noteModal" class="fixed inset-0 z-[70] bg-black/95 backdrop-blur-[120px] hidden items-center justify-center p-8">
-        <div class="glass-card p-24 max-w-2xl w-full space-y-16">
-            <h3 class="text-7xl italic font-serif">Broadcast</h3>
-            <div class="flex flex-col space-y-12">
-                <input type="text" id="nTitle" placeholder="HEADLINE" class="!text-5xl">
-                <textarea id="nDesc" rows="4" placeholder="MESSAGE..." class="!text-3xl !italic !font-serif !bg-transparent !border-b-8 !border-white/5 !outline-none !text-white"></textarea>
-                <button onclick="postNote()" class="btn-action py-12 text-3xl">Publish</button>
-                <button onclick="closeNote()" class="text-xs font-black opacity-20 uppercase tracking-widest hover:opacity-100 transition text-center">Discard</button>
+    <div id="noteModal" class="fixed inset-0 z-[70] bg-black/95 backdrop-blur-[100px] hidden items-center justify-center p-8">
+        <div class="glass-card p-20 max-w-xl w-full space-y-12">
+            <h3 class="text-5xl italic font-serif">Broadcast</h3>
+            <div class="flex flex-col space-y-8">
+                <input type="text" id="nTitle" placeholder="HEADLINE" class="!text-3xl">
+                <textarea id="nDesc" rows="4" placeholder="MESSAGE..." class="!text-2xl !italic !font-serif !bg-transparent !border-b-4 !border-white/10 !outline-none !text-white"></textarea>
+                <button onclick="postNote()" class="btn-action py-8 text-xl">Publish</button>
+                <button onclick="closeNote()" class="text-xs font-black opacity-30 uppercase tracking-widest text-center">Discard</button>
             </div>
         </div>
     </div>
 
     <script>
-        let users = JSON.parse(localStorage.getItem('zhs_auth_v9')) || [];
-        let db = JSON.parse(localStorage.getItem('zhs_db_v9')) || { issues: [], history: [], notes: [], students: {} };
+        let users = JSON.parse(localStorage.getItem('zhs_auth_v10')) || [];
+        let db = JSON.parse(localStorage.getItem('zhs_db_v10')) || { issues: [], history: [], notes: [], students: {} };
         let activeUser = null;
         let authMode = 'login';
 
         function toggleAuth(m) {
             authMode = m;
-            document.getElementById('logTab').className = m === 'login' ? 'flex-1 py-4 rounded-[1.5rem] text-xs font-black uppercase bg-white/10 text-white' : 'flex-1 py-4 rounded-[1.5rem] text-xs font-black uppercase text-white/10';
-            document.getElementById('regTab').className = m === 'register' ? 'flex-1 py-4 rounded-[1.5rem] text-xs font-black uppercase bg-white/10 text-white' : 'flex-1 py-4 rounded-[1.5rem] text-xs font-black uppercase text-white/10';
-            document.getElementById('authBtn').innerText = m === 'login' ? 'Link System' : 'Create Access';
+            document.getElementById('logTab').className = m === 'login' ? 'flex-1 py-4 rounded-2xl text-xs font-black uppercase bg-white/10 text-white' : 'flex-1 py-4 rounded-2xl text-xs font-black uppercase text-white/30';
+            document.getElementById('regTab').className = m === 'register' ? 'flex-1 py-4 rounded-2xl text-xs font-black uppercase bg-white/10 text-white' : 'flex-1 py-4 rounded-2xl text-xs font-black uppercase text-white/30';
+            document.getElementById('authBtn').innerText = m === 'login' ? 'Establish Link' : 'Register Curator';
         }
 
         function handleAuth() {
@@ -287,9 +279,9 @@
             const p = document.getElementById('authPass').value.trim();
             if(!u || !p) return;
             if(authMode === 'register') {
-                if(users.find(x => x.u === u)) return alert("Identity already active.");
+                if(users.find(x => x.u === u)) return alert("Identity active.");
                 users.push({u, p, theme: 'dark'});
-                localStorage.setItem('zhs_auth_v9', JSON.stringify(users));
+                localStorage.setItem('zhs_auth_v10', JSON.stringify(users));
                 showToast("IDENTITY ESTABLISHED"); toggleAuth('login');
             } else {
                 const f = users.find(x => x.u === u && x.p === p);
@@ -308,7 +300,7 @@
             const nameContainer = document.getElementById('nameContainer');
             const foundName = document.getElementById('foundName');
             
-            if (id.length < 2) { // Prevents flickering before typing
+            if (id.length < 2) { 
                 status.classList.add('hidden');
                 nameContainer.classList.add('hidden');
                 return;
@@ -327,45 +319,45 @@
         function setMode(t) {
             const h = document.getElementById('mainHtml');
             t === 'light' ? h.classList.add('light-theme') : h.classList.remove('light-theme');
-            if(activeUser) { activeUser.theme = t; localStorage.setItem('zhs_auth_v9', JSON.stringify(users)); }
+            if(activeUser) { activeUser.theme = t; localStorage.setItem('zhs_auth_v10', JSON.stringify(users)); }
         }
 
         function sync() {
-            localStorage.setItem('zhs_db_v9', JSON.stringify(db));
+            localStorage.setItem('zhs_db_v10', JSON.stringify(db));
             document.getElementById('statActive').innerText = db.issues.length;
             document.getElementById('statHistory').innerText = db.history.length;
 
             document.getElementById('ledgerGrid').innerHTML = db.issues.map(i => `
-                <div class="glass-card p-20 flex justify-between items-center reveal">
-                    <div><p class="font-black text-7xl">${i.name}</p><p class="text-xs opacity-40 uppercase tracking-[0.5em] mt-8">ADM: ${i.adm}</p></div>
-                    <div class="italic font-serif text-6xl opacity-80 underline underline-offset-[20px] decoration-blue-500/20">${i.book}</div>
-                    <button onclick="retBook(${i.id})" class="btn-action px-20 py-10 text-xs">Return</button>
-                </div>`).join('') || '<p class="text-center opacity-10 uppercase py-60 text-9xl font-black tracking-tighter">Empty Archive</p>';
+                <div class="glass-card p-14 flex justify-between items-center reveal">
+                    <div><p class="font-black text-4xl">${i.name}</p><p class="text-xs opacity-40 uppercase tracking-[0.4em] mt-4">ADM: ${i.adm}</p></div>
+                    <div class="italic font-serif text-4xl opacity-80 underline underline-offset-[20px] decoration-blue-500/20">${i.book}</div>
+                    <button onclick="retBook(${i.id})" class="btn-action px-12 py-5 text-xs">Return</button>
+                </div>`).join('') || '<p class="text-center opacity-10 uppercase py-32 text-6xl font-black tracking-tighter">Empty Archive</p>';
 
             document.getElementById('historyGrid').innerHTML = db.history.map(i => `
-                <div class="glass-card p-20 flex flex-col space-y-12 opacity-60 reveal">
+                <div class="glass-card p-14 flex flex-col space-y-8 opacity-60 reveal">
                     <div class="flex justify-between items-end">
-                        <div><p class="font-black text-6xl">${i.name}</p><p class="text-xs opacity-40 uppercase tracking-[0.4em] mt-6">ADM: ${i.adm}</p></div>
-                        <div class="italic font-serif text-6xl">${i.book}</div>
+                        <div><p class="font-black text-4xl">${i.name}</p><p class="text-xs opacity-40 uppercase tracking-[0.4em] mt-4">ADM: ${i.adm}</p></div>
+                        <div class="italic font-serif text-4xl">${i.book}</div>
                     </div>
-                    <div class="grid grid-cols-2 gap-20 border-t-4 border-white/5 pt-12">
-                        <div><span class="tag-mono mb-4 inline-block">Issued</span><p class="text-5xl font-serif italic text-white/50">${i.date}</p></div>
-                        <div><span class="tag-mono mb-4 inline-block !bg-blue-500/20">Returned</span><p class="text-5xl font-serif italic text-blue-500 font-black">${i.rDate}</p></div>
+                    <div class="grid grid-cols-2 gap-10 border-t-2 border-white/5 pt-10">
+                        <div><span class="tag-mono mb-4 inline-block">Issued</span><p class="text-4xl font-serif italic text-white/50">${i.date}</p></div>
+                        <div><span class="tag-mono mb-4 inline-block !bg-blue-500/20">Returned</span><p class="text-4xl font-serif italic text-blue-500 font-black">${i.rDate}</p></div>
                     </div>
-                </div>`).join('') || '<p class="text-center opacity-10 uppercase py-40 text-7xl font-black">No History</p>';
+                </div>`).join('') || '<p class="text-center opacity-10 uppercase py-32 text-6xl font-black">No History</p>';
 
             const c = {}; [...db.issues, ...db.history].forEach(x => c[x.name] = (c[x.name] || 0) + 1);
             const s = Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,5);
             document.getElementById('leadGrid').innerHTML = s.map(([n,v],idx) => `
-                <div class="glass-card p-24 flex justify-between items-center group reveal">
-                    <div class="flex items-center gap-24"><span class="text-[12rem] italic font-serif opacity-10 group-hover:opacity-100 transition duration-700">0${idx+1}</span><p class="font-black text-8xl tracking-tighter">${n}</p></div>
-                    <div class="text-right"><span class="text-9xl font-serif italic">${v}</span><p class="text-xs font-black opacity-20 uppercase tracking-[0.5em] mt-8">Books Borrowed</p></div>
+                <div class="glass-card p-16 flex justify-between items-center group reveal">
+                    <div class="flex items-center gap-16"><span class="text-9xl italic font-serif opacity-10 group-hover:opacity-100 transition duration-700">0${idx+1}</span><p class="font-black text-5xl tracking-tighter">${n}</p></div>
+                    <div class="text-right"><span class="text-7xl font-serif italic">${v}</span><p class="text-xs font-black opacity-20 uppercase tracking-[0.4em] mt-4">Books Borrowed</p></div>
                 </div>`).join('');
 
             document.getElementById('noteList').innerHTML = db.notes.map(n => `
-                <div class="space-y-14 border-b-8 border-white/5 pb-24 reveal">
-                    <div class="flex justify-between items-center"><span class="tag-mono">${n.date}</span><button onclick="delNote(${n.id})" class="text-red-500/20 text-xs font-black hover:text-red-500 transition">Discard</button></div>
-                    <p class="text-8xl italic font-serif leading-[0.8]">${n.title}</p><p class="text-4xl opacity-30 font-light leading-relaxed">${n.desc}</p>
+                <div class="space-y-10 border-b-4 border-white/5 pb-16 reveal">
+                    <div class="flex justify-between items-center"><span class="tag-mono">${n.date}</span><button onclick="delNote(${n.id})" class="text-red-500/20 text-xs font-black hover:text-red-500 transition">Wipe</button></div>
+                    <p class="text-6xl italic font-serif leading-[0.8]">${n.title}</p><p class="text-2xl opacity-40 font-light leading-relaxed">${n.desc}</p>
                 </div>`).join('');
         }
 
@@ -383,7 +375,7 @@
             let name = db.students[adm];
             if(!name) {
                 name = document.getElementById('iName').value;
-                if(!name) return alert("Identify Scholar");
+                if(!name) return alert("Verify Scholar Name");
                 db.students[adm] = name;
             }
             const book = document.getElementById('iBook').value;
@@ -407,7 +399,7 @@
             db.history.forEach(i => csv += `${i.adm},${i.name},${i.book},${i.date},${i.rDate}\n`);
             const blob = new Blob([csv], { type: 'text/csv' });
             const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob); link.download = "ZHS_Archive_Master.csv"; link.click();
+            link.href = URL.createObjectURL(blob); link.download = "Library_Master.csv"; link.click();
         }
 
         function postNote() {
