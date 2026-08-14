@@ -3,380 +3,374 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE ARCHIVE</title>
-    <link rel="icon" type="image/png" href="data:image/png;base64,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">	
+    <title>THE ARCHIVE | Zee High School</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                },
-            },
-        }
-    </script>
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <!-- Firebase Cloud SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900&family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #000000;
-            --glass: rgba(10, 10, 12, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass: rgba(10, 10, 15, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.18);
             --text-main: #FFFFFF;
-            --text-dim: rgba(255, 255, 255, 0.4);
+            --text-dim: rgba(255, 255, 255, 0.45);
             --accent: #007AFF;
         }
 
         .light-theme {
-            --bg: #f5f5f7;
-            --glass: rgba(255, 255, 255, 0.8);
-            --glass-border: rgba(0, 0, 0, 0.1);
+            --bg: #fbfbfd;
+            --glass: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(0, 0, 0, 0.12);
             --text-main: #000000;
-            --text-dim: #666666;
-            --accent: #007AFF;
-        }						
+            --text-dim: #555555;
+        }
 
-       body {
-        background-color: var(--bg);
-	color: var(--text-main);
-	font-family: 'Inter', sans-serif;
-	transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-	min-height: 100vh;
-	overflow-x: hidden;
-}
+        body { 
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            transition: all 0.8s cubic-bezier(0.2, 0, 0, 1);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-
-        /* Sovereign Background */
+        /* Ultimate Liquid Background */
         .liquid-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: var(--bg); }
         .liquid-mesh {
-            position: absolute; width: 140vw; height: 140vh; top: -20vh; left: -20vw;
-            background-image: radial-gradient(circle at 20% 30%, rgba(0, 122, 255, 0.15) 0%, transparent 40%),
-                              radial-gradient(circle at 80% 70%, rgba(255, 0, 128, 0.05) 0%, transparent 40%);
-            filter: blur(120px); animation: drift 40s infinite alternate;
+            position: absolute; width: 150vw; height: 150vh; top: -25vh; left: -25vw;
+            background-image: radial-gradient(circle at 20% 30%, rgba(0, 122, 255, 0.18) 0%, transparent 40%),
+                              radial-gradient(circle at 80% 70%, rgba(255, 0, 128, 0.08) 0%, transparent 40%),
+                              radial-gradient(circle at 50% 10%, rgba(0, 255, 255, 0.05) 0%, transparent 30%);
+            filter: blur(100px); animation: drift 35s infinite alternate;
         }
-        @keyframes drift { from { transform: rotate(0deg); } to { transform: rotate(10deg) scale(1.1); } }
+        @keyframes drift { from { transform: rotate(0deg); } to { transform: rotate(12deg) scale(1.15); } }
 
-        /* Liquid Glass Card */
+        /* Physical Glass Material */
         .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(60px) saturate(210%);
-            -webkit-backdrop-filter: blur(60px) saturate(210%);
+            backdrop-filter: blur(100px) saturate(250%) contrast(110%);
+            -webkit-backdrop-filter: blur(100px) saturate(250%) contrast(110%);
             border: 1px solid var(--glass-border);
-            border-radius: 40px;
-            box-shadow: 0 40px 100px -30px rgba(0,0,0,0.8);
-            position: relative;
-            overflow: hidden;
+            border-radius: 44px;
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.05);
+            position: relative; overflow: hidden;
         }
 
         .glass-card::after {
             content: ""; position: absolute; inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            opacity: 0.03; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.035; pointer-events: none; mix-blend-mode: overlay;
         }
 
         .hero-text {
             font-family: 'Fraunces', serif; font-weight: 900;
-            background: linear-gradient(180deg, var(--text-main) 70%, var(--text-dim) 100%);
+            background: linear-gradient(180deg, var(--text-main) 60%, var(--text-dim) 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
         .nav-link {
             font-size: 11px; font-weight: 900; letter-spacing: 0.2em;
             text-transform: uppercase; color: var(--text-dim);
-            transition: 0.3s; padding: 12px 24px; border-radius: 18px;
+            transition: 0.4s; padding: 12px 28px; border-radius: 20px;
         }
         .nav-link.active { color: var(--text-main); background: rgba(255,255,255,0.1); }
 
         .btn-action {
-            background: var(--text-main); color: var(--bg); font-weight: 900;
-            border-radius: 20px; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            text-transform: uppercase; font-size: 12px; letter-spacing: 0.1em;
+            background: #FFFFFF; color: #000000; font-weight: 900;
+            border-radius: 24px; transition: 0.5s; text-transform: uppercase; font-size: 13px; letter-spacing: 0.15em;
         }
-        .btn-action:hover { transform: scale(1.04) translateY(-5px); box-shadow: 0 20px 40px rgba(255,255,255,0.1); }
+        .btn-action:hover { transform: translateY(-6px); box-shadow: 0 30px 50px rgba(0,122,255,0.25); }
 
-        /* Smoothed Inputs */
         input {
             background: transparent !important; border: none !important;
-            border-bottom: 3px solid var(--glass-border) !important;
+            border-bottom: 4px solid var(--glass-border) !important;
             border-radius: 0 !important; color: var(--text-main) !important;
-            padding: 1.5rem 0 !important; outline: none !important;
-            transition: 0.4s ease; font-family: 'Fraunces', serif;
-            font-style: italic; font-weight: 700; font-size: 2.2rem; width: 100%;
+            padding: 1.8rem 0 !important; outline: none !important;
+            transition: 0.5s; font-family: 'Fraunces', serif;
+            font-style: italic; font-weight: 700; font-size: 2.6rem; width: 100%;
         }
         input:focus { border-bottom-color: var(--accent) !important; }
 
-        .reveal { animation: revealEffect 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes revealEffect { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        .reveal { animation: revealEffect 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes revealEffect { from { opacity: 0; transform: translateY(60px); } to { opacity: 1; transform: translateY(0); } }
 
-        #notification { transform: translate(-50%, -150px); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); z-index: 1000; }
+        #notification { transform: translate(-50%, -150px); transition: 0.6s; z-index: 2000; }
         #notification.show { transform: translate(-50%, 60px); }
 
-        .tag-mono { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; background: rgba(0,122,255,0.15); color: var(--accent); padding: 4px 10px; border-radius: 6px; text-transform: uppercase; }
+        .tag-mono { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; background: rgba(0,122,255,0.1); color: var(--accent); padding: 4px 10px; border-radius: 6px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
     <div class="liquid-bg"><div class="liquid-mesh"></div></div>
 
-    <!-- Notification -->
-    <div id="notification" class="fixed top-0 left-1/2 -translate-x-1/2 glass-card px-10 py-5 flex items-center gap-5 border-blue-500/40">
+    <div id="notification" class="fixed top-0 left-1/2 -translate-x-1/2 glass-card px-10 py-5 flex items-center gap-5 border-blue-500/50">
         <div class="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_20px_#007AFF] animate-pulse"></div>
-        <span id="notifText" class="text-sm font-black uppercase tracking-widest text-white">System Synchronized</span>
+        <span id="notifText" class="text-sm font-black uppercase tracking-widest text-white">Confirmed</span>
     </div>
 
-    <!-- Auth Overlay -->
+    <!-- Auth -->
     <div id="authOverlay" class="fixed inset-0 z-[60] bg-black flex items-center justify-center p-8">
-        <div class="max-w-md w-full space-y-16 text-center">
-            <h1 class="text-9xl italic font-serif text-white tracking-tighter leading-none">Archive</h1>
-            <div class="glass-card p-14 space-y-10">
-                <div class="flex gap-4 p-1 bg-white/5 rounded-3xl">
-                    <button onclick="toggleAuth('login')" id="logTab" class="flex-1 py-4 rounded-2xl text-xs font-black uppercase bg-white/10 text-white transition">Login</button>
-                    <button onclick="toggleAuth('register')" id="regTab" class="flex-1 py-4 rounded-2xl text-xs font-black uppercase text-white/30 transition">Register</button>
-                </div>
-                <div class="space-y-4">
-                    <input type="text" id="authUser" placeholder="USERNAME" class="text-center !text-2xl">
-                    <input type="password" id="authPass" placeholder="PASSCODE" class="text-center !text-2xl">
-                </div>
-                <button onclick="handleAuth()" id="authBtn" class="w-full btn-action py-7 text-lg uppercase">Link Identity</button>
-                <p id="authError" class="text-xs font-black text-red-500 uppercase hidden">Unauthorized</p>
+        <div class="max-w-md w-full space-y-16 text-center reveal">
+            <h1 class="text-[10rem] italic font-serif text-white tracking-tighter leading-none">Archive</h1>
+            <div class="glass-card p-14 space-y-12">
+                <input type="password" id="loginPass" placeholder="PASSKEY" class="text-center">
+                <button onclick="attemptLogin()" class="w-full btn-action py-8 text-xl">Enter Cloud</button>
             </div>
         </div>
     </div>
 
-    <!-- Main Application -->
+    <!-- App -->
     <div id="dashboardApp" class="hidden min-h-screen flex-col">
-        <header class="px-12 py-10 flex justify-between items-center sticky top-0 z-40 bg-black/5 backdrop-blur-3xl border-b border-white/5">
+        <header class="px-12 py-12 flex justify-between items-center sticky top-0 z-40 bg-black/5 backdrop-blur-3xl border-b border-white/5">
             <div class="flex items-center gap-20">
-                <div class="font-serif italic text-4xl text-white font-black tracking-tighter cursor-pointer" onclick="switchTab('dashboard')">ZHS</div>
+                <div class="font-serif italic text-5xl text-white font-black tracking-tighter cursor-pointer" onclick="switchTab('dashboard')">ZHS</div>
                 <nav class="hidden md:flex gap-4">
                     <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-link active">Dashboard</button>
                     <button onclick="switchTab('issue')" id="nav-issue" class="nav-link">Issue</button>
                     <button onclick="switchTab('ledger')" id="nav-ledger" class="nav-link">Ledger</button>
+                    <button onclick="switchTab('overdue')" id="nav-overdue" class="nav-link text-red-400">Overdue</button>
                     <button onclick="switchTab('history')" id="nav-history" class="nav-link">History</button>
                     <button onclick="switchTab('settings')" id="nav-settings" class="nav-link">Settings</button>
                 </nav>
             </div>
-            <button onclick="location.reload()" class="text-xs font-black text-red-500 uppercase tracking-widest hover:opacity-50 transition underline decoration-2 underline-offset-8">Logout</button>
+            <button onclick="location.reload()" class="text-xs font-black text-red-500 uppercase tracking-widest">Logout</button>
         </header>
 
-        <main class="max-w-[1600px] w-full mx-auto p-12 flex-grow">
+        <main class="max-w-[1700px] w-full mx-auto p-12 flex-grow">
             
-            <!-- Dashboard -->
-            <div id="tab-dashboard" class="space-y-24 reveal">
-                <div class="space-y-6">
-                    <h1 class="text-[12rem] italic tracking-tighter leading-[0.8] hero-text">The Archive</h1>
-                    <p id="curatorBadge" class="text-lg font-black tracking-[0.5em] uppercase opacity-40">Zee High School | Library Management Suite</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                    <div class="glass-card p-14 space-y-6">
-                        <p class="text-xs font-black opacity-30 uppercase tracking-[0.4em]">Active Circulation</p>
-                        <h3 id="statActive" class="text-9xl font-serif tracking-tighter">0</h3>
+            <!-- Dashboard Tab -->
+            <div id="tab-dashboard" class="space-y-40 reveal">
+                <h1 class="text-[16rem] italic tracking-tighter leading-[0.7] hero-text">The Archive</h1>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-14">
+                    <div class="glass-card p-20 space-y-8">
+                        <p class="text-xs font-black opacity-30 uppercase tracking-[0.5em]">Active Circulation</p>
+                        <h3 id="statActive" class="text-[12rem] font-serif tracking-tighter leading-none">0</h3>
                     </div>
-                    <div class="glass-card p-14 space-y-6">
-                        <p class="text-xs font-black opacity-30 uppercase tracking-[0.4em]">Archived Logs</p>
-                        <h3 id="statHistory" class="text-9xl font-serif tracking-tighter">0</h3>
+                    <div class="glass-card p-20 space-y-8">
+                        <p class="text-xs font-black opacity-30 uppercase tracking-[0.5em]">Overdue Policy</p>
+                        <h3 id="statOverdue" class="text-[12rem] font-serif tracking-tighter leading-none text-red-500">0</h3>
                     </div>
-                    <div class="glass-card p-14 flex flex-col justify-center items-center border-blue-500/20">
-                        <div class="text-blue-500 uppercase tracking-[0.4em] font-black text-xs mb-8">System Active</div>
-                        <div class="w-8 h-8 rounded-full bg-blue-500 animate-pulse shadow-[0_0_50px_#007AFF]"></div>
+                    <div class="glass-card p-20 flex flex-col justify-center items-center border-blue-500/20">
+                        <div class="text-blue-500 uppercase tracking-[0.6em] font-black text-sm mb-12">Cloud Live</div>
+                        <div class="w-12 h-12 rounded-full bg-blue-500 animate-pulse shadow-[0_0_80px_#007AFF]"></div>
                     </div>
                 </div>
-
-                <div class="grid lg:grid-cols-12 gap-24">
-                    <div class="lg:col-span-8 space-y-12">
-                        <h3 class="text-4xl italic font-serif opacity-90 tracking-widest">Scholar Engagement</h3>
-                        <div id="leadGrid" class="space-y-8"></div>
-                    </div>
-                    <div class="lg:col-span-4 space-y-12">
-                        <div class="flex justify-between items-center border-b-2 border-white/10 pb-8">
-                            <h3 class="text-4xl italic font-serif opacity-90 tracking-widest">Notices</h3>
-                            <button onclick="openNote()" class="text-4xl font-light text-white/20 hover:text-white transition hover:scale-125">+</button>
-                        </div>
-                        <div id="noteList" class="space-y-16"></div>
-                    </div>
-                </div>
+                <div id="leadGrid" class="space-y-10"></div>
             </div>
 
-            <!-- Issue -->
-            <div id="tab-issue" class="hidden max-w-4xl mx-auto py-10 reveal">
-                <div class="glass-card p-24 space-y-20">
-                    <h2 class="text-7xl italic font-serif">Create Entry</h2>
+            <!-- Issue Tab -->
+            <div id="tab-issue" class="hidden max-w-5xl mx-auto py-10 reveal">
+                <div class="glass-card p-28 space-y-24">
+                    <h2 class="text-[8rem] italic font-serif leading-none tracking-tighter">Issue</h2>
                     <div class="flex flex-col space-y-12">
-                        <input type="text" id="iAdm" placeholder="ADMISSION ID" onkeyup="checkStudent(this.value)" autocomplete="off">
+                        <input type="text" id="iAdm" placeholder="ADMISSION ID" onkeyup="detectStudent(this.value)" autocomplete="off">
                         
-                        <div id="studentStatus" class="hidden p-12 border-l-8 border-blue-500 bg-blue-500/5 rounded-3xl reveal">
-                            <p class="text-blue-400 font-black text-xs uppercase tracking-widest mb-2">Scholar Verified</p>
+                        <!-- Returning Scholar Banner -->
+                        <div id="studentStatus" class="hidden p-10 border-l-8 border-blue-500 bg-blue-500/5 rounded-3xl reveal">
+                            <p class="text-blue-400 font-black text-sm uppercase tracking-widest mb-3">Identity Verified</p>
                             <h4 id="foundName" class="text-6xl italic font-serif text-white">Full Name</h4>
+                            <p id="foundClass" class="text-xl text-white/40 mt-2">Class</p>
                         </div>
 
-                        <div id="nameContainer" class="hidden reveal">
-                            <p class="text-blue-500 text-[10px] font-black uppercase mb-4 tracking-widest">New Student Detected</p>
+                        <!-- New Student Fields -->
+                        <div id="newStudentFields" class="hidden space-y-10 reveal">
+                            <p class="text-blue-500 text-xs font-black uppercase tracking-widest">New Student Initialized</p>
                             <input type="text" id="iName" placeholder="SCHOLAR FULL NAME">
+                            <input type="text" id="iClass" placeholder="CLASS & SECTION">
                         </div>
 
                         <input type="text" id="iBook" placeholder="BOOK CODE">
-			<input type="text" id="iClass" placeholder="STUDENT CLASS-SECTION">
-                        <button onclick="issueNow()" class="btn-action py-10 mt-12 text-2xl">Confirm Loan</button>
+                        <button onclick="issueNow()" class="btn-action py-12 mt-16 text-3xl">Register Loan</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Ledger -->
-            <div id="tab-ledger" class="hidden space-y-14 reveal">
-                <h2 class="text-8xl italic font-serif font-bold tracking-tighter uppercase">Ledger</h2>
-                <div id="ledgerGrid" class="space-y-8"></div>
-            </div>
+            <!-- Ledger Tab -->
+            <div id="tab-ledger" class="hidden space-y-20 reveal"><h2 class="text-[10rem] italic font-serif font-bold uppercase">Ledger</h2><div id="ledgerGrid" class="space-y-12"></div></div>
+            
+            <!-- Overdue Tab -->
+            <div id="tab-overdue" class="hidden space-y-20 reveal"><h2 class="text-[10rem] italic font-serif font-bold uppercase text-red-500">Overdue</h2><div id="overdueGrid" class="space-y-12"></div></div>
+            
+            <!-- History Tab -->
+            <div id="tab-history" class="hidden space-y-20 reveal"><h2 class="text-[10rem] italic font-serif font-bold uppercase">History</h2><div id="historyGrid" class="space-y-12"></div></div>
 
-            <!-- History -->
-            <div id="tab-history" class="hidden space-y-14 reveal">
-                <h2 class="text-8xl italic font-serif font-bold tracking-tighter uppercase">History</h2>
-                <div id="historyGrid" class="space-y-8"></div>
-            </div>
-
-            <!-- Settings -->
-            <div id="tab-settings" class="hidden max-w-4xl mx-auto py-10 reveal">
+            <!-- Settings Tab -->
+            <div id="tab-settings" class="hidden max-w-5xl mx-auto py-10 reveal">
                 <div class="glass-card p-24 space-y-20">
-                    <h2 class="text-7xl italic font-serif">System</h2>
-                    <div class="space-y-12">
-                        <p class="text-xs font-black uppercase tracking-[0.4em] opacity-30">Theme Interface</p>
-                        <div class="grid grid-cols-2 gap-8">
-                            <button onclick="setMode('dark')" class="py-7 glass-card text-xs font-black uppercase hover:border-white transition">Midnight</button>
-                            <button onclick="setMode('light')" class="py-7 glass-card text-xs font-black uppercase bg-white text-black border-none transition">Light</button>
-                        </div>
-                    </div>
-                    <div class="space-y-12 border-t-2 border-white/10 pt-16">
-                        <p class="text-xs font-black uppercase tracking-[0.4em] opacity-30">Data Transfer</p>
-                        <div class="grid grid-cols-2 gap-8">
-                            <button onclick="exportJSON()" class="py-6 border-4 border-blue-500/40 rounded-3xl text-xs font-black text-blue-400 uppercase tracking-widest hover:bg-blue-500/10 transition">JSON Backup</button>
-                            <button onclick="exportCSV()" class="py-6 border-4 border-emerald-500/40 rounded-3xl text-xs font-black text-emerald-400 uppercase tracking-widest hover:bg-emerald-500/10 transition">Sheets (.csv)</button>
-                        </div>
-                        <label class="block w-full py-6 glass-card text-center text-xs font-black uppercase text-amber-400 cursor-pointer border-amber-400/20 hover:border-amber-400 transition">
-                            Reconstruct System Archive <input type="file" onchange="importBackup(event)" class="hidden">
-                        </label>
-                    </div>
+                    <h2 class="text-8xl italic font-serif">System</h2>
+                    <button onclick="setTheme('dark')" class="py-10 glass-card w-full text-sm font-black uppercase">Obsidian</button>
+                    <button onclick="setTheme('light')" class="py-10 glass-card w-full text-sm font-black uppercase bg-white text-black border-none">Alpine</button>
+                    <button onclick="exportCSV()" class="py-6 border-2 border-emerald-500/50 rounded-3xl text-xs font-black text-emerald-500 uppercase tracking-widest hover:bg-emerald-500/10 transition">Spreadsheet (.csv)</button>
                 </div>
             </div>
-
         </main>
     </div>
 
-    <!-- Notice Modal -->
-    <div id="noteModal" class="fixed inset-0 z-[70] bg-black/95 backdrop-blur-[100px] hidden items-center justify-center p-8">
-        <div class="glass-card p-20 max-w-xl w-full space-y-12">
-            <h3 class="text-5xl italic font-serif">Broadcast</h3>
-            <div class="flex flex-col space-y-8">
-                <input type="text" id="nTitle" placeholder="HEADLINE" class="!text-3xl">
-                <textarea id="nDesc" rows="4" placeholder="MESSAGE..." class="!text-2xl !italic !font-serif !bg-transparent !border-b-4 !border-white/10 !outline-none !text-white"></textarea>
-                <button onclick="postNote()" class="btn-action py-8 text-xl">Publish</button>
-                <button onclick="closeNote()" class="text-xs font-black opacity-30 uppercase tracking-widest text-center">Discard</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        let users = JSON.parse(localStorage.getItem('zhs_auth_v10')) || [];
-        let db = JSON.parse(localStorage.getItem('zhs_db_v10')) || { issues: [], history: [], notes: [], students: {} };
-        let activeUser = null;
-        let authMode = 'login';
+        // 1. FIREBASE INITIALIZATION (EXACT KEYS FROM YOUR SCREENSHOT)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAyTODBohXLiLFdjnrjK4YGJSGcHIc4hUc",
+            authDomain: "the-archive-79cd9.firebaseapp.com",
+            projectId: "the-archive-79cd9",
+            storageBucket: "the-archive-79cd9.firebasestorage.app",
+            messagingSenderId: "168411716812",
+            appId: "1:168411716812:web:4837ea2bdfe538d23db669",
+            measurementId: "G-NWL665HWCF"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        function toggleAuth(m) {
-            authMode = m;
-            document.getElementById('logTab').className = m === 'login' ? 'flex-1 py-4 rounded-2xl text-xs font-black uppercase bg-white/10 text-white' : 'flex-1 py-4 rounded-2xl text-xs font-black uppercase text-white/30';
-            document.getElementById('regTab').className = m === 'register' ? 'flex-1 py-4 rounded-2xl text-xs font-black uppercase bg-white/10 text-white' : 'flex-1 py-4 rounded-2xl text-xs font-black uppercase text-white/30';
-            document.getElementById('authBtn').innerText = m === 'login' ? 'Establish Link' : 'Register Curator';
-        }
-
-        function handleAuth() {
-            const u = document.getElementById('authUser').value.trim();
-            const p = document.getElementById('authPass').value.trim();
-            if(!u || !p) return;
-            if(authMode === 'register') {
-                if(users.find(x => x.u === u)) return alert("Identity active.");
-                users.push({u, p, theme: 'dark'});
-                localStorage.setItem('zhs_auth_v10', JSON.stringify(users));
-                showToast("IDENTITY ESTABLISHED"); toggleAuth('login');
-            } else {
-                const f = users.find(x => x.u === u && x.p === p);
-                if(f) {
-                    activeUser = f;
-                    document.getElementById('authOverlay').style.display='none';
-                    document.getElementById('dashboardApp').classList.remove('hidden');
-                    document.getElementById('curatorBadge').innerText = `ZEE HIGH SCHOOL | CURATOR: ${u.toUpperCase()}`;
-                    setMode(f.theme); sync();
-                } else { document.getElementById('authError').classList.remove('hidden'); }
-            }
-        }
-
-        function checkStudent(id) {
+        // 2. SMART SCHOLAR DETECTION
+        async function detectStudent(id) {
             const status = document.getElementById('studentStatus');
-            const nameContainer = document.getElementById('nameContainer');
-            const foundName = document.getElementById('foundName');
-            
-            if (id.length < 2) { 
-                status.classList.add('hidden');
-                nameContainer.classList.add('hidden');
-                return;
-            }
+            const newFields = document.getElementById('newStudentFields');
+            if (id.length < 3) { status.classList.add('hidden'); newFields.classList.add('hidden'); return; }
 
-            if(db.students[id]) {
+            const doc = await db.collection('students').doc(id).get();
+            if (doc.exists) {
                 status.classList.remove('hidden');
-                nameContainer.classList.add('hidden');
-                foundName.innerText = db.students[id];
+                newFields.classList.add('hidden');
+                document.getElementById('foundName').innerText = doc.data().name;
+                document.getElementById('foundClass').innerText = doc.data().class;
             } else {
                 status.classList.add('hidden');
-                nameContainer.classList.remove('hidden');
+                newFields.classList.remove('hidden');
             }
         }
 
-        function setMode(t) {
-            const h = document.getElementById('mainHtml');
-            t === 'light' ? h.classList.add('light-theme') : h.classList.remove('light-theme');
-            if(activeUser) { activeUser.theme = t; localStorage.setItem('zhs_auth_v10', JSON.stringify(users)); }
+        // 3. CORE TRANSACTIONS
+        async function issueNow() {
+            const adm = document.getElementById('iAdm').value;
+            const book = document.getElementById('iBook').value;
+            if(!adm || !book) return;
+
+            let name, classSec;
+            const doc = await db.collection('students').doc(adm).get();
+            if(doc.exists) {
+                name = doc.data().name; classSec = doc.data().class;
+            } else {
+                name = document.getElementById('iName').value;
+                classSec = document.getElementById('iClass').value;
+                if(!name || !classSec) return alert("Register Scholar Name & Class");
+                await db.collection('students').doc(adm).set({ name, class: classSec });
+            }
+
+            const now = new Date();
+            const due = new Date(); due.setDate(now.getDate() + 7);
+
+            await db.collection('issues').add({
+                adm, name, class: classSec, book,
+                issueDate: now.toISOString(),
+                dueDate: due.toISOString()
+            });
+
+            showToast("ARCHIVE UPDATED");
+            switchTab('ledger');
+            ['iAdm', 'iName', 'iClass', 'iBook'].forEach(id => document.getElementById(id).value = '');
+            detectStudent('');
         }
 
-        function sync() {
-            localStorage.setItem('zhs_db_v10', JSON.stringify(db));
-            document.getElementById('statActive').innerText = db.issues.length;
-            document.getElementById('statHistory').innerText = db.history.length;
+        async function retBook(id, data) {
+            await db.collection('history').add({ ...data, returnDate: new Date().toISOString() });
+            await db.collection('issues').doc(id).delete();
+            showToast("VOLUME RETURNED");
+        }
 
-            document.getElementById('ledgerGrid').innerHTML = db.issues.map(i => `
-                <div class="glass-card p-14 flex justify-between items-center reveal">
-                    <div><p class="font-black text-4xl">${i.name}</p><p class="text-xs opacity-40 uppercase tracking-[0.4em] mt-4">ADM: ${i.adm}</p></div>
-                    <div class="italic font-serif text-4xl opacity-80 underline underline-offset-[20px] decoration-blue-500/20">${i.book}</div>
-                    <button onclick="retBook(${i.id})" class="btn-action px-12 py-5 text-xs">Return</button>
-                </div>`).join('') || '<p class="text-center opacity-10 uppercase py-32 text-6xl font-black tracking-tighter">Empty Archive</p>';
+        // 4. CLOUD SYNC ENGINE
+        function syncCloud() {
+            db.collection('issues').onSnapshot(snap => {
+                const issues = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderLedger(issues);
+                renderOverdue(issues);
+                updateStats(issues);
+                renderLeaderboard();
+            });
+            db.collection('history').orderBy('returnDate', 'desc').limit(50).onSnapshot(snap => {
+                renderHistory(snap.docs.map(d => d.data()));
+            });
+        }
 
-            document.getElementById('historyGrid').innerHTML = db.history.map(i => `
-                <div class="glass-card p-14 flex flex-col space-y-8 opacity-60 reveal">
+        function updateStats(issues) {
+            const overdue = issues.filter(i => new Date(i.dueDate) < new Date());
+            document.getElementById('statActive').innerText = issues.length;
+            document.getElementById('statOverdue').innerText = overdue.length;
+        }
+
+        function renderLedger(data) {
+            document.getElementById('ledgerGrid').innerHTML = data.map(i => `
+                <div class="glass-card p-16 flex justify-between items-center">
+                    <div>
+                        <p class="font-black text-6xl">${i.name} <span class="opacity-30 text-xl font-normal">[${i.class}]</span></p>
+                        <p class="text-[11px] opacity-40 uppercase tracking-widest mt-6">ID: ${i.adm} • DUE: ${new Date(i.dueDate).toLocaleDateString()}</p>
+                    </div>
+                    <div class="italic font-serif text-6xl text-blue-500">${i.book}</div>
+                    <button onclick="retBook('${i.id}', ${JSON.stringify(i).replace(/"/g, '&quot;')})" class="btn-action px-16 py-8 text-xs">Return</button>
+                </div>`).join('');
+        }
+
+        function renderOverdue(data) {
+            const overdue = data.filter(i => new Date(i.dueDate) < new Date());
+            document.getElementById('overdueGrid').innerHTML = overdue.map(i => `
+                <div class="glass-card p-16 flex justify-between items-center border-red-500/40">
+                    <div>
+                        <p class="font-black text-6xl text-red-500">${i.name} [${i.class}]</p>
+                        <p class="text-xs opacity-40 uppercase mt-4">ADM ID: ${i.adm} • DEFAULTER</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="tag-mono !bg-red-500/20 !text-red-500 mb-4 inline-block">7-Day Violation</p>
+                        <p class="italic font-serif text-5xl">${i.book}</p>
+                    </div>
+                </div>`).join('') || '<p class="text-center opacity-10 text-9xl py-40 uppercase font-black">Zero Overdue</p>';
+        }
+
+        function renderHistory(data) {
+            document.getElementById('historyGrid').innerHTML = data.map(i => `
+                <div class="glass-card p-16 opacity-50 flex flex-col space-y-8">
                     <div class="flex justify-between items-end">
-                        <div><p class="font-black text-4xl">${i.name}</p><p class="text-xs opacity-40 uppercase tracking-[0.4em] mt-4">ADM: ${i.adm}</p></div>
-                        <div class="italic font-serif text-4xl">${i.book}</div>
+                        <div><p class="font-black text-5xl">${i.name} [${i.class}]</p><p class="text-xs opacity-40 mt-4 uppercase">ID: ${i.adm}</p></div>
+                        <div class="italic font-serif text-5xl">${i.book}</div>
                     </div>
-                    <div class="grid grid-cols-2 gap-10 border-t-2 border-white/5 pt-10">
-                        <div><span class="tag-mono mb-4 inline-block">Issued</span><p class="text-4xl font-serif italic text-white/50">${i.date}</p></div>
-                        <div><span class="tag-mono mb-4 inline-block !bg-blue-500/20">Returned</span><p class="text-4xl font-serif italic text-blue-500 font-black">${i.rDate}</p></div>
+                    <div class="grid grid-cols-2 gap-10 border-t border-white/5 pt-10">
+                        <div><span class="tag-mono mb-4 inline-block">Issued</span><p class="text-4xl font-serif italic">${new Date(i.issueDate).toLocaleDateString()}</p></div>
+                        <div><span class="tag-mono mb-4 inline-block !bg-blue-500/20">Returned</span><p class="text-4xl font-serif italic text-blue-500 font-black">${new Date(i.returnDate).toLocaleDateString()}</p></div>
                     </div>
-                </div>`).join('') || '<p class="text-center opacity-10 uppercase py-32 text-6xl font-black">No History</p>';
-
-            const c = {}; [...db.issues, ...db.history].forEach(x => c[x.name] = (c[x.name] || 0) + 1);
-            const s = Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,5);
-            document.getElementById('leadGrid').innerHTML = s.map(([n,v],idx) => `
-                <div class="glass-card p-16 flex justify-between items-center group reveal">
-                    <div class="flex items-center gap-16"><span class="text-9xl italic font-serif opacity-10 group-hover:opacity-100 transition duration-700">0${idx+1}</span><p class="font-black text-5xl tracking-tighter">${n}</p></div>
-                    <div class="text-right"><span class="text-7xl font-serif italic">${v}</span><p class="text-xs font-black opacity-20 uppercase tracking-[0.4em] mt-4">Books Borrowed</p></div>
                 </div>`).join('');
+        }
 
-            document.getElementById('noteList').innerHTML = db.notes.map(n => `
-                <div class="space-y-10 border-b-4 border-white/5 pb-16 reveal">
-                    <div class="flex justify-between items-center"><span class="tag-mono">${n.date}</span><button onclick="delNote(${n.id})" class="text-red-500/20 text-xs font-black hover:text-red-500 transition">Wipe</button></div>
-                    <p class="text-6xl italic font-serif leading-[0.8]">${n.title}</p><p class="text-2xl opacity-40 font-light leading-relaxed">${n.desc}</p>
+        async function renderLeaderboard() {
+            const hSnap = await db.collection('history').get();
+            const iSnap = await db.collection('issues').get();
+            const c = {};
+            [...hSnap.docs, ...iSnap.docs].forEach(d => { c[d.data().name] = (c[d.data().name] || 0) + 1; });
+            const sorted = Object.entries(c).sort((a,b) => b[1] - a[1]).slice(0, 5);
+            document.getElementById('leadGrid').innerHTML = sorted.map(([n, v], idx) => `
+                <div class="glass-card p-20 flex justify-between items-center group">
+                    <div class="flex items-center gap-20">
+                        <span class="text-[12rem] italic font-serif opacity-10 group-hover:opacity-100 transition duration-700">0${idx+1}</span>
+                        <p class="font-black text-8xl tracking-tighter">${n}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-9xl font-serif italic">${v}</span>
+                        <p class="text-xs font-black opacity-20 uppercase mt-8 tracking-widest">Books Borrowed</p>
+                    </div>
                 </div>`).join('');
+        }
+
+        // 5. UTILS
+        function attemptLogin() {
+            if (document.getElementById('loginPass').value === 'librarian123') {
+                document.getElementById('authOverlay').classList.add('hidden');
+                document.getElementById('dashboardApp').classList.remove('hidden');
+                syncCloud();
+            }
         }
 
         function switchTab(t) {
-            ['dashboard', 'issue', 'ledger', 'history', 'settings'].forEach(tab => {
+            ['dashboard', 'issue', 'ledger', 'overdue', 'history', 'settings'].forEach(tab => {
                 document.getElementById(`tab-${tab}`).classList.add('hidden');
                 document.getElementById(`nav-${tab}`).classList.remove('active');
             });
@@ -384,49 +378,30 @@
             document.getElementById(`nav-${t}`).classList.add('active');
         }
 
-        function issueNow() {
-            const adm = document.getElementById('iAdm').value;
-            let name = db.students[adm];
-            if(!name) {
-                name = document.getElementById('iName').value;
-                if(!name) return alert("Verify Scholar Name");
-                db.students[adm] = name;
-            }
-            const book = document.getElementById('iBook').value;
-            if(!book) return;
-            db.issues.push({ id: Date.now(), adm, name, book, date: new Date().toLocaleDateString() });
-            sync(); showToast("ARCHIVE SYNCHRONIZED"); switchTab('ledger');
-            ['iAdm', 'iName', 'iBook'].forEach(id => document.getElementById(id).value = '');
-            checkStudent('');
-        }
-
-        function retBook(id) {
-            const idx = db.issues.findIndex(x => x.id === id);
-            const item = db.issues.splice(idx,1)[0];
-            item.rDate = new Date().toLocaleDateString();
-            db.history.unshift(item); sync(); showToast("VOLUME RETURNED");
+        function setTheme(t) {
+            const h = document.getElementById('mainHtml');
+            t === 'light' ? h.classList.add('light-theme') : h.classList.remove('light-theme');
         }
 
         function exportCSV() {
-            let csv = "Admission ID,Name,Book Code,Issue Date,Return Date\n";
-            db.issues.forEach(i => csv += `${i.adm},${i.name},${i.book},${i.date},Active\n`);
-            db.history.forEach(i => csv += `${i.adm},${i.name},${i.book},${i.date},${i.rDate}\n`);
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob); link.download = "Library_Master.csv"; link.click();
+            let csv = "Admission ID,Name,Class,Book Code,Issue Date,Return Date\n";
+            db.collection('history').get().then(snap => {
+                snap.forEach(d => {
+                    const i = d.data();
+                    csv += `${i.adm},${i.name},${i.class},${i.book},${i.issueDate},${i.returnDate}\n`;
+                });
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob); a.download = "Library_Master_List.csv"; a.click();
+            });
         }
 
-        function postNote() {
-            db.notes.unshift({ id: Date.now(), title: document.getElementById('nTitle').value, desc: document.getElementById('nDesc').value, date: new Date().toLocaleDateString() });
-            sync(); closeNote(); showToast("SYSTEM BROADCAST LIVE");
+        function showToast(t) {
+            const n = document.getElementById('notification');
+            document.getElementById('notifText').innerText = t;
+            n.classList.add('show');
+            setTimeout(() => n.classList.remove('show'), 3000);
         }
-
-        function delNote(id) { db.notes = db.notes.filter(x => x.id !== id); sync(); }
-        function openNote() { document.getElementById('noteModal').classList.remove('hidden'); document.getElementById('noteModal').classList.add('flex'); }
-        function closeNote() { document.getElementById('noteModal').classList.add('hidden'); }
-        function showToast(t) { const n = document.getElementById('notification'); document.getElementById('notifText').innerText = t; n.classList.add('show'); setTimeout(()=>n.classList.remove('show'), 3000); }
-        function exportJSON() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(db)], {type:'application/json'})); a.download = 'Archive_Backup.json'; a.click(); }
-        function importBackup(e) { const f = e.target.files[0]; const r = new FileReader(); r.onload=(ev) => { try { db = JSON.parse(ev.target.result); sync(); showToast("RESTORED"); } catch(e){ alert("Invalid Source"); } }; r.readAsText(f); }
     </script>
 </body>
 </html>
