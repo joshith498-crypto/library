@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE ARCHIVE | Zee High School</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Firebase Cloud SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900&family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@500;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #000000;
-            --glass: rgba(10, 10, 15, 0.6);
+            --glass: rgba(10, 10, 15, 0.65);
             --glass-border: rgba(255, 255, 255, 0.18);
             --text-main: #FFFFFF;
             --text-dim: rgba(255, 255, 255, 0.45);
@@ -40,28 +39,20 @@
         .liquid-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: var(--bg); }
         .liquid-mesh {
             position: absolute; width: 150vw; height: 150vh; top: -25vh; left: -25vw;
-            background-image: radial-gradient(circle at 20% 30%, rgba(0, 122, 255, 0.18) 0%, transparent 40%),
-                              radial-gradient(circle at 80% 70%, rgba(255, 0, 128, 0.08) 0%, transparent 40%),
-                              radial-gradient(circle at 50% 10%, rgba(0, 255, 255, 0.05) 0%, transparent 30%);
+            background-image: radial-gradient(circle at 20% 30%, rgba(0, 122, 255, 0.2) 0%, transparent 40%),
+                              radial-gradient(circle at 80% 70%, rgba(255, 0, 128, 0.1) 0%, transparent 40%);
             filter: blur(100px); animation: drift 35s infinite alternate;
         }
-        @keyframes drift { from { transform: rotate(0deg); } to { transform: rotate(12deg) scale(1.15); } }
+        @keyframes drift { from { transform: rotate(0deg); } to { transform: rotate(12deg) scale(1.1); } }
 
-        /* Physical Glass Material */
         .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(100px) saturate(250%) contrast(110%);
-            -webkit-backdrop-filter: blur(100px) saturate(250%) contrast(110%);
+            backdrop-filter: blur(80px) saturate(250%) contrast(110%);
+            -webkit-backdrop-filter: blur(80px) saturate(250%) contrast(110%);
             border: 1px solid var(--glass-border);
             border-radius: 44px;
-            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.05);
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.8);
             position: relative; overflow: hidden;
-        }
-
-        .glass-card::after {
-            content: ""; position: absolute; inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            opacity: 0.035; pointer-events: none; mix-blend-mode: overlay;
         }
 
         .hero-text {
@@ -70,36 +61,23 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        .nav-link {
-            font-size: 11px; font-weight: 900; letter-spacing: 0.2em;
-            text-transform: uppercase; color: var(--text-dim);
-            transition: 0.4s; padding: 12px 28px; border-radius: 20px;
-        }
+        .nav-link { font-size: 11px; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); transition: 0.4s; padding: 12px 28px; border-radius: 20px; }
         .nav-link.active { color: var(--text-main); background: rgba(255,255,255,0.1); }
 
-        .btn-action {
-            background: #FFFFFF; color: #000000; font-weight: 900;
-            border-radius: 24px; transition: 0.5s; text-transform: uppercase; font-size: 13px; letter-spacing: 0.15em;
-        }
+        .btn-action { background: #FFFFFF; color: #000000; font-weight: 900; border-radius: 24px; transition: 0.5s; text-transform: uppercase; font-size: 13px; letter-spacing: 0.15em; }
         .btn-action:hover { transform: translateY(-6px); box-shadow: 0 30px 50px rgba(0,122,255,0.25); }
 
-        input {
-            background: transparent !important; border: none !important;
-            border-bottom: 4px solid var(--glass-border) !important;
-            border-radius: 0 !important; color: var(--text-main) !important;
-            padding: 1.8rem 0 !important; outline: none !important;
-            transition: 0.5s; font-family: 'Fraunces', serif;
-            font-style: italic; font-weight: 700; font-size: 2.6rem; width: 100%;
-        }
+        input { background: transparent !important; border: none !important; border-bottom: 4px solid var(--glass-border) !important; color: var(--text-main) !important; padding: 1.8rem 0 !important; outline: none !important; transition: 0.5s; font-family: 'Fraunces', serif; font-style: italic; font-weight: 700; font-size: 2.6rem; width: 100%; }
         input:focus { border-bottom-color: var(--accent) !important; }
 
-        .reveal { animation: revealEffect 1.5s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes revealEffect { from { opacity: 0; transform: translateY(60px); } to { opacity: 1; transform: translateY(0); } }
+        .reveal { animation: revealEffect 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes revealEffect { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 
         #notification { transform: translate(-50%, -150px); transition: 0.6s; z-index: 2000; }
         #notification.show { transform: translate(-50%, 60px); }
 
-        .tag-mono { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; background: rgba(0,122,255,0.1); color: var(--accent); padding: 4px 10px; border-radius: 6px; text-transform: uppercase; }
+        .light-theme .hero-text { -webkit-text-fill-color: #000; background: none; }
+        .light-theme input { color: #000 !important; border-bottom-color: #000 !important; font-weight: 900; }
     </style>
 </head>
 <body>
@@ -108,21 +86,29 @@
 
     <div id="notification" class="fixed top-0 left-1/2 -translate-x-1/2 glass-card px-10 py-5 flex items-center gap-5 border-blue-500/50">
         <div class="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_20px_#007AFF] animate-pulse"></div>
-        <span id="notifText" class="text-sm font-black uppercase tracking-widest text-white">Confirmed</span>
+        <span id="notifText" class="text-sm font-black uppercase tracking-widest text-white">System Synchronized</span>
     </div>
 
-    <!-- Auth -->
+    <!-- Multi-User Auth -->
     <div id="authOverlay" class="fixed inset-0 z-[60] bg-black flex items-center justify-center p-8">
         <div class="max-w-md w-full space-y-16 text-center reveal">
             <h1 class="text-[10rem] italic font-serif text-white tracking-tighter leading-none">Archive</h1>
-            <div class="glass-card p-14 space-y-12">
-                <input type="password" id="loginPass" placeholder="PASSKEY" class="text-center">
-                <button onclick="attemptLogin()" class="w-full btn-action py-8 text-xl">Enter Cloud</button>
+            <div class="glass-card p-14 space-y-10">
+                <div class="flex gap-4 p-1 bg-white/5 rounded-3xl">
+                    <button onclick="toggleAuth('login')" id="logTab" class="flex-1 py-4 rounded-2xl text-xs font-black uppercase bg-white/10 text-white transition">Login</button>
+                    <button onclick="toggleAuth('register')" id="regTab" class="flex-1 py-4 rounded-2xl text-xs font-black uppercase text-white/20 transition">Register</button>
+                </div>
+                <div class="space-y-4">
+                    <input type="text" id="authUser" placeholder="USERNAME" class="text-center !text-2xl">
+                    <input type="password" id="authPass" placeholder="PASSWORD" class="text-center !text-2xl">
+                </div>
+                <button onclick="handleAuth()" id="authBtn" class="w-full btn-action py-8 text-xl">Enter</button>
+                <p id="authError" class="text-xs font-bold text-red-500 uppercase hidden">Denied</p>
             </div>
         </div>
     </div>
 
-    <!-- App -->
+    <!-- App Content -->
     <div id="dashboardApp" class="hidden min-h-screen flex-col">
         <header class="px-12 py-12 flex justify-between items-center sticky top-0 z-40 bg-black/5 backdrop-blur-3xl border-b border-white/5">
             <div class="flex items-center gap-20">
@@ -141,9 +127,13 @@
 
         <main class="max-w-[1700px] w-full mx-auto p-12 flex-grow">
             
-            <!-- Dashboard Tab -->
+            <!-- Dashboard -->
             <div id="tab-dashboard" class="space-y-40 reveal">
-                <h1 class="text-[16rem] italic tracking-tighter leading-[0.7] hero-text">The Archive</h1>
+                <div class="space-y-10">
+                    <h1 class="text-[16rem] italic tracking-tighter leading-[0.7] hero-text">The Archive</h1>
+                    <p id="curatorBadge" class="text-xl font-black tracking-[0.8em] uppercase opacity-30">ZEE HIGH SCHOOL | PERSISTENT ARCHIVAL SUITE</p>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-14">
                     <div class="glass-card p-20 space-y-8">
                         <p class="text-xs font-black opacity-30 uppercase tracking-[0.5em]">Active Circulation</p>
@@ -154,28 +144,32 @@
                         <h3 id="statOverdue" class="text-[12rem] font-serif tracking-tighter leading-none text-red-500">0</h3>
                     </div>
                     <div class="glass-card p-20 flex flex-col justify-center items-center border-blue-500/20">
-                        <div class="text-blue-500 uppercase tracking-[0.6em] font-black text-sm mb-12">Cloud Live</div>
+                        <div class="text-blue-500 uppercase tracking-[0.6em] font-black text-sm mb-12">Cloud Active</div>
                         <div class="w-12 h-12 rounded-full bg-blue-500 animate-pulse shadow-[0_0_80px_#007AFF]"></div>
                     </div>
                 </div>
-                <div id="leadGrid" class="space-y-10"></div>
+
+                <div class="grid lg:grid-cols-12 gap-24">
+                    <div class="lg:col-span-12 space-y-20">
+                        <h3 class="text-6xl italic font-serif opacity-90 tracking-tighter">Scholarly Leaderboard</h3>
+                        <div id="leadGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Issue Tab -->
+            <!-- Issue -->
             <div id="tab-issue" class="hidden max-w-5xl mx-auto py-10 reveal">
                 <div class="glass-card p-28 space-y-24">
-                    <h2 class="text-[8rem] italic font-serif leading-none tracking-tighter">Issue</h2>
+                    <h2 class="text-[10rem] italic font-serif leading-none tracking-tighter">Issue</h2>
                     <div class="flex flex-col space-y-12">
                         <input type="text" id="iAdm" placeholder="ADMISSION ID" onkeyup="detectStudent(this.value)" autocomplete="off">
                         
-                        <!-- Returning Scholar Banner -->
                         <div id="studentStatus" class="hidden p-10 border-l-8 border-blue-500 bg-blue-500/5 rounded-3xl reveal">
                             <p class="text-blue-400 font-black text-sm uppercase tracking-widest mb-3">Identity Verified</p>
                             <h4 id="foundName" class="text-6xl italic font-serif text-white">Full Name</h4>
                             <p id="foundClass" class="text-xl text-white/40 mt-2">Class</p>
                         </div>
 
-                        <!-- New Student Fields -->
                         <div id="newStudentFields" class="hidden space-y-10 reveal">
                             <p class="text-blue-500 text-xs font-black uppercase tracking-widest">New Student Initialized</p>
                             <input type="text" id="iName" placeholder="SCHOLAR FULL NAME">
@@ -188,29 +182,28 @@
                 </div>
             </div>
 
-            <!-- Ledger Tab -->
-            <div id="tab-ledger" class="hidden space-y-20 reveal"><h2 class="text-[10rem] italic font-serif font-bold uppercase">Ledger</h2><div id="ledgerGrid" class="space-y-12"></div></div>
-            
-            <!-- Overdue Tab -->
-            <div id="tab-overdue" class="hidden space-y-20 reveal"><h2 class="text-[10rem] italic font-serif font-bold uppercase text-red-500">Overdue</h2><div id="overdueGrid" class="space-y-12"></div></div>
-            
-            <!-- History Tab -->
-            <div id="tab-history" class="hidden space-y-20 reveal"><h2 class="text-[10rem] italic font-serif font-bold uppercase">History</h2><div id="historyGrid" class="space-y-12"></div></div>
-
-            <!-- Settings Tab -->
+            <!-- Settings -->
             <div id="tab-settings" class="hidden max-w-5xl mx-auto py-10 reveal">
-                <div class="glass-card p-24 space-y-20">
+                <div class="glass-card p-28 space-y-24 text-center">
                     <h2 class="text-8xl italic font-serif">System</h2>
-                    <button onclick="setTheme('dark')" class="py-10 glass-card w-full text-sm font-black uppercase">Obsidian</button>
-                    <button onclick="setTheme('light')" class="py-10 glass-card w-full text-sm font-black uppercase bg-white text-black border-none">Alpine</button>
-                    <button onclick="exportCSV()" class="py-6 border-2 border-emerald-500/50 rounded-3xl text-xs font-black text-emerald-500 uppercase tracking-widest hover:bg-emerald-500/10 transition">Spreadsheet (.csv)</button>
+                    <div class="grid grid-cols-2 gap-10">
+                        <button onclick="setTheme('dark')" class="py-10 glass-card text-xs font-black uppercase hover:border-white transition">Obsidian</button>
+                        <button onclick="setTheme('light')" class="py-10 glass-card text-xs font-black uppercase bg-white text-black border-none transition">Alpine</button>
+                    </div>
+                    <div class="py-20 border-y border-white/5">
+                        <p class="text-xs font-black opacity-30 uppercase tracking-[0.5em] mb-12">Administrative Export</p>
+                        <button onclick="exportCSV()" class="btn-action px-20 py-10 text-xl border-2 border-emerald-500/40 !bg-transparent text-emerald-400 hover:!bg-emerald-500 hover:text-white">Export to Google Sheets (.csv)</button>
+                    </div>
                 </div>
             </div>
+
+            <div id="tab-ledger" class="hidden space-y-12 reveal"><h2 class="text-[10rem] italic font-serif font-black tracking-tighter uppercase">Ledger</h2><div id="ledgerGrid" class="space-y-10"></div></div>
+            <div id="tab-overdue" class="hidden space-y-12 reveal"><h2 class="text-[10rem] italic font-serif font-black tracking-tighter uppercase text-red-500">Overdue</h2><div id="overdueGrid" class="space-y-10"></div></div>
+            <div id="tab-history" class="hidden space-y-12 reveal"><h2 class="text-[10rem] italic font-serif font-black tracking-tighter uppercase">History</h2><div id="historyGrid" class="space-y-10"></div></div>
         </main>
     </div>
 
     <script>
-        // 1. FIREBASE INITIALIZATION (EXACT KEYS FROM YOUR SCREENSHOT)
         const firebaseConfig = {
             apiKey: "AIzaSyAyTODBohXLiLFdjnrjK4YGJSGcHIc4hUc",
             authDomain: "the-archive-79cd9.firebaseapp.com",
@@ -223,31 +216,52 @@
         
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        let activeUser = null;
+        let authMode = 'login';
 
-        // 2. SMART SCHOLAR DETECTION
-        async function detectStudent(id) {
-            const status = document.getElementById('studentStatus');
-            const newFields = document.getElementById('newStudentFields');
-            if (id.length < 3) { status.classList.add('hidden'); newFields.classList.add('hidden'); return; }
+        function toggleAuth(m) {
+            authMode = m;
+            document.getElementById('logTab').className = m === 'login' ? 'flex-1 py-4 rounded-2xl text-xs font-black uppercase bg-white/10 text-white' : 'flex-1 py-4 rounded-2xl text-xs font-black uppercase text-white/20';
+            document.getElementById('regTab').className = m === 'register' ? 'flex-1 py-4 rounded-2xl text-xs font-black uppercase bg-white/10 text-white' : 'flex-1 py-4 rounded-2xl text-xs font-black uppercase text-white/20';
+        }
 
-            const doc = await db.collection('students').doc(id).get();
-            if (doc.exists) {
-                status.classList.remove('hidden');
-                newFields.classList.add('hidden');
-                document.getElementById('foundName').innerText = doc.data().name;
-                document.getElementById('foundClass').innerText = doc.data().class;
+        async function handleAuth() {
+            const u = document.getElementById('authUser').value.trim();
+            const p = document.getElementById('authPass').value.trim();
+            if(!u || !p) return;
+
+            if(authMode === 'register') {
+                await db.collection('curators').doc(u).set({ password: p, theme: 'dark' });
+                showToast("ID CREATED"); toggleAuth('login');
             } else {
-                status.classList.add('hidden');
-                newFields.classList.remove('hidden');
+                const doc = await db.collection('curators').doc(u).get();
+                if(doc.exists && doc.data().password === p) {
+                    activeUser = { u, ...doc.data() };
+                    document.getElementById('authOverlay').style.display='none';
+                    document.getElementById('dashboardApp').classList.remove('hidden');
+                    setTheme(activeUser.theme); syncCloud();
+                } else { document.getElementById('authError').classList.remove('hidden'); }
             }
         }
 
-        // 3. CORE TRANSACTIONS
+        async function detectStudent(id) {
+            const status = document.getElementById('studentStatus');
+            const newFields = document.getElementById('newStudentFields');
+            if (id.length < 2) { status.classList.add('hidden'); newFields.classList.add('hidden'); return; }
+
+            const doc = await db.collection('students').doc(id).get();
+            if (doc.exists) {
+                status.classList.remove('hidden'); newFields.classList.add('hidden');
+                document.getElementById('foundName').innerText = doc.data().name;
+                document.getElementById('foundClass').innerText = doc.data().class;
+            } else {
+                status.classList.add('hidden'); newFields.classList.remove('hidden');
+            }
+        }
+
         async function issueNow() {
             const adm = document.getElementById('iAdm').value;
             const book = document.getElementById('iBook').value;
-            if(!adm || !book) return;
-
             let name, classSec;
             const doc = await db.collection('students').doc(adm).get();
             if(doc.exists) {
@@ -255,21 +269,12 @@
             } else {
                 name = document.getElementById('iName').value;
                 classSec = document.getElementById('iClass').value;
-                if(!name || !classSec) return alert("Register Scholar Name & Class");
                 await db.collection('students').doc(adm).set({ name, class: classSec });
             }
-
             const now = new Date();
             const due = new Date(); due.setDate(now.getDate() + 7);
-
-            await db.collection('issues').add({
-                adm, name, class: classSec, book,
-                issueDate: now.toISOString(),
-                dueDate: due.toISOString()
-            });
-
-            showToast("ARCHIVE UPDATED");
-            switchTab('ledger');
+            await db.collection('issues').add({ adm, name, class: classSec, book, issueDate: now.toISOString(), dueDate: due.toISOString() });
+            showToast("BOOK ISSUED"); switchTab('ledger');
             ['iAdm', 'iName', 'iClass', 'iBook'].forEach(id => document.getElementById(id).value = '');
             detectStudent('');
         }
@@ -277,66 +282,51 @@
         async function retBook(id, data) {
             await db.collection('history').add({ ...data, returnDate: new Date().toISOString() });
             await db.collection('issues').doc(id).delete();
-            showToast("VOLUME RETURNED");
+            showToast("RETURNED");
         }
 
-        // 4. CLOUD SYNC ENGINE
         function syncCloud() {
             db.collection('issues').onSnapshot(snap => {
                 const issues = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                renderLedger(issues);
-                renderOverdue(issues);
-                updateStats(issues);
+                renderLedger(issues); renderOverdue(issues);
+                document.getElementById('statActive').innerText = issues.length;
+                document.getElementById('statOverdue').innerText = issues.filter(i => new Date(i.dueDate) < new Date()).length;
                 renderLeaderboard();
             });
-            db.collection('history').orderBy('returnDate', 'desc').limit(50).onSnapshot(snap => {
+            db.collection('history').orderBy('returnDate', 'desc').onSnapshot(snap => {
                 renderHistory(snap.docs.map(d => d.data()));
+                renderLeaderboard();
             });
-        }
-
-        function updateStats(issues) {
-            const overdue = issues.filter(i => new Date(i.dueDate) < new Date());
-            document.getElementById('statActive').innerText = issues.length;
-            document.getElementById('statOverdue').innerText = overdue.length;
         }
 
         function renderLedger(data) {
             document.getElementById('ledgerGrid').innerHTML = data.map(i => `
-                <div class="glass-card p-16 flex justify-between items-center">
-                    <div>
-                        <p class="font-black text-6xl">${i.name} <span class="opacity-30 text-xl font-normal">[${i.class}]</span></p>
-                        <p class="text-[11px] opacity-40 uppercase tracking-widest mt-6">ID: ${i.adm} • DUE: ${new Date(i.dueDate).toLocaleDateString()}</p>
-                    </div>
-                    <div class="italic font-serif text-6xl text-blue-500">${i.book}</div>
-                    <button onclick="retBook('${i.id}', ${JSON.stringify(i).replace(/"/g, '&quot;')})" class="btn-action px-16 py-8 text-xs">Return</button>
+                <div class="glass-card p-14 flex justify-between items-center reveal">
+                    <div><p class="font-black text-5xl">${i.name} [${i.class}]</p><p class="text-xs opacity-40 uppercase tracking-widest mt-4">ID: ${i.adm} • DUE: ${new Date(i.dueDate).toLocaleDateString()}</p></div>
+                    <div class="italic font-serif text-5xl text-blue-500">${i.book}</div>
+                    <button onclick="retBook('${i.id}', ${JSON.stringify(i).replace(/"/g, '&quot;')})" class="btn-action px-14 py-6 text-xs">Return</button>
                 </div>`).join('');
         }
 
         function renderOverdue(data) {
             const overdue = data.filter(i => new Date(i.dueDate) < new Date());
             document.getElementById('overdueGrid').innerHTML = overdue.map(i => `
-                <div class="glass-card p-16 flex justify-between items-center border-red-500/40">
-                    <div>
-                        <p class="font-black text-6xl text-red-500">${i.name} [${i.class}]</p>
-                        <p class="text-xs opacity-40 uppercase mt-4">ADM ID: ${i.adm} • DEFAULTER</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="tag-mono !bg-red-500/20 !text-red-500 mb-4 inline-block">7-Day Violation</p>
-                        <p class="italic font-serif text-5xl">${i.book}</p>
-                    </div>
-                </div>`).join('') || '<p class="text-center opacity-10 text-9xl py-40 uppercase font-black">Zero Overdue</p>';
+                <div class="glass-card p-14 flex justify-between items-center border-red-500/40 reveal">
+                    <div><p class="font-black text-5xl text-red-500">${i.name} [${i.class}]</p><p class="text-xs opacity-40 mt-4">ADM: ${i.adm}</p></div>
+                    <div class="text-right"><p class="italic font-serif text-5xl">${i.book}</p></div>
+                </div>`).join('') || '<p class="text-center opacity-10 text-9xl py-40">Zero Overdue</p>';
         }
 
         function renderHistory(data) {
             document.getElementById('historyGrid').innerHTML = data.map(i => `
-                <div class="glass-card p-16 opacity-50 flex flex-col space-y-8">
+                <div class="glass-card p-14 opacity-50 flex flex-col space-y-8">
                     <div class="flex justify-between items-end">
                         <div><p class="font-black text-5xl">${i.name} [${i.class}]</p><p class="text-xs opacity-40 mt-4 uppercase">ID: ${i.adm}</p></div>
                         <div class="italic font-serif text-5xl">${i.book}</div>
                     </div>
-                    <div class="grid grid-cols-2 gap-10 border-t border-white/5 pt-10">
-                        <div><span class="tag-mono mb-4 inline-block">Issued</span><p class="text-4xl font-serif italic">${new Date(i.issueDate).toLocaleDateString()}</p></div>
-                        <div><span class="tag-mono mb-4 inline-block !bg-blue-500/20">Returned</span><p class="text-4xl font-serif italic text-blue-500 font-black">${new Date(i.returnDate).toLocaleDateString()}</p></div>
+                    <div class="grid grid-cols-2 gap-10 border-t border-white/5 pt-10 text-4xl font-serif italic">
+                        <div class="text-white/30">Issued: ${new Date(i.issueDate).toLocaleDateString()}</div>
+                        <div class="text-blue-500">Returned: ${new Date(i.returnDate).toLocaleDateString()}</div>
                     </div>
                 </div>`).join('');
         }
@@ -346,27 +336,13 @@
             const iSnap = await db.collection('issues').get();
             const c = {};
             [...hSnap.docs, ...iSnap.docs].forEach(d => { c[d.data().name] = (c[d.data().name] || 0) + 1; });
-            const sorted = Object.entries(c).sort((a,b) => b[1] - a[1]).slice(0, 5);
+            const sorted = Object.entries(c).sort((a,b) => b[1] - a[1]).slice(0, 6);
             document.getElementById('leadGrid').innerHTML = sorted.map(([n, v], idx) => `
-                <div class="glass-card p-20 flex justify-between items-center group">
-                    <div class="flex items-center gap-20">
-                        <span class="text-[12rem] italic font-serif opacity-10 group-hover:opacity-100 transition duration-700">0${idx+1}</span>
-                        <p class="font-black text-8xl tracking-tighter">${n}</p>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-9xl font-serif italic">${v}</span>
-                        <p class="text-xs font-black opacity-20 uppercase mt-8 tracking-widest">Books Borrowed</p>
-                    </div>
+                <div class="glass-card p-16 space-y-6">
+                    <span class="text-7xl italic font-serif opacity-10">0${idx+1}</span>
+                    <p class="font-black text-4xl tracking-tighter">${n}</p>
+                    <p class="text-blue-500 font-bold uppercase text-xs">${v} Books</p>
                 </div>`).join('');
-        }
-
-        // 5. UTILS
-        function attemptLogin() {
-            if (document.getElementById('loginPass').value === 'librarian123') {
-                document.getElementById('authOverlay').classList.add('hidden');
-                document.getElementById('dashboardApp').classList.remove('hidden');
-                syncCloud();
-            }
         }
 
         function switchTab(t) {
@@ -381,6 +357,7 @@
         function setTheme(t) {
             const h = document.getElementById('mainHtml');
             t === 'light' ? h.classList.add('light-theme') : h.classList.remove('light-theme');
+            if(activeUser) db.collection('curators').doc(activeUser.u).update({ theme: t });
         }
 
         function exportCSV() {
@@ -391,8 +368,7 @@
                     csv += `${i.adm},${i.name},${i.class},${i.book},${i.issueDate},${i.returnDate}\n`;
                 });
                 const blob = new Blob([csv], { type: 'text/csv' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob); a.download = "Library_Master_List.csv"; a.click();
+                const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "Library_Report.csv"; a.click();
             });
         }
 
