@@ -8,64 +8,39 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <!-- 3D Engine Load -->
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.28/build/spline-viewer.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900&family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #010103;
-            --glass: rgba(12, 12, 18, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --rim-light: rgba(255, 255, 255, 0.25);
-            --text-main: #FFFFFF;
-            --text-dim: #D1D1D1;
-            --accent: #007AFF;
-        }
-
-        .light-theme {
-            --bg: #FFFFFF;
-            --glass: rgba(255, 255, 255, 0.85);
-            --glass-border: rgba(0, 0, 0, 0.1);
-            --rim-light: rgba(255, 255, 255, 0.9);
-            --text-main: #000000;
-            --text-dim: #333333;
-        }
-
+        :root { --bg: #010102; --glass: rgba(10, 10, 15, 0.65); --glass-border: rgba(255, 255, 255, 0.18); --text-main: #FFFFFF; --text-dim: rgba(255, 255, 255, 0.45); --accent: #007AFF; }
+        .light-theme { --bg: #f5f5f7; --glass: rgba(255, 255, 255, 0.75); --glass-border: rgba(0, 0, 0, 0.1); --text-main: #000000; --text-dim: #444; }
+        
         * { user-select: none !important; -webkit-user-select: none !important; }
         .copy-safe, .copy-safe * { user-select: text !important; -webkit-user-select: text !important; cursor: text; }
 
-        body { background-color: var(--bg); color: var(--text-main); font-family: 'Inter', sans-serif; transition: 0.5s ease; min-height: 100vh; overflow-x: hidden; font-weight: 500; }
-        .liquid-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: var(--bg); }
-        .liquid-mesh { position: absolute; width: 150vw; height: 150vh; top: -25vh; left: -25vw; background-image: radial-gradient(circle at 20% 30%, rgba(0, 122, 255, 0.2) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(255, 0, 128, 0.1) 0%, transparent 40%); filter: blur(130px); animation: drift 40s infinite alternate; }
+        body { background-color: var(--bg); color: var(--text-main); font-family: 'Inter', sans-serif; transition: 0.6s ease; min-height: 100vh; overflow-x: hidden; }
+        .liquid-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: var(--bg); }
+        .liquid-mesh { position: absolute; width: 150vw; height: 150vh; top: -25vh; left: -25vw; background-image: radial-gradient(circle at 20% 30%, rgba(0, 122, 255, 0.1) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(255, 0, 128, 0.05) 0%, transparent 40%); filter: blur(120px); animation: drift 40s infinite alternate; }
         @keyframes drift { from { transform: rotate(0deg); } to { transform: rotate(10deg) scale(1.1); } }
-
-        /* ULTRA LIQUID GLASS WITH RIM LIGHTING */
-        .glass-card { 
-            background: var(--glass); 
-            backdrop-filter: blur(100px) saturate(220%) contrast(120%); 
-            -webkit-backdrop-filter: blur(100px) saturate(220%) contrast(120%); 
-            border: 1px solid var(--glass-border); 
-            border-top: 1.5px solid var(--rim-light); /* The Rim Light effect */
-            border-radius: 44px; 
-            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.9); 
-            transition: 0.4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
-        }
-        .glass-card:hover { transform: translateY(-8px); border-top-color: var(--accent); }
-
-        .hero-text { font-family: 'Fraunces', serif; font-weight: 900; background: linear-gradient(180deg, var(--text-main) 70%, #999 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .nav-link { font-size: 11px; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); transition: 0.3s; padding: 12px 24px; border-radius: 20px; cursor: pointer; border: none; background: transparent; }
-        .nav-link.active { color: var(--text-main); background: rgba(255,255,255,0.15); box-shadow: 0 0 30px rgba(255,255,255,0.05); }
+        /* 3D Scene Container */
+        .three-d-hero { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.6; pointer-events: none; }
 
-        .btn-action { background: #FFFFFF; color: #000000; font-weight: 900; border-radius: 24px; text-transform: uppercase; font-size: 14px; padding: 22px 45px; transition: 0.4s; cursor: pointer; border: none; }
-        .btn-action:hover { transform: scale(1.05); box-shadow: 0 20px 40px rgba(255,255,255,0.25); }
+        .glass-card { background: var(--glass); backdrop-filter: blur(80px) saturate(210%) contrast(110%); border: 1px solid var(--glass-border); border-radius: 44px; box-shadow: 0 40px 100px -30px rgba(0,0,0,0.8); position: relative; overflow: hidden; }
+        .hero-text { font-family: 'Fraunces', serif; font-weight: 900; background: linear-gradient(180deg, var(--text-main) 70%, var(--text-dim) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .nav-link { font-size: 10px; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); transition: 0.3s; padding: 12px 24px; border-radius: 18px; cursor: pointer; border: none; background: transparent; }
+        .nav-link.active { color: var(--text-main); background: rgba(255,255,255,0.15); box-shadow: 0 0 20px rgba(255,255,255,0.05); }
 
-        input { background: transparent !important; border: none !important; border-bottom: 4px solid var(--glass-border) !important; color: var(--text-main) !important; padding: 1.5rem 0 !important; outline: none !important; transition: 0.5s; font-family: 'Fraunces', serif; font-style: italic; font-weight: 800; font-size: 2.5rem; width: 100%; }
+        .btn-action { background: #FFFFFF; color: #000000; font-weight: 900; border-radius: 24px; text-transform: uppercase; font-size: 14px; padding: 20px 40px; transition: 0.4s; cursor: pointer; border: none; width: 100%; }
+        .btn-action:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(255,255,255,0.2); }
+
+        input { background: transparent !important; border: none !important; border-bottom: 4px solid var(--glass-border) !important; color: var(--text-main) !important; padding: 1.2rem 0 !important; outline: none !important; transition: 0.5s; font-family: 'Fraunces', serif; font-style: italic; font-weight: 800; font-size: 2.2rem; width: 100%; }
         input:focus { border-bottom-color: var(--accent) !important; }
 
-        .sub-nav { display: flex; gap: 12px; overflow-x: auto; padding: 15px 0; border-bottom: 2px solid rgba(255,255,255,0.1); margin-bottom: 3rem; }
-        .sub-link { font-size: 10px; font-weight: 900; color: var(--text-dim); padding: 10px 25px; border-radius: 12px; transition: 0.3s; text-transform: uppercase; cursor: pointer; border: none; background: transparent; white-space: nowrap; }
+        .sub-nav { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; border-bottom: 2px solid rgba(255,255,255,0.1); margin-bottom: 2rem; }
+        .sub-link { font-size: 10px; font-weight: 900; color: var(--text-dim); padding: 10px 20px; border-radius: 10px; transition: 0.3s; text-transform: uppercase; cursor: pointer; border: none; background: transparent; white-space: nowrap; }
         .sub-link.active { background: var(--accent) !important; color: white !important; box-shadow: 0 0 30px var(--accent); }
-
-        .date-edit-input { font-family: 'JetBrains Mono', monospace; font-size: 1.4rem !important; color: var(--accent) !important; background: rgba(0,122,255,0.1) !important; border: 2px solid var(--accent) !important; padding: 8px 15px !important; border-radius: 12px !important; width: auto !important; cursor: pointer; font-weight: 800; margin-top: 10px; }
 
         #notification { transform: translate(-50%, -150px); transition: 0.6s; z-index: 2000; position: fixed; top: 0; left: 50%; }
         #notification.show { transform: translate(-50%, 60px); }
@@ -81,10 +56,10 @@
         <span id="notifText" class="text-sm font-black uppercase tracking-widest text-white">System Synchronized</span>
     </div>
 
-    <!-- Login -->
+    <!-- Auth -->
     <div id="authOverlay" class="fixed inset-0 z-[60] bg-black flex items-center justify-center p-8">
         <div class="max-w-md w-full text-center">
-            <img id="loginLogo" src="" style="height:220px; width:auto; margin:0 auto 2rem auto; display:block;">
+            <img id="loginLogo" src="" style="height:200px; width:auto; margin:0 auto 2rem auto; display:block;">
             <div class="glass-card p-14 space-y-12">
                 <div class="flex gap-4 p-1.5 bg-white/5 rounded-[2.5rem]">
                     <button onclick="toggleAuth('login')" id="logTab" class="flex-1 py-5 rounded-[2rem] text-xs font-black uppercase bg-white/10 text-white transition">Login</button>
@@ -95,12 +70,12 @@
                     <input type="password" id="authPass" placeholder="PASSKEY" class="text-center">
                 </div>
                 <button onclick="handleAuth()" id="authBtn" class="w-full btn-action">Authorize Portal</button>
-                <p id="authError" class="text-xs font-bold text-red-500 uppercase hidden">Login Failed</p>
+                <p id="authError" class="text-xs font-bold text-red-500 uppercase hidden">Access Denied</p>
             </div>
         </div>
     </div>
 
-    <!-- Main View -->
+    <!-- Main -->
     <div id="dashboardApp" class="hidden min-h-screen flex-col">
         <header class="px-12 py-8 flex justify-between items-center sticky top-0 z-40 bg-black/5 backdrop-blur-3xl border-b border-white/5">
             <div class="flex items-center gap-8">
@@ -116,16 +91,22 @@
                     <button onclick="switchTab('settings')" id="nav-settings" class="nav-link">Settings</button>
                 </nav>
             </div>
-            <button onclick="location.reload()" class="text-xs font-black text-red-500 uppercase tracking-widest underline underline-offset-8 decoration-2">Exit System</button>
+            <button onclick="location.reload()" class="text-xs font-black text-red-500 uppercase tracking-widest underline underline-offset-8 decoration-2">Exit</button>
         </header>
 
-        <main class="max-w-[1800px] w-full mx-auto p-12 flex-grow">
-            <!-- DASHBOARD -->
-            <div id="tab-dashboard" class="space-y-40">
+        <main class="max-w-[1700px] w-full mx-auto p-12 flex-grow">
+            <!-- DASHBOARD WITH 3D HERO -->
+            <div id="tab-dashboard" class="space-y-40 relative">
+                <!-- Interactive 3D Element -->
+                <div class="three-d-hero">
+                    <spline-viewer url="https://prod.spline.design/6Wq1Q7YEB2-pXvS9/scene.splinecode"></spline-viewer>
+                </div>
+                
                 <h1 class="text-[16rem] italic tracking-tighter leading-[0.7] hero-text">The Archive</h1>
+                
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-14">
                     <div class="glass-card p-20 space-y-8"><p class="text-xs font-black opacity-30 uppercase tracking-widest">Active Circulation</p><h3 id="statActive" class="text-[12rem] font-serif tracking-tighter leading-none">0</h3></div>
-                    <div class="glass-card p-20 space-y-8"><p class="text-xs font-black opacity-30 uppercase tracking-widest">Overdue Policy</p><h3 id="statOverdue" class="text-[12rem] font-serif tracking-tighter text-red-500 leading-none">0</h3></div>
+                    <div class="glass-card p-20 space-y-8"><p class="text-xs font-black opacity-30 uppercase tracking-widest">Overdue Policy</p><h3 id="statOverdue" class="text-[12rem] font-serif tracking-tighter text-red-500">0</h3></div>
                     <div class="glass-card p-20 flex flex-col justify-center items-center border-blue-500/20">
                         <div id="curatorName" class="text-blue-500 uppercase font-black text-sm mb-12 italic tracking-widest">User</div>
                         <div class="w-12 h-12 rounded-full bg-blue-500 animate-pulse shadow-[0_0_80px_#007AFF]"></div>
@@ -133,46 +114,41 @@
                 </div>
             </div>
 
-            <!-- STUDENTS -->
+            <!-- OTHER TABS (Same logic, better styling) -->
             <div id="tab-students" class="hidden space-y-10">
                 <h2 class="text-9xl italic font-serif font-bold uppercase tracking-tighter">Roster</h2>
                 <div class="sub-nav" id="studentGradeNav"></div>
-                <input type="text" placeholder="SEARCH BY NAME OR ID..." style="font-size:1.5rem !important" onkeyup="renderStudents(this.value)">
+                <input type="text" placeholder="SEARCH ROSTER..." style="font-size:1.5rem !important" onkeyup="renderStudents(this.value)">
                 <div id="studentsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"></div>
             </div>
 
-            <!-- ISSUE -->
             <div id="tab-issue" class="hidden max-w-5xl mx-auto py-10">
-                <div class="glass-card p-28 space-y-24">
+                <div class="glass-card p-24 space-y-14">
                     <h2 class="text-[8rem] italic font-serif leading-none tracking-tighter">Issue</h2>
-                    <div class="flex flex-col space-y-12">
-                        <input type="text" id="iSearch" placeholder="NAME OR ADMISSION ID" onkeyup="smartSearch(this.value)" autocomplete="off">
-                        <div id="studentStatus" class="hidden p-14 border-l-8 border-blue-500 bg-blue-500/5 rounded-3xl">
-                            <h4 id="foundName" class="text-7xl italic font-serif text-white copy-safe">Full Name</h4>
-                            <p id="foundClass" class="text-2xl text-white opacity-90 mt-4 font-bold uppercase">Member Verified</p>
-                        </div>
-                        <input type="text" id="iBook" placeholder="BOOK CODE">
-                        <button onclick="issueNow()" class="btn-action">Confirm Loan</button>
+                    <input type="text" id="iSearch" placeholder="NAME OR ADMISSION ID" onkeyup="smartSearch(this.value)" autocomplete="off">
+                    <div id="studentStatus" class="hidden p-14 border-l-8 border-blue-500 bg-blue-500/5 rounded-3xl">
+                        <h4 id="foundName" class="text-7xl italic font-serif text-white copy-safe">Full Name</h4>
+                        <p id="foundClass" class="text-2xl text-white opacity-90 mt-4 font-bold uppercase">Verified Member</p>
                     </div>
+                    <input type="text" id="iBook" placeholder="BOOK CODE">
+                    <button onclick="issueNow()" class="btn-action">Confirm Loan</button>
                 </div>
             </div>
 
-            <!-- LEDGER & HISTORY -->
             <div id="tab-ledger" class="hidden space-y-10">
                 <h2 class="text-9xl italic font-serif font-bold uppercase tracking-tighter">Ledger</h2>
                 <div class="sub-nav" id="ledgerGradeNav"></div>
-                <input type="text" placeholder="FILTER ACTIVE..." style="font-size:1.5rem !important" onkeyup="renderLedger(this.value)">
+                <input type="text" placeholder="SEARCH ACTIVE..." style="font-size:1.5rem !important" onkeyup="renderLedger(this.value)">
                 <div id="ledgerGrid" class="space-y-10"></div>
             </div>
 
             <div id="tab-history" class="hidden space-y-10">
                 <h2 class="text-9xl italic font-serif font-bold uppercase tracking-tighter">History</h2>
                 <div class="sub-nav" id="historyGradeNav"></div>
-                <input type="text" placeholder="FILTER LOGS..." style="font-size:1.5rem !important" onkeyup="renderHistory(this.value)">
+                <input type="text" placeholder="SEARCH ARCHIVES..." style="font-size:1.5rem !important" onkeyup="renderHistory(this.value)">
                 <div id="historyGrid" class="space-y-12"></div>
             </div>
 
-            <!-- CHAMPIONS -->
             <div id="tab-champions" class="hidden space-y-10">
                 <h2 class="text-9xl italic font-serif font-bold uppercase tracking-tighter">Champions</h2>
                 <div class="sub-nav" id="championGradeNav"></div>
@@ -184,14 +160,10 @@
             <div id="tab-settings" class="hidden max-w-5xl mx-auto py-10 text-center">
                 <div class="glass-card p-24 space-y-14">
                     <h2 class="text-8xl italic font-serif">System</h2>
-                    <div class="grid grid-cols-2 gap-10">
-                        <button onclick="setTheme('dark')" class="py-10 glass-card text-sm font-black uppercase obsidian-btn">Obsidian</button>
-                        <button onclick="setTheme('light')" class="py-10 glass-card text-sm font-black uppercase alpine-btn">Alpine</button>
-                    </div>
-                    <div class="flex flex-col gap-6">
-                        <button onclick="seedRoster()" class="btn-action w-full py-10 !bg-blue-600 !text-white italic">INITIALIZE DATABASE</button>
-                        <button onclick="exportCSV()" class="btn-action w-full py-10 !bg-transparent border-2 border-emerald-500 text-emerald-500 italic uppercase">Export Master Report</button>
-                    </div>
+                    <button onclick="setTheme('dark')" class="py-10 glass-card w-full text-sm font-black uppercase">Obsidian</button>
+                    <button onclick="setTheme('light')" class="py-10 glass-card w-full text-sm font-black uppercase bg-white text-black border-none">Alpine</button>
+                    <button onclick="seedRoster()" class="btn-action w-full py-10 !bg-blue-600 !text-white italic">INITIALIZE DATABASE</button>
+                    <button onclick="exportCSV()" class="btn-action w-full py-10 !bg-transparent border-2 border-emerald-500 text-emerald-500 italic uppercase">Export master Report</button>
                 </div>
             </div>
         </main>
@@ -217,7 +189,6 @@
             if(!u || !p) return;
             const doc = await db.collection('curators').doc(u).get();
             if (authMode === 'register') {
-                if(doc.exists) return alert("User exists");
                 await db.collection('curators').doc(u).set({ password: p, theme: 'dark' });
                 showToast("VAULT OPENED"); toggleAuth('login');
             } else if (doc.exists && doc.data().password === p) {
@@ -229,32 +200,14 @@
         }
 
         function initGradeNavs() { ['studentGradeNav', 'ledgerGradeNav', 'historyGradeNav', 'championGradeNav'].forEach(cid => { document.getElementById(cid).innerHTML = GRADES.map(g => `<button onclick="setSubTab('${cid}','${g}')" class="sub-link s-btn-${cid}">${g}</button>`).join(''); setSubTab(cid, 'Class 6'); }); }
-        
-        function setSubTab(cid, grade) {
-            subTabFilters[cid] = grade;
-            document.querySelectorAll(`.s-btn-${cid}`).forEach(b => b.classList.remove('active'));
-            const activeBtn = Array.from(document.querySelectorAll(`.s-btn-${cid}`)).find(b => b.innerText === grade);
-            if(activeBtn) activeBtn.classList.add('active');
-            if(cid === 'studentGradeNav') renderStudents();
-            if(cid === 'ledgerGradeNav') renderLedger();
-            if(cid === 'historyGradeNav') renderHistory();
-            if(cid === 'championGradeNav') renderChampions();
-        }
-
-        function switchTab(t) {
-            ['dashboard', 'students', 'issue', 'ledger', 'overdue', 'history', 'champions', 'settings'].forEach(tab => {
-                document.getElementById(`tab-${tab}`).classList.add('hidden');
-                const btn = document.getElementById(`nav-${tab}`); if(btn) btn.classList.remove('active');
-            });
-            document.getElementById(`tab-${t}`).classList.remove('hidden');
-            const activeBtn = document.getElementById(`nav-${t}`); if(activeBtn) activeBtn.classList.add('active');
-        }
+        function setSubTab(cid, grade) { subTabFilters[cid] = grade; document.querySelectorAll(`.s-btn-${cid}`).forEach(b => b.classList.remove('active')); const activeBtn = Array.from(document.querySelectorAll(`.s-btn-${cid}`)).find(b => b.innerText === grade); if(activeBtn) activeBtn.classList.add('active'); if(cid === 'studentGradeNav') renderStudents(); if(cid === 'ledgerGradeNav') renderLedger(); if(cid === 'historyGradeNav') renderHistory(); if(cid === 'championGradeNav') renderChampions(); }
+        function switchTab(t) { ['dashboard', 'students', 'issue', 'ledger', 'overdue', 'history', 'champions', 'settings'].forEach(tab => { document.getElementById(`tab-${tab}`).classList.add('hidden'); const btn = document.getElementById(`nav-${tab}`); if(btn) btn.classList.remove('active'); }); document.getElementById(`tab-${t}`).classList.remove('hidden'); const activeBtn = document.getElementById(`nav-${t}`); if(activeBtn) activeBtn.classList.add('active'); }
 
         async function smartSearch(val) {
             const status = document.getElementById('studentStatus');
             if (val.length < 3) { status.classList.add('hidden'); selectedStudent = null; return; }
-            let doc = await db.collection('roster').doc(val).get();
-            if(!doc.exists) { const q = await db.collection('roster').where('name', '==', val.toUpperCase()).get(); if(!q.empty) doc = q.docs[0]; }
+            let doc = await db.collection('curators').doc(activeUser.u).collection('roster').doc(val).get();
+            if(!doc.exists) { const q = await db.collection('curators').doc(activeUser.u).collection('roster').where('name', '==', val.toUpperCase()).get(); if(!q.empty) doc = q.docs[0]; }
             if (doc.exists) { selectedStudent = doc.data(); status.classList.remove('hidden'); document.getElementById('foundName').innerText = selectedStudent.name; } else { status.classList.add('hidden'); selectedStudent = null; }
         }
 
@@ -262,14 +215,12 @@
             const book = document.getElementById('iBook').value;
             if(!selectedStudent || !book) return alert("Select Scholar First");
             const now = new Date(); const due = new Date(); due.setDate(now.getDate() + 7);
-            await db.collection('curators').doc(activeUser.u).collection('issues').add({ adm: selectedStudent.id, name: selectedStudent.name, class: selectedStudent.grade, section: selectedStudent.section, book, issueDate: now.toISOString(), dueDate: due.toISOString() });
+            await db.collection('curators').doc(activeUser.u).collection('issues').add({ adm: selectedStudent.id, name: selectedStudent.name, class: selectedStudent.grade, book, issueDate: now.toISOString(), dueDate: due.toISOString() });
             showToast("RECORDED"); switchTab('ledger'); ['iSearch', 'iBook'].forEach(id => document.getElementById(id).value = ''); document.getElementById('studentStatus').classList.add('hidden');
         }
 
-        async function updateDate(id, coll, type, val) { const obj = {}; obj[type] = new Date(val).toISOString(); await db.collection('curators').doc(activeUser.u).collection(coll).doc(id).update(obj); showToast("DATE UPDATED"); }
         async function retBook(id, data) { await db.collection('curators').doc(activeUser.u).collection('history').add({ ...data, returnDate: new Date().toISOString() }); await db.collection('curators').doc(activeUser.u).collection('issues').doc(id).delete(); showToast("RETURNED"); }
 
-        // --- RENDERERS ---
         function syncCloud() {
             const ref = db.collection('curators').doc(activeUser.u);
             ref.collection('issues').onSnapshot(snap => { allIssues = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderLedger(); renderOverdue(); document.getElementById('statActive').innerText = allIssues.length; document.getElementById('statOverdue').innerText = allIssues.filter(i => new Date(i.dueDate) < new Date()).length; });
@@ -280,39 +231,26 @@
             const grade = subTabFilters.ledgerGradeNav;
             let data = allIssues.filter(i => i.class === grade);
             if(q) data = data.filter(i => i.name.toLowerCase().includes(q.toLowerCase()) || i.adm.includes(q));
-            document.getElementById('ledgerGrid').innerHTML = data.map(i => `
-                <div class="glass-card p-10 flex justify-between items-center reveal">
-                    <div><p class="font-bold text-4xl text-white copy-safe">${i.name}</p><p class="text-[10px] opacity-30 uppercase mt-1">ADM: ${i.adm} • SECTION: ${i.section}</p>
-                    <p class="text-[10px] font-bold uppercase mt-4">Issued: <input type="date" class="date-edit-input" value="${i.issueDate.split('T')[0]}" onchange="updateDate('${i.id}', 'issues', 'issueDate', this.value)"></p></div>
-                    <div class="italic font-serif text-5xl text-blue-500">${i.book}</div>
-                    <button onclick="retBook('${i.id}', ${JSON.stringify(i).replace(/"/g, '&quot;')})" class="btn-action">Return</button>
-                </div>`).join('') || '<p class="opacity-10 py-10 uppercase text-center font-black">Empty</p>';
+            document.getElementById('ledgerGrid').innerHTML = data.map(i => `<div class="glass-card p-12 flex justify-between items-center"><div><p class="font-bold text-4xl text-white copy-safe">${i.name}</p><p class="text-xs opacity-40 mt-4 uppercase">ID: ${i.adm}</p></div><div class="italic font-serif text-5xl text-blue-500">${i.book}</div><button onclick="retBook('${i.id}', ${JSON.stringify(i).replace(/"/g, '&quot;')})" class="btn-action px-10 py-4 text-xs">Return</button></div>`).join('') || '<p class="opacity-10 py-10 uppercase text-center font-black">Empty</p>';
         }
 
         function renderHistory(q = "") {
             const grade = subTabFilters.historyGradeNav;
             let data = allHistory.filter(i => i.class === grade);
             if(q) data = data.filter(i => i.name.toLowerCase().includes(q.toLowerCase()) || i.adm.includes(q));
-            document.getElementById('historyGrid').innerHTML = data.map(i => `
-                <div class="glass-card p-8 flex flex-col space-y-6 opacity-60 reveal">
-                    <div class="flex justify-between items-end"><div><p class="font-bold text-3xl text-white">${i.name}</p><p class="text-[9px] opacity-30 mt-1 uppercase">ID: ${i.adm} • SEC: ${i.section}</p></div><div class="italic font-serif text-3xl text-white/50">${i.book}</div></div>
-                    <div class="grid grid-cols-2 gap-10 border-t border-white/10 pt-6 font-mono italic">
-                        <div><p class="tag-header">ISSUED ON</p><input type="date" value="${i.issueDate.split('T')[0]}" class="date-edit-input" onchange="updateDate('${i.id}', 'history', 'issueDate', this.value)"></div>
-                        <div><p class="tag-header">RETURNED ON</p><input type="date" value="${i.returnDate.split('T')[0]}" class="date-edit-input" onchange="updateDate('${i.id}', 'history', 'returnDate', this.value)"></div>
-                    </div>
-                </div>`).join('');
+            document.getElementById('historyGrid').innerHTML = data.map(i => `<div class="glass-card p-12 flex justify-between items-center opacity-60"><div><p class="font-black text-4xl text-white">${i.name}</p><p class="text-[11px] opacity-40 mt-4 uppercase font-mono">Issued: ${i.issueDate.split('T')[0]} • Returned: ${i.returnDate.split('T')[0]}</p></div><div class="italic font-serif text-4xl text-white/50">${i.book}</div></div>`).join('');
         }
 
         function renderChampions() {
             const grade = subTabFilters.championGradeNav;
             const logs = allHistory.filter(h => h.class === grade);
             const top3 = Object.entries(logs.reduce((acc, l) => { acc[l.name] = (acc[l.name] || 0) + 1; return acc; }, {})).sort((a,b) => b[1] - a[1]).slice(0, 3);
-            document.getElementById('championGrid').innerHTML = top3.map((t, idx) => `<div class="glass-card p-12 text-center space-y-6"><span class="text-7xl italic font-serif opacity-10">0${idx+1}</span><p class="font-black text-4xl text-white">${t[0]}</p><p class="text-blue-500 font-bold uppercase text-xs tracking-widest">${t[1]} Books Borrowed</p></div>`).join('') || "<p class='opacity-10 py-10 text-center col-span-3 text-3xl font-black uppercase'>No Logs</p>";
+            document.getElementById('championGrid').innerHTML = top3.map((t, idx) => `<div class="glass-card p-12 text-center space-y-6"><span class="text-7xl italic font-serif opacity-10">0${idx+1}</span><p class="font-black text-4xl text-white">${t[0]}</p><p class="text-blue-500 font-bold uppercase text-xs tracking-widest">${t[1]} Books Read</p></div>`).join('');
         }
 
         async function renderStudents(q = "") {
             const grade = subTabFilters.studentGradeNav;
-            db.collection('roster').where('grade', '==', grade).get().then(snap => {
+            db.collection('curators').doc(activeUser.u).collection('roster').where('grade', '==', grade).get().then(snap => {
                 let docs = snap.docs.map(d => d.data());
                 if(q) docs = docs.filter(d => d.name.includes(q.toUpperCase()) || d.id.includes(q));
                 document.getElementById('studentsList').innerHTML = docs.map(d => `<div class="glass-card p-10"><p class="font-black text-3xl text-white copy-safe">${d.name}</p><p class="text-xs opacity-40 uppercase mt-4 copy-safe">ID: ${d.id} • Sec: ${d.section}</p></div>`).join('');
@@ -330,15 +268,11 @@
 
         async function seedRoster() {
             const pass = prompt("ADMIN CODE:"); if(pass !== "Zhs@library") return alert("DENIED");
-            showToast("UPLOADING ROSTER...");
+            showToast("SYNCING...");
             const roster = [
-                {id: "003659-24", name: "ANDHE ARIHANT VARMA", grade: "Class 6", section: "A"}, {id: "002938-22", name: "BADDULA MOKSHA", grade: "Class 6", section: "A"}, {id: "002618-21", name: "BALTHU RUDRA VEER", grade: "Class 6", section: "A"}, {id: "001994-19", name: "BARKA BHARGAV KRISHNA", grade: "Class 6", section: "A"}, {id: "003049-22", name: "BARRE MAHONNATH YADAV ", grade: "Class 6", section: "A"}, {id: "001938-18", name: "BOKKA HARDHIK REDDY", grade: "Class 6", section: "A"}, {id: "003698-24", name: "CHIRITHOTI  SUCHARITHA SAI", grade: "Class 6", section: "A"}, {id: "003801-24", name: "DHOTI  ADWIKA ", grade: "Class 6", section: "A"}, {id: "002884-22", name: "EDULA SRIKAR REDDY", grade: "Class 6", section: "A"}, {id: "002312-19", name: "HUMERA ", grade: "Class 6", section: "A"}, {id: "003754-24", name: "KANUGU RAGHUVEER", grade: "Class 6", section: "A"}, {id: "003188-23", name: "KATTA AARUSH", grade: "Class 6", section: "A"}, {id: "003084-23", name: "KOLLURU  ESHWAR", grade: "Class 6", section: "A"}, {id: "002564-21", name: "KOMMU DEEKSITHA SAI", grade: "Class 6", section: "A"}, {id: "001985-19", name: "KOTHA KARTIKEYA", grade: "Class 6", section: "A"}, {id: "003737-24", name: "LAVUDI THANUSRICHOWHAN", grade: "Class 6", section: "A"}, {id: "002462-20", name: "LOKASANI RAGHAV KRISHNA REDDY ", grade: "Class 6", section: "A"}, {id: "002807-22", name: "MALLIPEDDI HIMAVARSHINI", grade: "Class 6", section: "A"}, {id: "003381-23", name: "MANNEPALLI RISHITHA", grade: "Class 6", section: "A"}, {id: "002446-20", name: "MANVITH REDDY PEDDITI ", grade: "Class 6", section: "A"}, {id: "002793-22", name: "MEKALA ABHIRAM", grade: "Class 6", section: "A"}, {id: "002610-21", name: "MOHAMMED SHAZAIN", grade: "Class 6", section: "A"}, {id: "002565-21", name: "PANDRAPRAGADA AADHYA SRI", grade: "Class 6", section: "A"}, {id: "002641-21", name: "PARIMI VENKATA SRINIVASA RUDRA SAI KRUTHIK", grade: "Class 6", section: "A"}, {id: "001572-18", name: "PRAVII TAANK", grade: "Class 6", section: "A"}, {id: "001952-19", name: "SAYINI ANWITHA", grade: "Class 6", section: "A"}, {id: "002030-19", name: "SHROTI AARSHI", grade: "Class 6", section: "A"}, {id: "003601-24", name: "SRIRAM SRAGVI", grade: "Class 6", section: "A"}, {id: "003617-24", name: "TEJAVATHU NISHITHA  SRI", grade: "Class 6", section: "A"}, {id: "001947-19", name: "TELLAPURAM DARVI RAJ", grade: "Class 6", section: "A"}, {id: "003830-25", name: "UMMETEHALA ASHWATH RAM", grade: "Class 6", section: "A"}, {id: "003175-23", name: "VEERAMALLA DHARANI", grade: "Class 6", section: "A"}, {id: "002334-20", name: "VRISHANK SURYAKANTH MALGIKAR ", grade: "Class 6", section: "A"},
-                {id: "002826-22", name: "A. LAKSHMI USHAS", grade: "Class 7", section: "A"}, {id: "003464-24", name: "ANANTHAGIRI   DIVYANSH", grade: "Class 7", section: "A"}, {id: "002423-20", name: "ANUMALA HARI SAI ", grade: "Class 7", section: "A"}, {id: "004140-26", name: "ARADHYA CHOWDARY ", grade: "Class 7", section: "A"}, {id: "003707-24", name: "BANDARI MANASVINI", grade: "Class 7", section: "A"}, {id: "003079-23", name: "BONGU SADHA SHIVA  AKSHAY GOUD", grade: "Class 7", section: "A"}, {id: "003699-24", name: "CHIRITHOTI  SUJAY KRISHNA SAI ", grade: "Class 7", section: "A"}, {id: "003948-25", name: "CHITTI REDDY SREE SHAMIKA REDDY ", grade: "Class 7", section: "A"}, {id: "002074-19", name: "DAKSH MITTAL", grade: "Class 7", section: "A"}, {id: "003828-25", name: "GADDAM HEMANTH", grade: "Class 7", section: "A"}, {id: "001548-18", name: "GALI VAMSHIDHAR", grade: "Class 7", section: "A"}, {id: "002361-20", name: "GANDHAM CHARAN ", grade: "Class 7", section: "A"}, {id: "003684-24", name: "GANDLA VIGHNESH", grade: "Class 7", section: "A"}, {id: "002776-22", name: "GUBBALA UJJWAL SAI", grade: "Class 7", section: "A"}, {id: "002413-20", name: "GUGULOTHU SATHVIKA ", grade: "Class 7", section: "A"}, {id: "004068-26", name: "HIMASRUTI ANNABATHINA ", grade: "Class 7", section: "A"}, {id: "0002670-21", name: "JADA TEJASHWINI", grade: "Class 7", section: "A"}, {id: "003219-23", name: "JD SABARISUJEEV", grade: "Class 7", section: "A"}, {id: "003995-25", name: "JULAKANTI  NIVITHA REDDY ", grade: "Class 7", section: "A"}, {id: "002405-20", name: "KHUSHI CHOUDHARY ", grade: "Class 7", section: "A"}, {id: "001776-18", name: "KOMPALLY SAANVI GOUD", grade: "Class 7", section: "A"}, {id: "001810-18", name: "KURESHAM THUSHIKA", grade: "Class 7", section: "A"}, {id: "003936-25", name: "LOKA SRI SAI CHAITRESH", grade: "Class 7", section: "A"}, {id: "002921-22", name: "MANNEM SUMITH CHOUDARY", grade: "Class 7", section: "A"}, {id: "004163-26", name: "MUPPIDI JATHIN ", grade: "Class 7", section: "A"}, {id: "004139-26", name: "N REVAN REDDY ", grade: "Class 7", section: "A"}, {id: "002753-22", name: "NALLAGONDA DHRUVANTH", grade: "Class 7", section: "A"}, {id: "002338-20", name: "P.R.KRISHNA KAUSHIK ", grade: "Class 7", section: "A"}, {id: "002848-22", name: "PERUMALLA NITHYA SREE", grade: "Class 7", section: "A"}, {id: "002876-22", name: "PONNAGANTI NAKSHATRA REDDY", grade: "Class 7", section: "A"}, {id: "003791-24", name: "POTLAPALLY  KAUTHIK GOUD", grade: "Class 7", section: "A"}, {id: "002517-20", name: "SOMANABOINA VIRAJ ", grade: "Class 7", section: "A"}, {id: "002409-20", name: "SRIKAKULAPU SHRESHTA GAYATHRI ", grade: "Class 7", section: "A"}, {id: "002577-21", name: "SURAVARAM  NISHANTH REDDY", grade: "Class 7", section: "A"}, {id: "003555-24", name: "THANNEERU THARVAN TEJ", grade: "Class 7", section: "A"}, {id: "000187-17", name: "UDITI KESHRI", grade: "Class 7", section: "A"}, {id: "000202-17", name: "YEDULLA NIVRITI REDDY ", grade: "Class 7", section: "A"},
-                {id: "002165-19", name: "ANDE RASHMIKA", grade: "Class 10", section: "A"}, {id: "003557-24", name: "ANDOJU ANIRUDH SAI RAAM", grade: "Class 10", section: "A"}, {id: "001881-18", name: "BADAM MAHIESH SWAMY", grade: "Class 10", section: "A"}, {id: "003353-23", name: "BADDAM DHANA SRI", grade: "Class 10", section: "A"}, {id: "003706-24", name: "BANDARI HIMAVANTH REDDY ", grade: "Class 10", section: "A"}, {id: "001429-17", name: "CHAVAN VEDASREE", grade: "Class 10", section: "A"}, {id: "001299-17", name: "DEVAVEER KURRA ", grade: "Class 10", section: "A"}, {id: "003594-24", name: "DUDDUKURU CHINMAYA SAI NANDAN", grade: "Class 10", section: "A"}, {id: "001447-17", name: "GAJJELA SAHARSHA PRATEEKSH", grade: "Class 10", section: "A"}, {id: "001380-17", name: "GAJJI DIYASHREE YADAV", grade: "Class 10", section: "A"},
-                {id: "002845-22", name: "ADDLA BRAHMESWARI", grade: "Class 12", section: "BIPC"}, {id: "001772-18", name: "ATIYA SAFANA", grade: "Class 12", section: "BIPC"}, {id: "003952-25", name: "EEDUPUGANTI SAHASRA", grade: "Class 12", section: "BIPC"}, {id: "003973-25", name: "MOHAMMED ABDULLAH ", grade: "Class 12", section: "BIPC"}, {id: "003016-22", name: "MOHAMMED HAMEEDA KHAN", grade: "Class 12", section: "BIPC"}, {id: "003932-25", name: "AKKAPELLI KAUSTUBH REDDY", grade: "Class 12", section: "CEC"}, {id: "001300-17", name: "NIVAAN VIHAR VAISHNAV", grade: "Class 12", section: "CEC"}, {id: "003956-25", name: "SUDARSHAN BISWAS", grade: "Class 12", section: "CEC"}, {id: "004019-25", name: "VALLURI LEAH JEDIDIAH", grade: "Class 12", section: "CEC"}, {id: "000872-15", name: "KINJAL SINGH", grade: "Class 12", section: "MBIPC"}
+                {id: "003659-24", name: "ANDHE ARIHANT VARMA", grade: "Class 6", section: "A"}, {id: "002938-22", name: "BADDULA MOKSHA", grade: "Class 6", section: "A"}, {id: "002618-21", name: "BALTHU RUDRA VEER", grade: "Class 6", section: "A"}, {id: "001994-19", name: "BARKA BHARGAV KRISHNA", grade: "Class 6", section: "A"}, {id: "003049-22", name: "BARRE MAHONNATH YADAV ", grade: "Class 6", section: "A"}, {id: "001938-18", name: "BOKKA HARDHIK REDDY", grade: "Class 6", section: "A"}, {id: "003698-24", name: "CHIRITHOTI  SUCHARITHA SAI", grade: "Class 6", section: "A"}, {id: "003801-24", name: "DHOTI  ADWIKA ", grade: "Class 6", section: "A"}, {id: "002884-22", name: "EDULA SRIKAR REDDY", grade: "Class 6", section: "A"}, {id: "002312-19", name: "HUMERA ", grade: "Class 6", section: "A"}, {id: "003754-24", name: "KANUGU RAGHUVEER", grade: "Class 6", section: "A"}, {id: "003188-23", name: "KATTA AARUSH", grade: "Class 6", section: "A"}, {id: "003084-23", name: "KOLLURU  ESHWAR", grade: "Class 6", section: "A"}, {id: "002564-21", name: "KOMMU DEEKSITHA SAI", grade: "Class 6", section: "A"}, {id: "001985-19", name: "KOTHA KARTIKEYA", grade: "Class 6", section: "A"}, {id: "003737-24", name: "LAVUDI THANUSRICHOWHAN", grade: "Class 6", section: "A"}, {id: "002462-20", name: "LOKASANI RAGHAV KRISHNA REDDY ", grade: "Class 6", section: "A"}, {id: "002807-22", name: "MALLIPEDDI HIMAVARSHINI", grade: "Class 6", section: "A"}, {id: "003381-23", name: "MANNEPALLI RISHITHA", grade: "Class 6", section: "A"}, {id: "002446-20", name: "MANVITH REDDY PEDDITI ", grade: "Class 6", section: "A"}, {id: "002793-22", name: "MEKALA ABHIRAM", grade: "Class 6", section: "A"}, {id: "002610-21", name: "MOHAMMED SHAZAIN", grade: "Class 6", section: "A"}, {id: "002565-21", name: "PANDRAPRAGADA AADHYA SRI", grade: "Class 6", section: "A"}, {id: "002641-21", name: "PARIMI VENKATA SRINIVASA RUDRA SAI KRUTHIK", grade: "Class 6", section: "A"}, {id: "001572-18", name: "PRAVII TAANK", grade: "Class 6", section: "A"}, {id: "001952-19", name: "SAYINI ANWITHA", grade: "Class 6", section: "A"}, {id: "002030-19", name: "SHROTI AARSHI", grade: "Class 6", section: "A"}, {id: "003601-24", name: "SRIRAM SRAGVI", grade: "Class 6", section: "A"}, {id: "003617-24", name: "TEJAVATHU NISHITHA  SRI", grade: "Class 6", section: "A"}, {id: "001947-19", name: "TELLAPURAM DARVI RAJ", grade: "Class 6", section: "A"}, {id: "003830-25", name: "UMMETEHALA ASHWATH RAM", grade: "Class 6", section: "A"}, {id: "003175-23", name: "VEERAMALLA DHARANI", grade: "Class 6", section: "A"}, {id: "002334-20", name: "VRISHANK SURYAKANTH MALGIKAR ", grade: "Class 6", section: "A"}, {id: "002826-22", name: "A. LAKSHMI USHAS", grade: "Class 7", section: "A"}, {id: "003464-24", name: "ANANTHAGIRI   DIVYANSH", grade: "Class 7", section: "A"}, {id: "002165-19", name: "ANDE RASHMIKA", grade: "Class 10", section: "A"}, {id: "003557-24", name: "ANDOJU ANIRUDH SAI RAAM", grade: "Class 10", section: "A"}, {id: "002845-22", name: "ADDLA BRAHMESWARI", grade: "Class 12", section: "BIPC"}, {id: "001772-18", name: "ATIYA SAFANA", grade: "Class 12", section: "BIPC"}, {id: "003932-25", name: "AKKAPELLI KAUSTUBH REDDY", grade: "Class 12", section: "CEC"}, {id: "000872-15", name: "KINJAL SINGH", grade: "Class 12", section: "MBIPC"}
             ];
-            for(let s of roster) { await db.collection('roster').doc(s.id).set(s); }
-            showToast("ROSTER ACTIVE");
+            const batch = db.batch(); const curatorRef = db.collection('curators').doc(activeUser.u); roster.forEach(s => batch.set(curatorRef.collection('roster').doc(s.id), s)); await batch.commit(); showToast("VAULT ACTIVE");
         }
     </script>
 </body>
