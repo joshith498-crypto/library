@@ -49,8 +49,7 @@
         .sub-nav { display: flex; gap: 12px; overflow-x: auto; padding: 15px 0; border-bottom: 2px solid rgba(255,255,255,0.1); margin-bottom: 3rem; }
         .sub-link { font-size: 10px; font-weight: 900; color: var(--text-dim); padding: 10px 25px; border-radius: 10px; transition: 0.3s; text-transform: uppercase; cursor: pointer; border: none; background: transparent; white-space: nowrap; }
         
-        /* DYNAMIC GLOW FIX */
-        .sub-link.active { background: var(--accent) !important; color: white !important; box-shadow: 0 0 30px var(--accent); }
+        .sub-link.active { background: var(--accent) !important; color: white !important; box-shadow: none !important; }
 
         .obsidian-btn { background: #111 !important; color: #fff !important; border: 2px solid #333 !important; }
         .alpine-btn { background: #fff !important; color: #000 !important; border: 2px solid #000 !important; }
@@ -175,7 +174,7 @@
                             <h4 id="foundName" class="text-6xl italic font-serif text-white copy-safe">Full Name</h4>
                             <p id="foundClass" class="text-xl text-white opacity-80 mt-4 font-bold uppercase">Member Verified</p>
                         </div>
-                        <input type="text" id="iBook" placeholder="BOOK CODE">
+                        <input type="text" id="iBook" placeholder="BOOK CODE" onkeydown="if(event.key==='Enter') issueNow()">
                         <button onclick="issueNow()" class="btn-action w-full">Finalize Loan</button>
                     </div>
                 </div>
@@ -305,12 +304,27 @@
             document.getElementById('championGrid').innerHTML = top3.map((t, idx) => `<div class="glass-card p-12 text-center space-y-6"><span class="text-7xl italic font-serif opacity-10">0${idx+1}</span><p class="font-black text-4xl text-white">${t[0]}</p><p class="text-blue-500 font-bold uppercase text-xs tracking-widest">${t[1]} Books Read</p></div>`).join('');
         }
 
+        function selectStudentForIssue(student) {
+            selectedStudent = student;
+            document.getElementById('iSearch').value = student.name;
+            document.getElementById('foundName').innerText = student.name;
+            document.getElementById('foundClass').innerText = (student.grade ? student.grade + (student.section ? ' (' + student.section + ')' : '') + ' • ' : '') + 'ADM: ' + student.id + ' • Member Verified';
+            document.getElementById('studentStatus').classList.remove('hidden');
+            document.getElementById('iBook').value = '';
+            switchTab('issue');
+            showToast("Student Verified: " + student.name);
+            setTimeout(() => {
+                const bookInput = document.getElementById('iBook');
+                if (bookInput) bookInput.focus();
+            }, 120);
+        }
+
         async function renderStudents(q = "") {
             const grade = subFilters.studentGradeNav;
             db.collection('curators').doc(activeUser.u).collection('roster').where('grade', '==', grade).get().then(snap => {
                 let docs = snap.docs.map(d => d.data());
                 if(q) docs = docs.filter(d => d.name.includes(q.toUpperCase()) || d.id.includes(q));
-                document.getElementById('studentsList').innerHTML = docs.map(d => `<div class="glass-card p-10"><p class="font-black text-3xl text-white copy-safe">${d.name}</p><p class="text-xs opacity-40 uppercase mt-4 copy-safe">ID: ${d.id} • Sec: ${d.section}</p></div>`).join('');
+                document.getElementById('studentsList').innerHTML = docs.map(d => `<div class="glass-card p-10 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:border-blue-500/60 group" onclick="selectStudentForIssue(${JSON.stringify(d).replace(/"/g, '&quot;')})" title="Click to issue a book to ${d.name}"><div class="flex justify-between items-start"><p class="font-black text-3xl text-white copy-safe group-hover:text-blue-400 transition-colors">${d.name}</p><span class="text-[10px] font-black uppercase px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">Issue →</span></div><p class="text-xs opacity-40 uppercase mt-4 copy-safe">ID: ${d.id} • Sec: ${d.section}</p></div>`).join('');
             });
         }
 
